@@ -116,7 +116,7 @@ export const DATA = {
       description:
         "Led multiple award-winning AI/ML projects for banking operations, achieving significant productivity gains and cost savings.",
       highlights: [
-        "Phoenix: Generic NLP IE platform using BERT + hybrid CNN + Bloom embeddings; ~90% accuracy; saved ~15,500 man-hours/year",
+        "Phoenix: Generic NLP IE platform using BERT + hybrid CNN + Bloom embeddings; ~90% accuracy; saved ~100,000 man-hours/year",
         "PIGEON: Document classification with RoBERTa and summarization (GPT-2/GPT Neo); achieved 97% accuracy",
         "SWAN: AML name check reduced false positives by 20%; vector DB for embeddings; graph neural networks for anomaly detection",
         "HAWK: Hybrid encoder–decoder LSTM for daily/weekly/monthly forecasts; saved ~3,000 man-hours/year",
@@ -249,7 +249,7 @@ export const DATA = {
     {
       title: "Phoenix - NLP Information Extraction Platform",
       description:
-        "Generic NLP IE platform using BERT + hybrid CNN + Bloom embeddings achieving ~90% accuracy and saving ~15,500 man-hours/year. Includes LightGBM post-prediction and BART-based spell checking.",
+        "Generic NLP IE platform using BERT + hybrid CNN + Bloom embeddings achieving ~90% accuracy and saving ~100,000 man-hours/year. Includes LightGBM post-prediction and BART-based spell checking.",
       technologies: ["BERT", "CNN", "LightGBM", "LSTM", "BART", "FastAPI"],
       type: "work",
       company: "Mizuho Bank",
