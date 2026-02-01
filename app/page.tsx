@@ -312,6 +312,18 @@ export default function Home() {
               </Tooltip>
             </BlurFade>
           ))}
+          <BlurFade delay={BLUR_FADE_DELAY * 14}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="text-muted-foreground hover:text-primary hover:-translate-y-1 transition-all duration-200">
+                  <ThemeToggle />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>Toggle theme</p>
+              </TooltipContent>
+            </Tooltip>
+          </BlurFade>
         </TooltipProvider>
       </div>
 
