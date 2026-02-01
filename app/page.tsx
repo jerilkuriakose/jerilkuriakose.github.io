@@ -291,7 +291,7 @@ export default function Home() {
       </section>
 
       {/* Fixed Side Elements */}
-      <div className="hidden lg:flex fixed left-8 bottom-0 flex-col items-center gap-6 after:content-[''] after:w-px after:h-24 after:bg-muted-foreground/30">
+      <div className="hidden lg:flex fixed left-6 xl:left-10 bottom-0 flex-col items-center gap-6 after:content-[''] after:w-px after:h-24 after:bg-muted-foreground/30">
         <TooltipProvider>
           {DATA.contact.social.map((social, i) => (
             <BlurFade key={social.name} delay={BLUR_FADE_DELAY * (10 + i)}>
@@ -316,7 +316,7 @@ export default function Home() {
       </div>
 
       {/* Right Side - Email */}
-      <div className="hidden lg:flex fixed right-8 bottom-0 flex-col items-center gap-6 after:content-[''] after:w-px after:h-24 after:bg-muted-foreground/30">
+      <div className="hidden lg:flex fixed right-6 xl:right-10 bottom-0 flex-col items-center gap-6 after:content-[''] after:w-px after:h-24 after:bg-muted-foreground/30">
         <BlurFade delay={BLUR_FADE_DELAY * 12}>
           <Link
             href={`mailto:${DATA.contact.email}`}
@@ -329,13 +329,13 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto pb-24">
+      <div className="relative z-10 px-6 md:px-12 lg:px-20 xl:px-24 max-w-6xl mx-auto pb-24">
         {/* About Section */}
         <BlurFade delay={BLUR_FADE_DELAY * 9}>
           <section id="about" className="py-24">
             <h2 className="numbered-heading font-bold text-foreground">About Me</h2>
-            <div className="grid md:grid-cols-3 gap-12">
-              <div className="md:col-span-2 space-y-4">
+            <div className="grid lg:grid-cols-5 gap-12">
+              <div className="lg:col-span-3 space-y-4">
                 {DATA.summary.split("\n\n").map((paragraph, i) => (
                   <p key={i} className="text-muted-foreground leading-relaxed">
                     {paragraph.split("**").map((part, j) =>
@@ -367,7 +367,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="relative group">
+              <div className="lg:col-span-2 relative group">
                 <div className="relative z-10">
                   <div className="relative overflow-hidden rounded-lg">
                     <Image
@@ -445,7 +445,7 @@ export default function Home() {
                   Other Noteworthy Projects
                 </h3>
               </BlurFade>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
                 {DATA.projects.slice(4).map((project, i) => (
                   <BlurFade key={project.title} delay={BLUR_FADE_DELAY * (19 + i)}>
                     <div className="card-hover bg-card rounded-lg border border-border p-6 h-full flex flex-col hover:border-primary/50">
@@ -566,7 +566,7 @@ export default function Home() {
             <h2 className="numbered-heading font-bold text-foreground">Awards & Recognition</h2>
           </BlurFade>
 
-          <div className="grid sm:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
             {DATA.awards.map((award, i) => (
               <BlurFade key={award.title} delay={BLUR_FADE_DELAY * (32 + i)}>
                 <div className="card-hover bg-card rounded-lg border border-border p-6 hover:border-primary/50">
