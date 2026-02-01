@@ -69,19 +69,38 @@ After LaTeX changes, update `jerilkuriakose.github.io/data/resume.tsx`:
 
 ### Step 3: Rebuild PDF (if LaTeX changed)
 
+**IMPORTANT:** pdflatex is NOT installed in this environment. 
+
+**Option A - If pdflatex is available:**
 ```bash
 cd /home/sagemaker-user/repos/cvs/jk-cv
-# If pdflatex is available:
 pdflatex cv.tex
 # Or use the Makefile:
 make
 ```
 
+**Option B - If pdflatex is NOT available (current situation):**
+1. Inform the user: "LaTeX compilation requires pdflatex which is not installed. Please compile the PDF locally or via Overleaf."
+2. Skip to Step 4 if an existing PDF is already present
+3. The user can:
+   - Install TeX Live: `sudo apt-get install texlive-full` (large, ~5GB)
+   - Install basic TeX: `sudo apt-get install texlive-latex-base texlive-fonts-recommended texlive-latex-extra`
+   - Use Overleaf online
+   - Compile locally on their machine
+
 ### Step 4: Copy PDF to Portfolio
 
+Only do this if a PDF exists (either newly compiled or previously existing):
+
 ```bash
-cp "/home/sagemaker-user/repos/cvs/jk-cv/CV-Jeril Kuriakose.pdf" \
-   "/home/sagemaker-user/repos/cvs/jerilkuriakose.github.io/public/Jeril_Kuriakose_CV.pdf"
+# Check if PDF exists
+if [ -f "/home/sagemaker-user/repos/cvs/jk-cv/CV-Jeril Kuriakose.pdf" ]; then
+  cp "/home/sagemaker-user/repos/cvs/jk-cv/CV-Jeril Kuriakose.pdf" \
+     "/home/sagemaker-user/repos/cvs/jerilkuriakose.github.io/public/Jeril_Kuriakose_CV.pdf"
+  echo "PDF copied successfully"
+else
+  echo "WARNING: PDF not found. Please compile LaTeX first."
+fi
 ```
 
 ### Step 5: Build Portfolio (Verify)
