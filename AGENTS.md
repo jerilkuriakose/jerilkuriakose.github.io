@@ -4,8 +4,8 @@
 
 This workspace contains two repositories that must be kept in sync:
 
-1. **LaTeX CV (Source of Truth):** `/home/sagemaker-user/repos/cvs/jk-cv/`
-2. **Portfolio Website:** `/home/sagemaker-user/repos/cvs/jerilkuriakose.github.io/`
+1. **LaTeX CV (Source of Truth):** `jk-cv/`
+2. **Portfolio Website:** `jerilkuriakose.github.io/`
 
 **Sync Direction:** LaTeX → Portfolio (LaTeX is the source of truth)
 
@@ -14,7 +14,7 @@ This workspace contains two repositories that must be kept in sync:
 ## Repository Locations
 
 ```
-/home/sagemaker-user/repos/cvs/
+cvs/                                # Parent folder (can be any name)
 ├── jk-cv/                          # LaTeX CV (SOURCE)
 │   ├── cv.tex                      # Main CV file
 │   ├── cv/
@@ -67,46 +67,27 @@ After LaTeX changes, update `jerilkuriakose.github.io/data/resume.tsx`:
 | `\cvpublication{title}{authors}{journal}{year}` | `publications: [{ title, authors, journal, year }]` |
 | `\cvaward{title}{org}{date}` | `awards: [{ title, organization, date }]` |
 
-### Step 3: Rebuild PDF (if LaTeX changed)
+### Step 3: Rebuild PDF
 
-**IMPORTANT:** pdflatex is NOT installed in this environment. 
-
-**Option A - If pdflatex is available:**
 ```bash
-cd /home/sagemaker-user/repos/cvs/jk-cv
+cd jk-cv
 pdflatex cv.tex
 # Or use the Makefile:
 make
 ```
 
-**Option B - If pdflatex is NOT available (current situation):**
-1. Inform the user: "LaTeX compilation requires pdflatex which is not installed. Please compile the PDF locally or via Overleaf."
-2. Skip to Step 4 if an existing PDF is already present
-3. The user can:
-   - Install TeX Live: `sudo apt-get install texlive-full` (large, ~5GB)
-   - Install basic TeX: `sudo apt-get install texlive-latex-base texlive-fonts-recommended texlive-latex-extra`
-   - Use Overleaf online
-   - Compile locally on their machine
+Output: `CV-Jeril Kuriakose.pdf`
 
 ### Step 4: Copy PDF to Portfolio
 
-Only do this if a PDF exists (either newly compiled or previously existing):
-
 ```bash
-# Check if PDF exists
-if [ -f "/home/sagemaker-user/repos/cvs/jk-cv/CV-Jeril Kuriakose.pdf" ]; then
-  cp "/home/sagemaker-user/repos/cvs/jk-cv/CV-Jeril Kuriakose.pdf" \
-     "/home/sagemaker-user/repos/cvs/jerilkuriakose.github.io/public/Jeril_Kuriakose_CV.pdf"
-  echo "PDF copied successfully"
-else
-  echo "WARNING: PDF not found. Please compile LaTeX first."
-fi
+cp "jk-cv/CV-Jeril Kuriakose.pdf" "jerilkuriakose.github.io/public/Jeril_Kuriakose_CV.pdf"
 ```
 
 ### Step 5: Build Portfolio (Verify)
 
 ```bash
-cd /home/sagemaker-user/repos/cvs/jerilkuriakose.github.io
+cd jerilkuriakose.github.io
 npm run build
 ```
 
@@ -120,12 +101,12 @@ Always commit and push BOTH repositories:
 
 ```bash
 # Commit LaTeX CV
-cd /home/sagemaker-user/repos/cvs/jk-cv
+cd jk-cv
 git add -A
 git commit -m "Update CV: <description of changes>"
 
 # Commit Portfolio
-cd /home/sagemaker-user/repos/cvs/jerilkuriakose.github.io
+cd jerilkuriakose.github.io
 git add -A
 git commit -m "Sync from LaTeX: <description of changes>"
 ```
@@ -134,11 +115,11 @@ git commit -m "Sync from LaTeX: <description of changes>"
 
 ```bash
 # Push LaTeX CV
-cd /home/sagemaker-user/repos/cvs/jk-cv
+cd jk-cv
 git push origin main
 
 # Push Portfolio
-cd /home/sagemaker-user/repos/cvs/jerilkuriakose.github.io
+cd jerilkuriakose.github.io
 git push origin main
 ```
 
@@ -230,23 +211,22 @@ skills: [
 
 ```bash
 # Check status of both repos
-cd /home/sagemaker-user/repos/cvs/jk-cv && git status
-cd /home/sagemaker-user/repos/cvs/jerilkuriakose.github.io && git status
+cd jk-cv && git status
+cd jerilkuriakose.github.io && git status
 
 # Sync PDF after LaTeX rebuild
-cp "/home/sagemaker-user/repos/cvs/jk-cv/CV-Jeril Kuriakose.pdf" \
-   "/home/sagemaker-user/repos/cvs/jerilkuriakose.github.io/public/Jeril_Kuriakose_CV.pdf"
+cp "jk-cv/CV-Jeril Kuriakose.pdf" "jerilkuriakose.github.io/public/Jeril_Kuriakose_CV.pdf"
 
 # Build and verify portfolio
-cd /home/sagemaker-user/repos/cvs/jerilkuriakose.github.io && npm run build
+cd jerilkuriakose.github.io && npm run build
 
 # Commit both (run separately)
-cd /home/sagemaker-user/repos/cvs/jk-cv && git add -A && git commit -m "MSG"
-cd /home/sagemaker-user/repos/cvs/jerilkuriakose.github.io && git add -A && git commit -m "MSG"
+cd jk-cv && git add -A && git commit -m "MSG"
+cd jerilkuriakose.github.io && git add -A && git commit -m "MSG"
 
 # Push both (run separately)
-cd /home/sagemaker-user/repos/cvs/jk-cv && git push origin main
-cd /home/sagemaker-user/repos/cvs/jerilkuriakose.github.io && git push origin main
+cd jk-cv && git push origin main
+cd jerilkuriakose.github.io && git push origin main
 ```
 
 ---
