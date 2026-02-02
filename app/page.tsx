@@ -28,6 +28,7 @@ import {
   Terminal,
   Calendar,
   Building2,
+  Phone,
 } from "lucide-react";
 
 const BLUR_FADE_DELAY = 0.04;
@@ -241,7 +242,7 @@ export default function Home() {
                   <MapPin className="h-4 w-4 text-primary" />
                   {DATA.location}
                 </p>
-                <p className="text-xs text-muted-foreground/70 font-mono mt-1">
+                <p className="text-xs text-primary font-mono mt-1">
                   {DATA.extraInfo}
                 </p>
               </div>
@@ -259,6 +260,30 @@ export default function Home() {
                 <Link href={`mailto:${DATA.contact.email}`}>
                   <Mail className="mr-2 h-4 w-4" />
                   Get In Touch
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10"
+              >
+                <Link
+                  href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icons.whatsapp className="mr-2 h-4 w-4" />
+                  WhatsApp
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10"
+              >
+                <Link href={`tel:${DATA.contact.tel}`}>
+                  <Phone className="mr-2 h-4 w-4" />
+                  Call
                 </Link>
               </Button>
               <Button
@@ -605,13 +630,42 @@ export default function Home() {
               I&apos;m currently open to new opportunities in AI/ML leadership roles.
               Whether you have a question or just want to say hi, my inbox is always open!
             </p>
-            <Button
-              asChild
-              size="lg"
-              className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10 px-8"
-            >
-              <Link href={`mailto:${DATA.contact.email}`}>Say Hello</Link>
-            </Button>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Button
+                asChild
+                size="lg"
+                className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10 px-8"
+              >
+                <Link href={`mailto:${DATA.contact.email}`}>
+                  <Mail className="mr-2 h-4 w-4" />
+                  Say Hello
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10 px-8"
+              >
+                <Link
+                  href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Icons.whatsapp className="mr-2 h-4 w-4" />
+                  WhatsApp
+                </Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10 px-8"
+              >
+                <Link href={`tel:${DATA.contact.tel}`}>
+                  <Phone className="mr-2 h-4 w-4" />
+                  Call
+                </Link>
+              </Button>
+            </div>
           </BlurFade>
         </section>
       </div>
