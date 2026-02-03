@@ -298,6 +298,13 @@ export const DATA = {
 
   publications: [
     {
+      title: "ALLaM: Large Language Models for Arabic and English",
+      authors: "Bari M. S., Kuriakose J., et al.",
+      journal: "The International Conference on Learning Representations (ICLR)",
+      year: "2025",
+      url: "https://doi.org/10.48550/arXiv.2407.15390",
+    },
+    {
       title:
         "A review of deep learning-based approaches for detection and diagnosis of diverse classes of drugs",
       authors: "Kuriakose J., et al.",
@@ -324,14 +331,6 @@ export const DATA = {
       title: "A Review on Mobile Sensor Localization",
       authors: "Kuriakose J., et al.",
       journal: "Security in Computing and Communications (Springer)",
-      year: "2014",
-      url: "https://scholar.google.com/citations?user=qRQlmIoAAAAJ",
-    },
-    {
-      title: "A Review on Localization in Wireless Sensor Networks",
-      authors: "Kuriakose J., Joshi S., Raju R. V., Kilaru A.",
-      journal:
-        "Advances in Signal Processing and Intelligent Recognition Systems (Springer)",
       year: "2014",
       url: "https://scholar.google.com/citations?user=qRQlmIoAAAAJ",
     },

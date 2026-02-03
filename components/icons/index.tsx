@@ -77,4 +77,16 @@ export const Icons = {
       />
     </svg>
   ),
+  send: (props: IconProps) => (
+    <svg viewBox="0 0 24 24" {...props}>
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="m22 2-7 20-4-9-9-4 20-7z M22 2 11 13"
+      />
+    </svg>
+  ),
 };

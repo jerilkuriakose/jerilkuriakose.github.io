@@ -2,7 +2,6 @@
 
 import { DATA } from "@/data/resume";
 import BlurFade from "@/components/magicui/blur-fade";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -187,133 +186,174 @@ export default function Home() {
       {/* Hero Section - Full Screen */}
       <section
         id="hero"
-        className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 max-w-7xl mx-auto"
+        className="relative h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 max-w-7xl mx-auto overflow-hidden"
       >
-        {/* Background gradient */}
-        <div className="hero-gradient" />
+        {/* Background gradient blobs */}
+        <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20">
+          <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[100px]" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-400/20 rounded-full blur-[100px]" />
+        </div>
         
         {/* Grid pattern */}
         <div className="absolute inset-0 grid-pattern opacity-[0.02] dark:opacity-[0.05]" />
 
-        <div className="relative z-10 py-24">
-          {/* Greeting */}
-          <BlurFade delay={BLUR_FADE_DELAY}>
-            <p className="font-mono text-primary mb-5 text-sm md:text-base">
-              Hi, my name is
-            </p>
-          </BlurFade>
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          {/* Left column - Text content */}
+          <div className="lg:col-span-7 xl:col-span-8 order-2 lg:order-1 space-y-6">
+            {/* Greeting */}
+            <BlurFade delay={BLUR_FADE_DELAY}>
+              <p className="font-mono text-primary mb-4 text-sm tracking-wide">
+                Hi, my name is
+              </p>
+            </BlurFade>
 
-          {/* Name - Big Heading */}
-          <BlurFade delay={BLUR_FADE_DELAY * 2}>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-4">
-              {DATA.name}
-            </h1>
-          </BlurFade>
+            {/* Name - Big Heading */}
+            <BlurFade delay={BLUR_FADE_DELAY * 2}>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-4 tracking-tight leading-tight">
+                {DATA.name}
+              </h1>
+            </BlurFade>
 
-          {/* Tagline */}
-          <BlurFade delay={BLUR_FADE_DELAY * 3}>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-muted-foreground mb-6">
-              I build intelligent AI systems.
-            </h2>
-          </BlurFade>
+            {/* Tagline */}
+            <BlurFade delay={BLUR_FADE_DELAY * 3}>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-muted-foreground mb-8 leading-tight">
+                I build intelligent AI systems.
+              </h2>
+            </BlurFade>
 
-          {/* Description */}
-          <BlurFade delay={BLUR_FADE_DELAY * 4}>
-            <p className="max-w-xl text-muted-foreground text-base md:text-lg leading-relaxed mb-8">
-              I&apos;m a <span className="text-primary font-medium">{DATA.title}</span> at{" "}
-              <span className="text-foreground font-medium">SDAIA</span>, specializing in
-              large language models, agentic AI systems, and production-scale ML deployment.
-              Currently building{" "}
-              <span className="text-primary font-medium">ALLaM</span> — the Arabic Large Language Model.
-            </p>
-          </BlurFade>
-
-          {/* Location and Avatar Row */}
-          <BlurFade delay={BLUR_FADE_DELAY * 5}>
-            <div className="flex items-center gap-6 mb-8">
-              <Avatar className="h-16 w-16 md:h-20 md:w-20 border-2 border-primary/50 ring-4 ring-primary/10 pulse-glow">
-                <AvatarImage src={DATA.avatarUrl} alt={DATA.name} />
-                <AvatarFallback className="bg-primary/20 text-primary text-xl font-bold">
-                  {DATA.initials}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="flex items-center gap-2 text-muted-foreground text-sm md:text-base">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  {DATA.location}
+            {/* Description */}
+            <BlurFade delay={BLUR_FADE_DELAY * 4}>
+              <div className="max-w-2xl text-base md:text-lg leading-relaxed text-muted-foreground space-y-4">
+                <p>
+                  I&apos;m a <span className="text-primary font-medium">{DATA.title}</span> at{" "}
+                  <span className="text-foreground font-semibold">SDAIA</span>, specializing in
+                  large language models, agentic AI systems, and production-scale ML deployment.
                 </p>
-                <p className="text-xs text-primary font-mono mt-1">
-                  {DATA.extraInfo}
+                <p>
+                  Currently building{" "}
+                  <span className="text-primary font-medium">ALLaM</span> — the Arabic Large Language Model.
                 </p>
               </div>
-            </div>
-          </BlurFade>
+            </BlurFade>
 
-          {/* CTA Buttons */}
-          <BlurFade delay={BLUR_FADE_DELAY * 6}>
-            <div className="flex flex-wrap gap-4">
-              <Button
-                asChild
-                size="lg"
-                className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10"
-              >
-                <Link href={`mailto:${DATA.contact.email}`}>
-                  <Mail className="mr-2 h-4 w-4" />
-                  Get In Touch
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10"
-              >
-                <Link
-                  href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+            {/* Location Row */}
+            <BlurFade delay={BLUR_FADE_DELAY * 5}>
+              <div className="flex items-center gap-3 text-sm font-mono text-muted-foreground py-2">
+                <MapPin className="h-4 w-4 text-primary" />
+                <span>{DATA.location}</span>
+                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-semibold ml-2">
+                  {DATA.extraInfo}
+                </span>
+              </div>
+            </BlurFade>
+
+            {/* CTA Buttons - Redesigned */}
+            <BlurFade delay={BLUR_FADE_DELAY * 6}>
+              <div className="flex flex-wrap items-center gap-3 pt-4">
+                {/* Primary CTA - Filled */}
+                <Button
+                  asChild
+                  size="lg"
+                  className="font-mono bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 px-8"
                 >
-                  <Icons.whatsapp className="mr-2 h-4 w-4" />
-                  WhatsApp
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10"
-              >
-                <Link href={`tel:${DATA.contact.tel}`}>
-                  <Phone className="mr-2 h-4 w-4" />
-                  Call
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="lg"
-                className="font-mono text-primary hover:bg-primary/10"
-              >
-                <Link href={DATA.resumeUrl} target="_blank">
-                  <Icons.download className="mr-2 h-4 w-4" />
-                  Resume
-                </Link>
-              </Button>
-            </div>
-          </BlurFade>
-        </div>
-
-        {/* Scroll indicator */}
-        <BlurFade delay={BLUR_FADE_DELAY * 8}>
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground">
-            <span className="text-xs font-mono">scroll</span>
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity }}
-            >
-              <ArrowDown className="h-4 w-4 text-primary" />
-            </motion.div>
+                  <Link href={`mailto:${DATA.contact.email}`}>
+                    <span>Get In Touch</span>
+                    <Mail className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                
+                {/* Icon buttons */}
+                <div className="flex gap-2">
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="icon"
+                    className="h-12 w-12 border-border hover:border-primary hover:text-primary"
+                  >
+                    <Link
+                      href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="WhatsApp"
+                    >
+                      <Icons.whatsapp className="h-5 w-5" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="icon"
+                    className="h-12 w-12 border-border hover:border-primary hover:text-primary"
+                  >
+                    <Link href={`tel:${DATA.contact.tel}`} title="Call">
+                      <Phone className="h-5 w-5" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="h-12 px-5 border-border hover:border-primary hover:text-primary font-mono"
+                  >
+                    <Link href={DATA.resumeUrl} target="_blank">
+                      <Icons.download className="mr-2 h-4 w-4" />
+                      <span>Resume</span>
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </BlurFade>
           </div>
-        </BlurFade>
+
+          {/* Right column - Profile Photo */}
+          <div className="lg:col-span-5 xl:col-span-4 order-1 lg:order-2 flex justify-center lg:justify-end">
+            <BlurFade delay={BLUR_FADE_DELAY * 3}>
+              <div className="relative">
+                {/* Animated outer ring */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-80 md:h-80 border-2 border-primary/20 rounded-full dark:border-primary/10 animate-[spin_10s_linear_infinite]" />
+                
+                {/* Static outer ring */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[19rem] md:w-[21rem] h-[19rem] md:h-[21rem] border border-border rounded-full" />
+                
+                {/* Profile image container */}
+                <div className="relative w-64 h-64 md:w-72 md:h-72">
+                  {/* Glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-primary to-blue-500 rounded-full opacity-20 blur-2xl transform translate-x-4 translate-y-4" />
+                  
+                  {/* Image */}
+                  <div className="relative w-full h-full rounded-full border-4 border-background shadow-2xl overflow-hidden group">
+                    <Image
+                      src={DATA.avatarUrl}
+                      alt={DATA.name}
+                      fill
+                      className="object-cover object-[center_20%] transition-transform duration-500 group-hover:scale-110"
+                      priority
+                    />
+                  </div>
+                  
+                  {/* Open to work badge */}
+                  <div className="absolute -bottom-2 -right-2 bg-background p-3 rounded-xl shadow-lg border border-border flex items-center gap-2">
+                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                    <span className="text-xs font-bold text-foreground">Open to work</span>
+                  </div>
+                </div>
+              </div>
+            </BlurFade>
+          </div>
+        </div>
       </section>
+
+      {/* Scroll indicator - fixed to viewport bottom */}
+      <BlurFade delay={BLUR_FADE_DELAY * 8}>
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground opacity-50 hover:opacity-100 transition-opacity cursor-pointer z-10">
+          <span className="text-xs font-mono" style={{ writingMode: "vertical-rl" }}>scroll</span>
+          <motion.div
+            animate={{ y: [0, 8, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+          >
+            <ArrowDown className="h-4 w-4 text-primary" />
+          </motion.div>
+        </div>
+      </BlurFade>
 
       {/* Fixed Side Elements */}
       <div className="hidden lg:flex fixed left-6 xl:left-10 bottom-0 flex-col items-center gap-6 after:content-[''] after:w-px after:h-24 after:bg-muted-foreground/30">
@@ -412,7 +452,7 @@ export default function Home() {
                       alt={DATA.name}
                       width={400}
                       height={400}
-                      className="w-full aspect-square object-cover grayscale hover:grayscale-0 transition-all duration-300"
+                      className="w-full aspect-square object-cover object-[center_20%] grayscale hover:grayscale-0 transition-all duration-300"
                     />
                     <div className="absolute inset-0 bg-primary/20 mix-blend-multiply group-hover:opacity-0 transition-opacity" />
                   </div>
@@ -630,41 +670,57 @@ export default function Home() {
               I&apos;m currently open to new opportunities in AI/ML leadership roles.
               Whether you have a question or just want to say hi, my inbox is always open!
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap justify-center items-center gap-3">
+              {/* Primary CTA - Filled */}
               <Button
                 asChild
                 size="lg"
-                className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10 px-8"
+                className="font-mono bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 px-8"
               >
                 <Link href={`mailto:${DATA.contact.email}`}>
-                  <Mail className="mr-2 h-4 w-4" />
-                  Say Hello
+                  <span>Say Hello</span>
+                  <Mail className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button
-                asChild
-                size="lg"
-                className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10 px-8"
-              >
-                <Link
-                  href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+              
+              {/* Icon buttons */}
+              <div className="flex gap-2">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="icon"
+                  className="h-12 w-12 border-border hover:border-primary hover:text-primary"
                 >
-                  <Icons.whatsapp className="mr-2 h-4 w-4" />
-                  WhatsApp
-                </Link>
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                className="font-mono bg-transparent border-2 border-primary text-primary hover:bg-primary/10 px-8"
-              >
-                <Link href={`tel:${DATA.contact.tel}`}>
-                  <Phone className="mr-2 h-4 w-4" />
-                  Call
-                </Link>
-              </Button>
+                  <Link
+                    href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="WhatsApp"
+                  >
+                    <Icons.whatsapp className="h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="icon"
+                  className="h-12 w-12 border-border hover:border-primary hover:text-primary"
+                >
+                  <Link href={`tel:${DATA.contact.tel}`} title="Call">
+                    <Phone className="h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="h-12 px-5 border-border hover:border-primary hover:text-primary font-mono"
+                >
+                  <Link href={DATA.resumeUrl} target="_blank">
+                    <Icons.download className="mr-2 h-4 w-4" />
+                    <span>Resume</span>
+                  </Link>
+                </Button>
+              </div>
             </div>
           </BlurFade>
         </section>
