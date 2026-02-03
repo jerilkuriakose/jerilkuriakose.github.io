@@ -13,6 +13,7 @@ export const DATA = {
   avatarUrl: "/profile.jpg",
   resumeUrl: "/Jeril_Kuriakose_CV.pdf",
   extraInfo: "Saudi Arabia Premium Resident",
+  yearsOfExperience: "14+",
 
   contact: {
     email: "jerilkuriakose10@gmail.com",
@@ -84,6 +85,7 @@ export const DATA = {
   work: [
     {
       company: "Saudi Data & AI Authority (SDAIA)",
+      url: "https://sdaia.gov.sa/en/default.aspx",
       title: "Principal Data Scientist (Gen AI)",
       location: "Riyadh, Saudi Arabia",
       start: "Jan 2024",
@@ -109,6 +111,7 @@ export const DATA = {
     },
     {
       company: "Mizuho Bank",
+      url: "https://www.mizuhogroup.com/asia-pacific/singapore",
       title: "Senior Data Scientist",
       location: "Singapore",
       start: "Jul 2019",
@@ -131,6 +134,7 @@ export const DATA = {
     },
     {
       company: "Baker Hughes (GE Company)",
+      url: "https://www.bakerhughes.com/",
       title: "Senior Data Scientist",
       location: "Kochi, India",
       start: "Jan 2019",
@@ -145,6 +149,7 @@ export const DATA = {
     },
     {
       company: "Innovation Incubator",
+      url: "https://innovationincubator.com/",
       title: "Senior AI Engineer",
       location: "Thiruvananthapuram, India",
       start: "Feb 2018",
@@ -160,6 +165,7 @@ export const DATA = {
     },
     {
       company: "Raw Data Technologies",
+      url: "https://www.rawdatatech.com/",
       title: "Senior ML/AI Developer",
       location: "Kochi, India",
       start: "Apr 2017",
@@ -175,6 +181,7 @@ export const DATA = {
     },
     {
       company: "St. John College of Engineering and Technology",
+      url: "https://sjcem.edu.in/",
       title: "Assistant Professor & Data Analyst",
       location: "Palghar, India",
       start: "Jun 2015",
@@ -186,6 +193,7 @@ export const DATA = {
     },
     {
       company: "Manipal University Jaipur",
+      url: "https://jaipur.manipal.edu/",
       title: "PhD Scholar, Developer, Data Analyst",
       location: "Jaipur, India",
       start: "Jul 2013",
@@ -197,6 +205,7 @@ export const DATA = {
     },
     {
       company: "Kavery College of Engineering",
+      url: "https://www.kavery.org.in/engg/index.aspx",
       title: "Developer & Assistant Professor",
       location: "Salem, Tamil Nadu",
       start: "Jun 2012",
@@ -211,6 +220,7 @@ export const DATA = {
   education: [
     {
       school: "Manipal University Jaipur, School of Computing and IT",
+      url: "https://jaipur.manipal.edu/",
       degree: "Ph.D. in Computer Engineering",
       location: "Jaipur, India",
       start: "Jul 2013",
@@ -221,6 +231,7 @@ export const DATA = {
     },
     {
       school: "ISIM, University of Mysore",
+      url: "https://uni-mysore.ac.in/Kannada/home.php",
       degree: "M.Tech. in Information Technology",
       location: "Mysuru, India",
       start: "",
@@ -231,6 +242,7 @@ export const DATA = {
     },
     {
       school: "Jeppiaar Engineering College (Anna University)",
+      url: "https://jeppiaarcollege.org/jeppiaar/",
       degree: "B.Tech. in Information Technology",
       location: "Chennai, India",
       start: "",
