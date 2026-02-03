@@ -246,13 +246,15 @@ export default function Home() {
 
             {/* Location Row */}
             <BlurFade delay={BLUR_FADE_DELAY * 5}>
-              <div className="flex items-center gap-3 text-sm font-mono text-muted-foreground py-2">
-                <MapPin className="h-4 w-4 text-primary" />
-                <span>{DATA.location}</span>
-                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-semibold ml-2">
+              <div className="flex flex-wrap items-center gap-2 text-sm font-mono text-muted-foreground py-2">
+                <span className="flex items-center gap-1">
+                  <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
+                  <span>{DATA.location}</span>
+                </span>
+                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-semibold whitespace-nowrap">
                   {DATA.extraInfo}
                 </span>
-                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-semibold">
+                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-semibold whitespace-nowrap">
                   {DATA.yearsOfExperience} Years Experience
                 </span>
               </div>
