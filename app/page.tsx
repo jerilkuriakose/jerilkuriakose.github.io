@@ -262,7 +262,7 @@ export default function Home() {
 
             {/* CTA Buttons - Redesigned */}
             <BlurFade delay={BLUR_FADE_DELAY * 6}>
-              <div className="flex flex-wrap items-center gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-3 pt-4">
                 {/* Primary CTA - Filled */}
                 <Button
                   asChild
@@ -275,42 +275,44 @@ export default function Home() {
                   </Link>
                 </Button>
                 
-                {/* Icon buttons - inline with wrap */}
-                <Button
-                  asChild
-                  variant="outline"
-                  size="icon"
-                  className="h-12 w-12 border-border hover:border-primary hover:text-primary"
-                >
-                  <Link
-                    href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="WhatsApp"
+                {/* Secondary buttons - grouped together */}
+                <div className="flex items-center gap-3">
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="icon"
+                    className="h-12 w-12 border-border hover:border-primary hover:text-primary"
                   >
-                    <Icons.whatsapp className="h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="icon"
-                  className="h-12 w-12 border-border hover:border-primary hover:text-primary"
-                >
-                  <Link href={`tel:${DATA.contact.tel}`} title="Call">
-                    <Phone className="h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="h-12 px-5 border-border hover:border-primary hover:text-primary font-mono"
-                >
-                  <Link href={DATA.resumeUrl} target="_blank">
-                    <Icons.download className="mr-2 h-4 w-4" />
-                    <span>Resume</span>
-                  </Link>
-                </Button>
+                    <Link
+                      href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="WhatsApp"
+                    >
+                      <Icons.whatsapp className="h-5 w-5" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="icon"
+                    className="h-12 w-12 border-border hover:border-primary hover:text-primary"
+                  >
+                    <Link href={`tel:${DATA.contact.tel}`} title="Call">
+                      <Phone className="h-5 w-5" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="h-12 px-5 border-border hover:border-primary hover:text-primary font-mono"
+                  >
+                    <Link href={DATA.resumeUrl} target="_blank">
+                      <Icons.download className="mr-2 h-4 w-4" />
+                      <span>Resume</span>
+                    </Link>
+                  </Button>
+                </div>
               </div>
             </BlurFade>
           </div>
