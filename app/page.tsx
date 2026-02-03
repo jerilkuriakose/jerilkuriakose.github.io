@@ -194,7 +194,7 @@ export default function Home() {
       {/* Hero Section - Full Screen */}
       <section
         id="hero"
-        className="relative h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 max-w-7xl mx-auto overflow-hidden"
+        className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 max-w-7xl mx-auto py-20 lg:py-0"
       >
         {/* Background gradient blobs */}
         <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20">
@@ -275,44 +275,42 @@ export default function Home() {
                   </Link>
                 </Button>
                 
-                {/* Icon buttons */}
-                <div className="flex gap-2">
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="icon"
-                    className="h-12 w-12 border-border hover:border-primary hover:text-primary"
+                {/* Icon buttons - inline with wrap */}
+                <Button
+                  asChild
+                  variant="outline"
+                  size="icon"
+                  className="h-12 w-12 border-border hover:border-primary hover:text-primary"
+                >
+                  <Link
+                    href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="WhatsApp"
                   >
-                    <Link
-                      href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      title="WhatsApp"
-                    >
-                      <Icons.whatsapp className="h-5 w-5" />
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    size="icon"
-                    className="h-12 w-12 border-border hover:border-primary hover:text-primary"
-                  >
-                    <Link href={`tel:${DATA.contact.tel}`} title="Call">
-                      <Phone className="h-5 w-5" />
-                    </Link>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="h-12 px-5 border-border hover:border-primary hover:text-primary font-mono"
-                  >
-                    <Link href={DATA.resumeUrl} target="_blank">
-                      <Icons.download className="mr-2 h-4 w-4" />
-                      <span>Resume</span>
-                    </Link>
-                  </Button>
-                </div>
+                    <Icons.whatsapp className="h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="icon"
+                  className="h-12 w-12 border-border hover:border-primary hover:text-primary"
+                >
+                  <Link href={`tel:${DATA.contact.tel}`} title="Call">
+                    <Phone className="h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="h-12 px-5 border-border hover:border-primary hover:text-primary font-mono"
+                >
+                  <Link href={DATA.resumeUrl} target="_blank">
+                    <Icons.download className="mr-2 h-4 w-4" />
+                    <span>Resume</span>
+                  </Link>
+                </Button>
               </div>
             </BlurFade>
           </div>
@@ -355,9 +353,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Scroll indicator - fixed to viewport bottom */}
+      {/* Scroll indicator - fixed to viewport bottom, hidden on mobile */}
       <BlurFade delay={BLUR_FADE_DELAY * 8}>
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-muted-foreground opacity-50 hover:opacity-100 transition-opacity cursor-pointer z-10">
+        <div className="hidden md:flex fixed bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 text-muted-foreground opacity-50 hover:opacity-100 transition-opacity cursor-pointer z-10">
           <span className="text-xs font-mono" style={{ writingMode: "vertical-rl" }}>scroll</span>
           <motion.div
             animate={{ y: [0, 8, 0] }}
