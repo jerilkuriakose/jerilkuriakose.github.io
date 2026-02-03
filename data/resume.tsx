@@ -195,6 +195,17 @@ export const DATA = {
         "Maintained university ERP; conducted predictive analytics on student outcomes; built data pipelines and departmental reporting",
       ],
     },
+    {
+      company: "Kavery College of Engineering",
+      title: "Developer & Assistant Professor",
+      location: "Salem, Tamil Nadu",
+      start: "Jun 2012",
+      end: "Jun 2013",
+      description: "Developed educational ERP for college using Django framework.",
+      highlights: [
+        "Developed educational ERP for college; server-side coding with Python/Django; functional testing, bug fixing, and end-user support",
+      ],
+    },
   ],
 
   education: [
