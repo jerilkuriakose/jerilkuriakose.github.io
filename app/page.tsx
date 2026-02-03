@@ -122,7 +122,15 @@ function ExperienceCard({
             </h3>
             <p className="text-primary font-medium flex items-center gap-2">
               <Building2 className="h-4 w-4" />
-              {job.company}
+              <a
+                href={job.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {job.company}
+              </a>
             </p>
           </div>
           <div className="text-sm text-muted-foreground font-mono text-right">
@@ -243,6 +251,9 @@ export default function Home() {
                 <span>{DATA.location}</span>
                 <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-semibold ml-2">
                   {DATA.extraInfo}
+                </span>
+                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-semibold">
+                  {DATA.yearsOfExperience} Years Experience
                 </span>
               </div>
             </BlurFade>
@@ -614,7 +625,17 @@ export default function Home() {
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
                     <div>
                       <h3 className="font-semibold text-foreground">{edu.degree}</h3>
-                      <p className="text-muted-foreground">{edu.school}</p>
+                      <p className="text-muted-foreground">
+                        <a
+                          href={edu.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:underline hover:text-primary transition-colors"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {edu.school}
+                        </a>
+                      </p>
                       {edu.description && (
                         <p className="text-sm text-muted-foreground mt-2">
                           {edu.description}
