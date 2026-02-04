@@ -80,6 +80,9 @@ export const DATA = {
     "Python",
     "Polars",
     "Plotly",
+    "Claude Code",
+    "OpenCode",
+    "Codex",
   ],
 
   work: [
@@ -107,6 +110,7 @@ export const DATA = {
         "Introduced self-optimized fine-tuning (SOFT) via self-distillation and adaptive curriculum scheduling",
         "Evaluated Grok, DBRX, Command R+ using LM-Harness for English and Arabic; informed model selection",
         "Built user analytics platform for LLM chat telemetry using ClickHouse, DuckDB, Polars, and Plotly",
+        "Designed AI-augmented development workflows using Claude Code, OpenCode, and Codex; authored custom skills and agents to automate engineering tasks and accelerate delivery",
       ],
     },
     {
