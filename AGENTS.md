@@ -1,5 +1,27 @@
 # CV Sync Agent Instructions
 
+> ## ⚠️ A phased redesign of this site is in flight — read this first
+>
+> **Before any work here:**
+> ```bash
+> bash scripts/redesign-status.sh     # derives phases, plans, progress, gates, reviews, build/tsc/lint
+> cat docs/superpowers/TRACKER.md     # one sentence of non-derivable state + the write-through rule
+> ```
+> **Record state WRITE-THROUGH — in the same turn a fact changes, not at "session end"**
+> (sessions get compacted without warning). A review verdict → a file in
+> `docs/superpowers/reviews/`. A human gate answered → tick its `G1..G4` checkbox in the
+> spec. Phase progress → tick checkboxes in `docs/superpowers/plans/*.md`. Only a change of
+> *next action* touches `TRACKER.md`. Writing the artifact **is** the update.
+>
+> **This repo has uncommitted work** (Next 16 / React 19 / Tailwind 4 upgrade). Run
+> `git status` and ask before any `checkout` / `clean` / `stash`. That is gate **G1**.
+>
+> Full environment notes and traps: `../AGENTS.md` in the workspace root.
+>
+> **Note:** the "LaTeX is the source of truth" workflow below is being reconsidered —
+> there is no LaTeX toolchain installed in this environment, so the PDF cannot be
+> rebuilt here. See the spec's "Out of scope" section.
+
 ## Overview
 
 This workspace contains two repositories that must be kept in sync:
