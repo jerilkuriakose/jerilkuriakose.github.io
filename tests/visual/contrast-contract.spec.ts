@@ -475,3 +475,73 @@ for (const theme of ["light", "dark"] as const) {
     ).toBeGreaterThanOrEqual(3);
   });
 }
+
+for (const theme of ["light", "dark"] as const) {
+  test(`no text OVERLAPS a panel from outside its scope: ${theme}`, async ({
+    page,
+  }) => {
+    await setTheme(page, theme);
+    await page.goto("/", { waitUntil: "networkidle" });
+
+    // The scope tests above only see the DOM tree. This catches the geometric
+    // case they cannot: a sibling element that visually sits on top of a panel.
+    //
+    // Found in production, not in review: making the featured-project visual
+    // block a deep panel put 140px of every project title - a DOM sibling in
+    // the overlapping content column - at 1.14:1. .on-panel cannot reach it,
+    // because it is not inside it.
+    const offenders = await page.evaluate(() => {
+      const toBytes = (colour: string) => {
+        const c = document.createElement("canvas");
+        c.width = 1;
+        c.height = 1;
+        const ctx = c.getContext("2d", { willReadFrequently: true })!;
+        ctx.fillStyle = colour;
+        ctx.fillRect(0, 0, 1, 1);
+        return Array.from(ctx.getImageData(0, 0, 1, 1).data).slice(0, 3);
+      };
+      const lin = (v: number) => {
+        const c = v / 255;
+        return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      };
+      const Y = (p: number[]) =>
+        0.2126 * lin(p[0]) + 0.7152 * lin(p[1]) + 0.0722 * lin(p[2]);
+      const cr = (a: number[], b: number[]) => {
+        const [hi, lo] = [Y(a), Y(b)].sort((x, y) => y - x);
+        return (hi + 0.05) / (lo + 0.05);
+      };
+
+      const bad: string[] = [];
+      for (const panel of Array.from(document.querySelectorAll(".on-panel"))) {
+        const pr = panel.getBoundingClientRect();
+        if (pr.width === 0) continue;
+        const panelBg = toBytes(getComputedStyle(panel).backgroundColor);
+
+        for (const el of Array.from(document.querySelectorAll("main *"))) {
+          if (el.children.length > 0) continue;
+          if (!(el.textContent ?? "").trim()) continue;
+          if (panel.contains(el)) continue; // inside the scope - already covered
+          const r = el.getBoundingClientRect();
+          const overlapX = Math.min(pr.right, r.right) - Math.max(pr.left, r.left);
+          const overlapY = Math.min(pr.bottom, r.bottom) - Math.max(pr.top, r.top);
+          if (overlapX <= 2 || overlapY <= 2) continue;
+
+          // An opaque background of its own protects it.
+          const ownBg = getComputedStyle(el).backgroundColor;
+          const opaque = ownBg !== "rgba(0, 0, 0, 0)" && !/, 0\)$/.test(ownBg);
+          if (opaque) continue;
+
+          const ratioVsPanel = cr(toBytes(getComputedStyle(el).color), panelBg);
+          if (ratioVsPanel < 3) {
+            bad.push(
+              `${el.tagName} "${(el.textContent ?? "").trim().slice(0, 24)}" overlaps a panel by ${Math.round(overlapX)}x${Math.round(overlapY)}px at ${ratioVsPanel.toFixed(2)}:1`,
+            );
+          }
+        }
+      }
+      return bad;
+    });
+
+    expect(offenders, offenders.join(" | ")).toEqual([]);
+  });
+}
