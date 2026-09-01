@@ -1,4 +1,38 @@
 import { Icons } from "@/components/icons";
+import type { Metric } from "./metrics";
+
+/**
+ * A role. `metrics` is OPTIONAL and absent on every entry until Phase 1b,
+ * which is gated on G3 (two impact claims named and cleared for attribution).
+ *
+ * These types exist so `metrics` is *visible on the type* while absent from the
+ * data. `as const` alone infers from the literals, where an omitted property is
+ * absent rather than optional - so `job.metrics` would not type-check at all.
+ * `satisfies` does not help either: it validates the literal while preserving
+ * that same narrow inferred type.
+ */
+export type WorkEntry = {
+  readonly id: string;
+  readonly company: string;
+  readonly url: string;
+  readonly title: string;
+  readonly location: string;
+  readonly start: string;
+  readonly end: string;
+  readonly description: string;
+  readonly highlights: readonly string[];
+  readonly metrics?: readonly Metric[];
+};
+
+export type ProjectEntry = {
+  readonly id: string;
+  readonly title: string;
+  readonly description: string;
+  readonly technologies: readonly string[];
+  readonly type: string;
+  readonly company: string;
+  readonly metrics?: readonly Metric[];
+};
 
 export const DATA = {
   name: "Jeril Kuriakose",
@@ -87,6 +121,7 @@ export const DATA = {
 
   work: [
     {
+      id: "sdaia",
       company: "Saudi Data & AI Authority (SDAIA)",
       url: "https://sdaia.gov.sa/en/default.aspx",
       title: "Principal Data Scientist (Gen AI)",
@@ -114,6 +149,7 @@ export const DATA = {
       ],
     },
     {
+      id: "mizuho",
       company: "Mizuho Bank",
       url: "https://www.mizuhogroup.com/asia-pacific/singapore",
       title: "Senior Data Scientist",
@@ -137,6 +173,7 @@ export const DATA = {
       ],
     },
     {
+      id: "baker-hughes",
       company: "Baker Hughes (GE Company)",
       url: "https://www.bakerhughes.com/",
       title: "Senior Data Scientist",
@@ -152,6 +189,7 @@ export const DATA = {
       ],
     },
     {
+      id: "innovation-incubator",
       company: "Innovation Incubator",
       url: "https://innovationincubator.com/",
       title: "Senior AI Engineer",
@@ -168,6 +206,7 @@ export const DATA = {
       ],
     },
     {
+      id: "raw-data-tech",
       company: "Raw Data Technologies",
       url: "https://www.rawdatatech.com/",
       title: "Senior ML/AI Developer",
@@ -184,6 +223,7 @@ export const DATA = {
       ],
     },
     {
+      id: "st-john",
       company: "St. John College of Engineering and Technology",
       url: "https://sjcem.edu.in/",
       title: "Assistant Professor & Data Analyst",
@@ -196,6 +236,7 @@ export const DATA = {
       ],
     },
     {
+      id: "manipal",
       company: "Manipal University Jaipur",
       url: "https://jaipur.manipal.edu/",
       title: "PhD Scholar, Developer, Data Analyst",
@@ -208,6 +249,7 @@ export const DATA = {
       ],
     },
     {
+      id: "kavery",
       company: "Kavery College of Engineering",
       url: "https://www.kavery.org.in/engg/index.aspx",
       title: "Developer & Assistant Professor",
@@ -219,7 +261,7 @@ export const DATA = {
         "Developed educational ERP for college; server-side coding with Python/Django; functional testing, bug fixing, and end-user support",
       ],
     },
-  ],
+  ] as readonly WorkEntry[],
 
   education: [
     {
@@ -258,6 +300,7 @@ export const DATA = {
 
   projects: [
     {
+      id: "allam",
       title: "ALLaM - Arabic Large Language Model",
       description:
         "End-to-end LLM development including 50TB data processing, LLaMA-2 pretraining strategies, curriculum SFT, DPO, and inference optimization for 7B/13B/70B models on Kubernetes.",
@@ -274,6 +317,7 @@ export const DATA = {
       company: "SDAIA",
     },
     {
+      id: "phoenix",
       title: "Phoenix - NLP Information Extraction Platform",
       description:
         "Generic NLP IE platform using BERT + hybrid CNN + Bloom embeddings achieving ~90% accuracy and saving ~100,000 man-hours/year. Includes LightGBM post-prediction and BART-based spell checking.",
@@ -282,6 +326,7 @@ export const DATA = {
       company: "Mizuho Bank",
     },
     {
+      id: "pigeon",
       title: "PIGEON - Document Classification & Summarization",
       description:
         "Document classification with RoBERTa and summarization using GPT-2/GPT Neo, achieving 97% accuracy with full API productionization.",
@@ -290,6 +335,7 @@ export const DATA = {
       company: "Mizuho Bank",
     },
     {
+      id: "swan",
       title: "SWAN - AML Name Check System",
       description:
         "Anti-Money Laundering name check system that reduced false positives by 20% using vector DB for embeddings and graph neural networks for anomaly detection.",
@@ -298,6 +344,7 @@ export const DATA = {
       company: "Mizuho Bank",
     },
     {
+      id: "hawk",
       title: "HAWK - Time-Series Forecasting",
       description:
         "Hybrid encoder-decoder LSTM for daily/weekly/monthly forecasts, saving ~3,000 man-hours/year with external data ingestion and ELK stack.",
@@ -306,6 +353,7 @@ export const DATA = {
       company: "Mizuho Bank",
     },
     {
+      id: "agentic-rag",
       title: "Agentic RAG & Multi-Agent Orchestration",
       description:
         "Implemented agentic RAG and multi-agent planning/orchestration using LangChain, LangGraph, and Dify for government environments.",
@@ -314,6 +362,7 @@ export const DATA = {
       company: "SDAIA",
     },
     {
+      id: "user-analytics",
       title: "User Analytics Platform",
       description:
         "Built analytics platform for LLM chat telemetry using ClickHouse for ingest/OLAP, DuckDB for ad-hoc queries, delivering product insights and quality metrics.",
@@ -321,7 +370,7 @@ export const DATA = {
       type: "work",
       company: "SDAIA",
     },
-  ],
+  ] as readonly ProjectEntry[],
 
   publications: [
     {
@@ -391,4 +440,12 @@ export const DATA = {
   ],
 
   languages: ["English", "Hindi", "Tamil", "Malayalam"],
+
+  /**
+   * Metric ids featured in the hero proof row, in display order.
+   * EMPTY until G3: the two claims must be named and confirmed cleared for
+   * public attribution. The row renders nothing while this is empty, which the
+   * spec's container contract explicitly permits.
+   */
+  featuredMetricIds: [] as readonly string[],
 } as const;
