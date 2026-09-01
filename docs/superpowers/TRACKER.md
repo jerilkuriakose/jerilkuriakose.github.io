@@ -22,23 +22,26 @@ hand-maintained, so none of it can go stale.**
 
 ## The only hand-maintained state
 
-**Next action:** **Phase 1a is complete** (27/27 steps, `verify.sh` all green, 114 passed over
-`--repeat-each=3`) but **not committed** — 18 files are uncommitted pending an explicit commit
-request. **Phase 2 needs a third pass before execution:** its 2nd Oracle review returned
-`REDESIGN` again (`reviews/2026-09-01-phase2-rewrite-oracle-2nd.md`, 8 blockers, all verified
-true). The role table must be **re-derived** from the corrected ramp rather than patched,
-because fixing the gamut changes the contrast numbers — `border-strong` on dark is already
-known broken at 2.91:1.
+**Next action:** **Phase 1a is complete and committed** (`d926de5` + `b7eecb9`, 27/27 steps,
+`verify.sh` all green). The **Phase 2 plan is on its third pass** and is ready to execute —
+the two `REDESIGN` verdicts behind it are in `reviews/`, and its closing table lists every
+defect the earlier drafts shipped so they are not reintroduced. Phase 1b remains blocked on
+**G3**. Nothing is pushed: `origin/main` is still at `31648c3`, so the live site serves the
+old Next 14 build.
 
-Two rules this project has now paid for twice. Both belong in every later phase:
+Three rules this project has paid for. They apply to every later phase:
 
 1. **No contrast number enters a plan or a test unless a browser produced it** — and the
-   browser measurement must be a **round-trip**: render `oklch(...)`, sample the bytes, then
-   read them back with `oklch(from rgb(...) l c h)`. Out-of-gamut colours are *gamut-mapped*,
-   not clamped, so comparing rendered bytes as chroma rises finds where the mapping saturates,
-   not the gamut edge. That mistake put three ramp steps out of gamut.
+   measurement must be a **round-trip**: render `oklch(...)`, sample the bytes, read them back
+   with `oklch(from rgb(...) l c h)`. Out-of-gamut colours are *gamut-mapped, not clamped*, so
+   growing chroma until the rendered bytes stop changing finds where the mapping saturates,
+   not the gamut edge. That error put three ramp steps outside sRGB.
 2. **Every colour check reuses `sample8bit()` and `setTheme()` from `tests/visual/helpers.ts`**,
    and `setTheme()` runs **before** `goto()` — it only installs an init script.
+3. **A role that is legal on one surface is often illegal on another.** Verify every role
+   against every surface it can land on, per theme. Single-value-per-role is provably
+   unsatisfiable here: no one `--focus` clears 3:1 on all six surfaces, and no ramp step works
+   as a border on both the light canvas and the deep panel.
 
 ---
 
