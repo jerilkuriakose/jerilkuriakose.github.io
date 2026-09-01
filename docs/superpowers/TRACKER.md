@@ -22,10 +22,10 @@ hand-maintained, so none of it can go stale.**
 
 ## The only hand-maintained state
 
-**Next action:** **Phases 0, 1a and 2 are complete** (`verify.sh` all green, 52 tests). The
-site is now light-default deep teal on a 9-step OKLCH ramp with per-theme, surface-scoped
-roles. **Phase 3 (type system) is next** and is unblocked. Phase 1b remains blocked on **G3**;
-Phase 5 shipping on **G4**.
+**Next action:** **Phases 0, 1a, 2 and 3 are complete, pushed and deployed** (`verify.sh`
+green, 60 tests). The site is light-default deep teal on a 9-step OKLCH ramp, with Newsreader
+as the serif display face on a fully pinned type scale. **Phase 4 (motion correctness) is
+next** and is unblocked. Phase 1b is blocked on **G3**; Phase 5 shipping on **G4**.
 
 Four rules this project has paid for. They apply to every later phase:
 
@@ -73,3 +73,13 @@ that cannot be derived.
 **Do not** treat this file as evidence of completion. Anthropic, Cursor and LangChain all
 converge on validating completion with tests and CI rather than prose — a green gate in
 the status script outranks any sentence written here.
+
+5. **A custom property's `var()` is substituted where the property is DECLARED, not where it
+   is used.** This has now broken two phases in different disguises: `--muted-foreground:
+   var(--ink-muted)` on `:root` ignored a scope override (Phase 2), and `--font-display:
+   var(--font-newsreader)` on `:root` resolved to nothing because `next/font` put the provider
+   variable on `<body>` (Phase 3). If a token references another token, they must be declared
+   at the same level or higher.
+6. **Tailwind 4.3.3 strips author content inside `@layer components`.** Write custom classes as
+   plain CSS. They then outrank every Tailwind layer, so a stale utility loses silently rather
+   than loudly — assert the rendered result.
