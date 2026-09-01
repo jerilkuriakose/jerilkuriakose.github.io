@@ -22,15 +22,14 @@ hand-maintained, so none of it can go stale.**
 
 ## The only hand-maintained state
 
-**Next action:** **Phases 0, 1a, 1b, 2, 3 and 4 are complete** (`verify.sh` green, 71 tests).
-**Phase 6 (AX + polish) is next** and is unblocked — `sitemap.ts`, `robots.ts`, `llms.txt`,
-JSON-LD, the OG image, and clipping the pre-existing hero blur-blob overflow. Only **G4**
-(photography) still blocks anything, and only the *shipping* of Phase 5; it can be developed on
-placeholders now. **G2** is best answered once Phase 5 has a real image in the first viewport.
+**Next action:** **Every phase except 5 is complete** — 0, 1a, 1b, 2, 3, 4 and 6 are shipped
+(`verify.sh` green, 89 tests). **Phase 5 (photography + glass) is the only work left, and it is
+blocked on G4**: 6–10 abstract material macro shots, landscape, high-res, cool/neutral. It can be
+*developed* on placeholders; it cannot ship without them. **G2** (owner sign-off) is best
+answered once Phase 5 has a real image in the first viewport.
 
-Phase 4 removed per-item reveal decoration on Jeril's explicit approval after an A/B: 92 reveal
-elements down to 33. He was shown both mid-transition and chose removal. Do not reintroduce
-per-item staggering.
+Phase 6 also closed every §9 accessibility gap and eliminated the horizontal overflow that
+predated this project (38/77/128px → 0).
 
 Four rules this project has paid for. They apply to every later phase:
 

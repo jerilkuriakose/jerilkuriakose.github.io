@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  A plain static file, not app/sitemap.ts. A .ts metadata route compiles to a GET
+  route handler, and the metadata loader does not emit dynamic = 'force-static'
+  for it - so under output: 'export' the build throws E301.
+
+  <lastmod> is a fixed date on purpose. A generated timestamp would make every
+  build produce a diff. Bump it deliberately when the content changes.
+
+  One <url>: the site is a single page. Its sections are anchors, not pages, and
+  listing them would be a claim a validator can falsify.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://jerilkuriakose.github.io/</loc>
+    <lastmod>2026-09-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>

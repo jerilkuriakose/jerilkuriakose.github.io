@@ -15,10 +15,16 @@ export function Hero() {
       {/* Hero Section - Full Screen */}
       <section
         id="hero"
+        aria-labelledby="hero-heading"
         className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 max-w-7xl mx-auto py-20 lg:py-0"
       >
         {/* Background gradient blobs */}
-        <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20">
+        {/* overflow-hidden clips the decorative blobs, which sit at -10% and were
+            the sole cause of the horizontal overflow (measured 38/77/128px at
+            375/768/1280). Clipped HERE and not on the <section>: the portrait
+            rings, the "Open to work" badge, the scroll indicator and the fixed
+            rails are siblings or live outside Hero and would be cut. */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-40 dark:opacity-20">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[100px]" />
           <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-interactive/20 rounded-full blur-[100px]" />
         </div>
@@ -38,7 +44,7 @@ export function Hero() {
 
             {/* Name - Big Heading */}
             <BlurFade delay={BLUR_FADE_DELAY * 2}>
-              <h1 className="display-1 text-foreground mb-4">
+              <h1 id="hero-heading" className="display-1 text-foreground mb-4">
                 {DATA.name}
               </h1>
             </BlurFade>
@@ -114,6 +120,7 @@ export function Hero() {
                       target="_blank"
                       rel="noopener noreferrer"
                       title="WhatsApp"
+                      aria-label="Message Jeril on WhatsApp"
                     >
                       <Icons.whatsapp className="h-5 w-5" />
                     </Link>
@@ -124,7 +131,11 @@ export function Hero() {
                     size="icon"
                     className="h-12 w-12 border-border hover:border-strong hover:text-interactive"
                   >
-                    <Link href={`tel:${DATA.contact.tel}`} title="Call">
+                    <Link
+                      href={`tel:${DATA.contact.tel}`}
+                      title="Call"
+                      aria-label="Call Jeril"
+                    >
                       <Phone className="h-5 w-5" />
                     </Link>
                   </Button>

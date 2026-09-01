@@ -18,9 +18,9 @@ import { DATA } from "@/data/resume";
  */
 export function EducationAwards() {
   return (
-    <section id="education-awards" className="py-24">
+    <section id="education-awards" aria-labelledby="education-awards-heading" className="py-24">
       <BlurFade delay={BLUR_FADE_DELAY * 27}>
-        <h2 className="numbered-heading display-3 text-foreground">Education &amp; Awards</h2>
+        <h2 id="education-awards-heading" className="numbered-heading display-3 text-foreground">Education &amp; Awards</h2>
       </BlurFade>
 
       <div className="space-y-16">

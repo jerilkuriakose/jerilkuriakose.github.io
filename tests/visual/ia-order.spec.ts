@@ -138,25 +138,21 @@ test("the experience disclosure is keyboard operable and reports state", async (
 });
 
 /**
- * Horizontal overflow is a PRE-EXISTING defect, not a regression from the
- * decomposition. Measured identical at HEAD before this phase (via a clean
- * `git worktree` build): 38 / 77 / 128px at 375 / 768 / 1280.
+ * Horizontal overflow must be ZERO at every width.
  *
- * Cause: the hero's two decorative blur blobs sit at `left-[-10%]` and
- * `right-[-10%]` inside an `absolute inset-0` container with no
- * `overflow-hidden`, so the bleed scales with the viewport - which is why the
- * spec's "39px mobile overflow" note understates it.
+ * This was a pre-existing defect, measured identically at commit 4a6994f before
+ * any of this work: 38 / 77 / 128px at 375 / 768 / 1280. Cause: the hero's two
+ * decorative blur blobs sit at left-[-10%] and right-[-10%], so the bleed scaled
+ * with the viewport. Phase 6 clips their container - and only their container,
+ * since clipping the <section> would cut the portrait rings, the "Open to work"
+ * badge, the scroll indicator and the fixed rails.
  *
- * Spec §9 sets the acceptance target at *none* for all three widths. Until the
- * phase that owns that fix, this locks the defect at its known size so it
- * cannot silently grow. Tighten to 0 when it is fixed.
+ * The assertion was previously a ceiling holding the known values. It is now 0,
+ * and the KNOWN_OVERFLOW map is deleted: keeping a lock after fixing the defect
+ * would let it silently return.
  */
-const KNOWN_OVERFLOW: Record<number, number> = { 375: 38, 768: 77, 1280: 128 };
-
 for (const width of [375, 768, 1280]) {
-  test(`horizontal overflow at ${width}px does not exceed the known defect`, async ({
-    page,
-  }) => {
+  test(`no horizontal overflow at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/", { waitUntil: "networkidle" });
     const overflow = await page.evaluate(
@@ -164,9 +160,6 @@ for (const width of [375, 768, 1280]) {
         document.documentElement.scrollWidth -
         document.documentElement.clientWidth,
     );
-    expect(
-      overflow,
-      `${width}px overflows by ${overflow}px; known pre-existing is ${KNOWN_OVERFLOW[width]}px`,
-    ).toBeLessThanOrEqual(KNOWN_OVERFLOW[width]);
+    expect(overflow, `${width}px overflows by ${overflow}px`).toBe(0);
   });
 }

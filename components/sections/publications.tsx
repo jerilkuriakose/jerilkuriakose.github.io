@@ -7,9 +7,9 @@ import { DATA } from "@/data/resume";
 
 export function Publications() {
   return (
-        <section id="publications" className="py-24">
+        <section id="publications" aria-labelledby="publications-heading" className="py-24">
           <BlurFade delay={BLUR_FADE_DELAY * 20}>
-            <h2 className="numbered-heading display-3 text-foreground">Research & Publications</h2>
+            <h2 id="publications-heading" className="numbered-heading display-3 text-foreground">Research & Publications</h2>
           </BlurFade>
 
           <div className="space-y-4">

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { DATA } from "@/data/resume";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,11 +44,23 @@ export const viewport: Viewport = {
   ],
 };
 
+/**
+ * One description string for the page, Open Graph and Twitter.
+ *
+ * They previously disagreed - the top-level string was longer than the two card
+ * strings - which the metadata guidance forbids and which makes "the description
+ * agrees everywhere" untestable.
+ */
+const DESCRIPTION =
+  "Principal Data Scientist with deep expertise in LLMs, NLP, and agentic AI systems. Leading end-to-end development of high-impact AI platforms including Arabic LLMs (ALLaM).";
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://jerilkuriakose.github.io"),
   title: "Jeril Kuriakose | Principal Data Scientist",
-  description:
-    "Principal Data Scientist with deep expertise in LLMs, NLP, and agentic AI systems. Leading end-to-end development of high-impact AI platforms including Arabic LLMs (ALLaM).",
+  description: DESCRIPTION,
+  // Must equal metadataBase and og:url. The live site normalises og:url with a
+  // trailing slash, so any test comparing them has to normalise first.
+  alternates: { canonical: "https://jerilkuriakose.github.io" },
   keywords: [
     "Data Scientist",
     "Machine Learning",
@@ -68,23 +81,25 @@ export const metadata: Metadata = {
     url: "https://jerilkuriakose.github.io",
     siteName: "Jeril Kuriakose Portfolio",
     title: "Jeril Kuriakose | Principal Data Scientist",
-    description:
-      "Principal Data Scientist with deep expertise in LLMs, NLP, and agentic AI systems.",
+    description: DESCRIPTION,
+    // 1200x630, branded, carrying the two approved impact claims. Replaces
+    // /profile.jpg, which was declared 800x800 while actually being 996x1325 -
+    // a tall portrait on a summary_large_image card, so it centre-cropped to a
+    // slice. Dimensions here are asserted against the real PNG header.
     images: [
       {
-        url: "/profile.jpg",
-        width: 800,
-        height: 800,
-        alt: "Jeril Kuriakose",
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Jeril Kuriakose — Principal Data Scientist (Gen AI)",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Jeril Kuriakose | Principal Data Scientist",
-    description:
-      "Principal Data Scientist with deep expertise in LLMs, NLP, and agentic AI systems.",
-    images: ["/profile.jpg"],
+    description: DESCRIPTION,
+    images: ["/og.png"],
   },
   robots: {
     index: true,
@@ -97,6 +112,54 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+};
+
+
+/**
+ * One JSON-LD @graph, built from DATA so it reflects what the page renders
+ * (never hand-typed, so it cannot drift).
+ *
+ * @graph rather than nesting: the articles are independent nodes, they reference
+ * the Person by @id, and they stay countable.
+ *
+ * `url` appears on an article ONLY where DATA identifies that specific work.
+ * Four of the five publications share the same generic Google Scholar PROFILE
+ * url; emitting that as an article url would be misleading structured data, so
+ * it is omitted until real DOIs exist.
+ */
+const SITE = "https://jerilkuriakose.github.io";
+const isArticleUrl = (url: string) => url.includes("doi.org");
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${SITE}/#person`,
+      name: DATA.name,
+      jobTitle: DATA.title,
+      description: DESCRIPTION,
+      url: SITE,
+      image: `${SITE}${DATA.avatarUrl}`,
+      email: `mailto:${DATA.contact.email}`,
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Riyadh",
+        addressCountry: "SA",
+      },
+      sameAs: DATA.contact.social.map((s) => s.url),
+      knowsAbout: [...DATA.skills],
+    },
+    ...DATA.publications.map((pub) => ({
+      "@type": "ScholarlyArticle",
+      headline: pub.title,
+      name: pub.title,
+      datePublished: pub.year,
+      isPartOf: { "@type": "Periodical", name: pub.journal },
+      author: { "@id": `${SITE}/#person` },
+      ...(isArticleUrl(pub.url) ? { url: pub.url } : {}),
+    })),
+  ],
 };
 
 export default function RootLayout({
@@ -119,6 +182,18 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="font-sans antialiased">
+        {/* First focusable element in the document. Visually hidden until focused,
+            so keyboard users can bypass the fixed rails and reach the content. */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:bg-canvas focus:px-4 focus:py-2 focus:font-mono focus:text-sm focus:text-ink focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-focus"
+        >
+          Skip to main content
+        </a>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

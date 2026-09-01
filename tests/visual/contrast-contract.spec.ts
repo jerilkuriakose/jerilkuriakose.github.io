@@ -435,44 +435,53 @@ for (const theme of ["light", "dark"] as const) {
   test(`keyboard focus produces a >=3:1 indicator: ${theme}`, async ({ page }) => {
     await setTheme(page, theme);
     await page.goto("/", { waitUntil: "networkidle" });
-    await page.keyboard.press("Tab");
 
-    // Components carry `focus-visible:ring-2 ring-ring`, so the real indicator
-    // is a BOX-SHADOW ring, not the outline: a global `outline: 2px dashed
-    // var(--focus)` rule also exists but its colour resolves to currentColor
-    // through the shorthand cascade - pre-existing behaviour, identical before
-    // Phase 2 when the same rule used var(--primary).
-    //
-    // So assert what actually renders: the ring band coloured by --ring.
-    const found = await page.evaluate(() => {
-      const el = document.activeElement!;
-      const s = getComputedStyle(el);
-      const ring = s.getPropertyValue("--tw-ring-color").trim();
-      const bytes = (colour: string) => {
-        const c = document.createElement("canvas");
-        c.width = 1;
-        c.height = 1;
-        const ctx = c.getContext("2d", { willReadFrequently: true })!;
-        ctx.fillStyle = colour;
-        ctx.fillRect(0, 0, 1, 1);
-        return Array.from(ctx.getImageData(0, 0, 1, 1).data).slice(0, 3);
-      };
-      return {
-        hasRingBand: /0px 0px 0px 4px/.test(s.boxShadow),
-        ring: ring ? bytes(ring) : null,
-        canvas: bytes(
-          getComputedStyle(document.documentElement).getPropertyValue("--canvas"),
-        ),
-      };
-    });
+    // Two indicator mechanisms exist on this site and BOTH must be legible:
+    //  - components carry `focus-visible:ring-2 ring-ring`, a box-shadow ring
+    //  - the skip link (Phase 6, and the first focusable element) uses an outline
+    // An earlier version pressed Tab once and demanded a ring band, which broke
+    // the moment the skip link became first in the tab order. Walk the first few
+    // stops and require each to show one mechanism or the other.
+    for (let i = 0; i < 3; i++) {
+      await page.keyboard.press("Tab");
 
-    expect(found.hasRingBand, "focused element must render a ring band").toBe(true);
-    expect(found.ring, "--tw-ring-color must be set").not.toBeNull();
-    const r = ratio(rgb(found.ring as number[]), rgb(found.canvas));
-    expect(
-      Number(r.toFixed(2)),
-      `${theme}: focus ring = ${r.toFixed(2)}:1 against the canvas`,
-    ).toBeGreaterThanOrEqual(3);
+      const found = await page.evaluate(() => {
+        const el = document.activeElement!;
+        const s = getComputedStyle(el);
+        const bytes = (colour: string) => {
+          const c = document.createElement("canvas");
+          c.width = 1;
+          c.height = 1;
+          const ctx = c.getContext("2d", { willReadFrequently: true })!;
+          ctx.fillStyle = colour;
+          ctx.fillRect(0, 0, 1, 1);
+          return Array.from(ctx.getImageData(0, 0, 1, 1).data).slice(0, 3);
+        };
+        const ring = s.getPropertyValue("--tw-ring-color").trim();
+        const hasRingBand = /0px 0px 0px 4px/.test(s.boxShadow) && !!ring;
+        const hasOutline =
+          s.outlineStyle !== "none" && parseFloat(s.outlineWidth) >= 2;
+        return {
+          tag: el.tagName,
+          mechanism: hasRingBand ? "ring" : hasOutline ? "outline" : "none",
+          colour: hasRingBand ? bytes(ring) : hasOutline ? bytes(s.outlineColor) : null,
+          canvas: bytes(
+            getComputedStyle(document.documentElement).getPropertyValue("--canvas"),
+          ),
+        };
+      });
+
+      expect(
+        found.mechanism,
+        `${theme}: tab stop ${i + 1} (${found.tag}) has no visible focus indicator`,
+      ).not.toBe("none");
+
+      const r = ratio(rgb(found.colour as number[]), rgb(found.canvas));
+      expect(
+        Number(r.toFixed(2)),
+        `${theme}: tab stop ${i + 1} (${found.tag}) ${found.mechanism} = ${r.toFixed(2)}:1`,
+      ).toBeGreaterThanOrEqual(3);
+    }
   });
 }
 

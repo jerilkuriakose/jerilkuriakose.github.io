@@ -1,0 +1,53 @@
+# Jeril Kuriakose
+
+> Principal Data Scientist (Gen AI) at the Saudi Data & AI Authority (SDAIA) in Riyadh,
+> Saudi Arabia. Works on large language models, agentic AI systems, and production-scale
+> ML deployment. Currently leading development of ALLaM, an Arabic large language model.
+
+This file exists so an agent answering questions about this CV does not have to scrape the
+page. Everything here is also rendered at https://jerilkuriakose.github.io/
+
+## Quantified impact
+
+- **~100,000 man-hours saved / year** — Phoenix NLP extraction platform, Mizuho Bank
+- **~35% faster model convergence** — curriculum SFT for agentic capabilities, ALLaM / SDAIA
+
+## Current focus
+
+Arabic LLMs (ALLaM), agent orchestration, curriculum SFT, DPO, RL–SFT hybrid training, and
+large-scale inference on Kubernetes with vLLM/TGI/Triton, Ray and Azure.
+
+## Experience
+
+- **Principal Data Scientist (Gen AI)** — Saudi Data & AI Authority (SDAIA), Riyadh · Jan 2024 – Present
+- **Senior Data Scientist** — Mizuho Bank, Singapore · Jul 2019 – Dec 2023
+- **Senior Data Scientist** — Baker Hughes (GE), Kochi, India · Jan 2019 – Jun 2019
+- Earlier roles in AI engineering, ML development and academia from 2012.
+
+## Selected skills
+
+LLMs, NLP, Agentic Systems, RAG, Generative AI, Time-series, Graph ML, PyTorch, Transformers, TRL, vLLM, TGI, Triton, Ray, LangChain, LangGraph, MLflow, DeepSpeed, Megatron-LM, NVIDIA NeMo, Docker, Kubernetes, Azure, DVC.
+
+## Publications
+
+- **ALLaM: Large Language Models for Arabic and English** · The International Conference on Learning Representations (ICLR) · 2025 — https://doi.org/10.48550/arXiv.2407.15390
+- **A review of deep learning-based approaches for detection and diagnosis of diverse classes of drugs** · Archives of Computational Methods in Engineering (Springer) · 2023
+- **EMBN-MANET: Eliminating Malicious Beacon Nodes in UWB-based Mobile Ad-Hoc Networks** · Ad Hoc Networks (Elsevier) · 2022
+- **Secure Multipoint Relay Node Selection in Mobile Ad Hoc Networks** · Communications in Computer and Information Science (Springer) · 2015
+- **A Review on Mobile Sensor Localization** · Security in Computing and Communications (Springer) · 2014
+
+Full list: https://scholar.google.com/citations?user=qRQlmIoAAAAJ
+
+## Education
+
+- **Ph.D. in Computer Engineering** — Manipal University Jaipur · 2013–2019 · CGPA 9.62
+- **M.Tech. in Information Technology** — ISIM, University of Mysore · 2012
+- **B.Tech. in Information Technology** — Jeppiaar Engineering College, Anna University · 2010
+
+## Contact
+
+- Email: jerilkuriakose10@gmail.com
+- GitHub: https://github.com/jerilkuriakose
+- LinkedIn: https://www.linkedin.com/in/jerilkuriakose/
+- Google Scholar: https://scholar.google.com/citations?user=qRQlmIoAAAAJ
+- CV (PDF): https://jerilkuriakose.github.io/Jeril_Kuriakose_CV.pdf

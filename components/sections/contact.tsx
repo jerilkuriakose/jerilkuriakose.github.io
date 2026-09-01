@@ -13,9 +13,9 @@ import { DATA } from "@/data/resume";
  */
 export function Contact() {
   return (
-        <section id="contact" className="py-24 text-center">
+        <section id="contact" aria-labelledby="contact-heading" className="py-24 text-center">
           <BlurFade delay={BLUR_FADE_DELAY * 36}>
-            <h2 className="display-2 text-foreground mb-6">
+            <h2 id="contact-heading" className="display-2 text-foreground mb-6">
               Get In Touch
             </h2>
             <p className="max-w-md mx-auto text-muted-foreground mb-8 leading-relaxed">
@@ -48,6 +48,7 @@ export function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     title="WhatsApp"
+                    aria-label="Message Jeril on WhatsApp"
                   >
                     <Icons.whatsapp className="h-5 w-5" />
                   </Link>
@@ -58,7 +59,11 @@ export function Contact() {
                   size="icon"
                   className="h-12 w-12 border-border hover:border-strong hover:text-interactive"
                 >
-                  <Link href={`tel:${DATA.contact.tel}`} title="Call">
+                  <Link
+                    href={`tel:${DATA.contact.tel}`}
+                    title="Call"
+                    aria-label="Call Jeril"
+                  >
                     <Phone className="h-5 w-5" />
                   </Link>
                 </Button>

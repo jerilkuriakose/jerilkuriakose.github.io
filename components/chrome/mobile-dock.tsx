@@ -20,7 +20,7 @@ import { DATA } from "@/data/resume";
  */
 export function MobileDock() {
   return (
-    <div className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+    <nav aria-label="Social links, mobile" className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
       <BlurFade delay={BLUR_FADE_DELAY * 8}>
         <TooltipProvider>
           <Dock className="glass border border-border/50 shadow-lg">
@@ -32,6 +32,7 @@ export function MobileDock() {
                       href={social.url}
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={social.name}
                       className="flex h-full w-full items-center justify-center rounded-full hover:bg-primary/10"
                     >
                       <social.icon className="h-5 w-5" />
@@ -49,6 +50,6 @@ export function MobileDock() {
           </Dock>
         </TooltipProvider>
       </BlurFade>
-    </div>
+    </nav>
   );
 }

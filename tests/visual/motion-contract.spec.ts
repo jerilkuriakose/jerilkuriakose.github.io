@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { globSync } from "node:fs";
-import { revealAll, settle, setTheme } from "./helpers";
+import { revealAll, settle } from "./helpers";
 
 /**
  * Motion contract for Phase 4 (spec §7).

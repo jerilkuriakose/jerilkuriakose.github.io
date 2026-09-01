@@ -1,0 +1,5 @@
+# Nothing on this site is private, so a restrictive default would be wrong.
+User-agent: *
+Allow: /
+
+Sitemap: https://jerilkuriakose.github.io/sitemap.xml

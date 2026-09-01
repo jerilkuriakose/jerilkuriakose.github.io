@@ -5,9 +5,9 @@ import { DATA } from "@/data/resume";
 
 export function Experience() {
   return (
-        <section id="experience" className="py-24">
+        <section id="experience" aria-labelledby="experience-heading" className="py-24">
           <BlurFade delay={BLUR_FADE_DELAY * 12}>
-            <h2 className="numbered-heading display-3 text-foreground">Where I&apos;ve Worked</h2>
+            <h2 id="experience-heading" className="numbered-heading display-3 text-foreground">Where I&apos;ve Worked</h2>
           </BlurFade>
 
           {/* Positioning summary: moved out of the retired About section (spec §5).

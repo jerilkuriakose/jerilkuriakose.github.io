@@ -6,9 +6,9 @@ import { DATA } from "@/data/resume";
 
 export function SelectedWork() {
   return (
-        <section id="selected-work" className="py-24">
+        <section id="selected-work" aria-labelledby="selected-work-heading" className="py-24">
           <BlurFade delay={BLUR_FADE_DELAY * 14}>
-            <h2 className="numbered-heading display-3 text-foreground">Things I&apos;ve Built</h2>
+            <h2 id="selected-work-heading" className="numbered-heading display-3 text-foreground">Things I&apos;ve Built</h2>
           </BlurFade>
 
           <div className="space-y-24">

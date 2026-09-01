@@ -504,7 +504,7 @@ them guarantees rework.
 | Body contrast | ≥ 7:1 |
 | Non-text / borders / focus | ≥ 3:1 (WCAG 1.4.11) |
 | Text over photo | ≥ 4.5:1, measured per image on the final composite |
-| Horizontal overflow @ 375/768/1280 | **none** |
+| Horizontal overflow @ 375/768/1280 | **none** — ✅ achieved in Phase 6 |
 | Reduced motion | honoured, per-interaction |
 | Keyboard traversal + focus visibility | passes |
 | Lighthouse (Playwright Chromium, median of 3) | recorded, no regression |
@@ -538,20 +538,24 @@ site. Add a static branded **1200×630** OG image with name, role and a restrain
 portrait treatment, and declare its true dimensions. For a job-seeking site this is
 worth more than `llms.txt`.
 
-### Accessibility gaps to close
+### Accessibility gaps to close — ✅ ALL CLOSED
 
-No `<header>`/`<nav>` landmark; no skip link; no `aria-expanded`/`aria-controls` on the
-experience disclosure; icon-only WhatsApp/phone links rely on `title` alone; custom SVG
-icons lack accessible names or `aria-hidden`.
+- `aria-expanded`/`aria-controls` on the experience disclosure — **Phase 1a** (`d926de5`)
+- `<header>` landmark, skip link, real `<nav>` elements, `aria-label` on icon-only
+  WhatsApp/phone links, `aria-hidden` on custom SVGs, and every section named via
+  `aria-labelledby` — **Phase 6**
+- All asserted by `tests/visual/metadata-contract.spec.ts`, which also verifies the skip link
+  is genuinely the first focusable element and that no `aria-labelledby` dangles.
 
 ### Other pre-existing defects to close
 
 Verified against a pre-upgrade baseline worktree — these are not regressions from this
 work, and should not be reported as new breakage.
 
-- **Dead classes emit no CSS:** `animate-in`, `fade-in-0`, `bg-grid-pattern`.
-  `tailwindcss-animate` was never a dependency and the old v3 config had `plugins: []`.
-  Either adopt the plugin or delete the classes. → Phase 6.
+- ~~**Dead classes emit no CSS:** `animate-in`, `fade-in-0`, `bg-grid-pattern`.~~
+  ✅ **Deleted in Phase 6.** Confirmed inert first: `bg-grid-pattern` was defined 0 times in
+  `globals.css` and `tailwindcss-animate` was never a dependency. A contract test now fails if
+  either returns.
 - **PDF prefetch 404:** `next/link` pointing at `/Jeril_Kuriakose_CV.pdf` makes Next
   prefetch an RSC payload that 404s. The file itself serves 200. Use a plain `<a>`.
   → Phase 6.

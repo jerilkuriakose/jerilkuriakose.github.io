@@ -30,7 +30,6 @@ export function FeaturedProject({
               project title at 1.14:1 over its left edge. Real imagery lands here in
               Phase 5, which owns text-over-photo contrast. */}
           <div className="relative overflow-hidden rounded-lg bg-linear-to-br from-brand-vivid/20 via-brand-vivid/10 to-transparent p-8 aspect-video flex items-center justify-center border border-brand-vivid/20">
-            <div className="absolute inset-0 bg-grid-pattern opacity-10" />
             <div className="relative z-10 text-center">
               <div className="text-4xl font-bold text-brand-vivid/40 font-mono mb-2">
                 {project.title.split(" ")[0]}

@@ -21,8 +21,11 @@ import { SocialRail } from "@/components/chrome/social-rail";
  */
 export default function Home() {
   return (
-    <main className="relative min-h-screen">
-      <Hero />
+    <main id="main-content" tabIndex={-1} className="relative min-h-screen">
+      {/* The hero is the page's banner region, so it gets a <header> landmark. */}
+      <header>
+        <Hero />
+      </header>
 
       <ScrollIndicator />
 
