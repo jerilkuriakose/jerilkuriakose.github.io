@@ -10,7 +10,7 @@ export function EmailRail() {
         <BlurFade delay={BLUR_FADE_DELAY * 12}>
           <Link
             href={`mailto:${DATA.contact.email}`}
-            className="font-mono text-xs text-muted-foreground hover:text-primary transition-colors tracking-widest"
+            className="font-mono text-xs text-muted-foreground hover:text-interactive transition-colors tracking-widest"
             style={{ writingMode: "vertical-rl" }}
           >
             {DATA.contact.email}

@@ -24,10 +24,10 @@ export function FeaturedProject({
             isOdd ? "md:col-start-1" : "md:col-start-6"
           } md:row-start-1`}
         >
-          <div className="relative overflow-hidden rounded-lg bg-linear-to-br from-primary/20 via-primary/10 to-transparent p-8 aspect-video flex items-center justify-center border border-primary/20">
+          <div className="on-panel relative overflow-hidden rounded-lg bg-panel p-8 aspect-video flex items-center justify-center border border-brand-vivid/20">
             <div className="absolute inset-0 bg-grid-pattern opacity-10" />
             <div className="relative z-10 text-center">
-              <div className="text-4xl font-bold text-primary/40 font-mono mb-2">
+              <div className="text-4xl font-bold text-brand-vivid/40 font-mono mb-2">
                 {project.title.split(" ")[0]}
               </div>
               <div className="text-sm text-muted-foreground">{project.company}</div>
@@ -42,7 +42,7 @@ export function FeaturedProject({
             isOdd ? "md:col-start-6" : "md:col-start-1"
           } md:row-start-1`}
         >
-          <p className="font-mono text-sm text-primary mb-2">Featured Project</p>
+          <p className="font-mono text-sm text-interactive mb-2">Featured Project</p>
           <h3 className="text-xl md:text-2xl font-bold mb-4 text-foreground">
             {project.title}
           </h3>

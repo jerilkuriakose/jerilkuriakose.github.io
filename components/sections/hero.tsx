@@ -20,7 +20,7 @@ export function Hero() {
         {/* Background gradient blobs */}
         <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-20">
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[100px]" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-400/20 rounded-full blur-[100px]" />
+          <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-interactive/20 rounded-full blur-[100px]" />
         </div>
         
         {/* Grid pattern */}
@@ -31,7 +31,7 @@ export function Hero() {
           <div className="lg:col-span-7 xl:col-span-8 order-2 lg:order-1 space-y-6">
             {/* Greeting */}
             <BlurFade delay={BLUR_FADE_DELAY}>
-              <p className="font-mono text-primary mb-4 text-sm tracking-wide">
+              <p className="font-mono text-interactive mb-4 text-sm tracking-wide">
                 Hi, my name is
               </p>
             </BlurFade>
@@ -54,13 +54,13 @@ export function Hero() {
             <BlurFade delay={BLUR_FADE_DELAY * 4}>
               <div className="max-w-2xl text-base md:text-lg leading-relaxed text-muted-foreground space-y-4">
                 <p>
-                  I&apos;m a <span className="text-primary font-medium">{DATA.title}</span> at{" "}
+                  I&apos;m a <span className="text-interactive font-medium">{DATA.title}</span> at{" "}
                   <span className="text-foreground font-semibold">SDAIA</span>, specializing in
                   large language models, agentic AI systems, and production-scale ML deployment.
                 </p>
                 <p>
                   Currently building{" "}
-                  <span className="text-primary font-medium">ALLaM</span> — the Arabic Large Language Model.
+                  <span className="text-interactive font-medium">ALLaM</span> — the Arabic Large Language Model.
                 </p>
               </div>
             </BlurFade>
@@ -69,13 +69,13 @@ export function Hero() {
             <BlurFade delay={BLUR_FADE_DELAY * 5}>
               <div className="flex flex-wrap items-center gap-2 text-sm font-mono text-muted-foreground py-2">
                 <span className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4 text-primary shrink-0" />
+                  <MapPin className="h-4 w-4 text-interactive shrink-0" />
                   <span>{DATA.location}</span>
                 </span>
-                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded-sm text-xs font-semibold whitespace-nowrap">
+                <span className="px-2 py-0.5 bg-primary/10 text-interactive rounded-sm text-xs font-semibold whitespace-nowrap">
                   {DATA.extraInfo}
                 </span>
-                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded-sm text-xs font-semibold whitespace-nowrap">
+                <span className="px-2 py-0.5 bg-primary/10 text-interactive rounded-sm text-xs font-semibold whitespace-nowrap">
                   {DATA.yearsOfExperience} Years Experience
                 </span>
               </div>
@@ -107,7 +107,7 @@ export function Hero() {
                     asChild
                     variant="outline"
                     size="icon"
-                    className="h-12 w-12 border-border hover:border-primary hover:text-primary"
+                    className="h-12 w-12 border-border hover:border-strong hover:text-interactive"
                   >
                     <Link
                       href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
@@ -122,7 +122,7 @@ export function Hero() {
                     asChild
                     variant="outline"
                     size="icon"
-                    className="h-12 w-12 border-border hover:border-primary hover:text-primary"
+                    className="h-12 w-12 border-border hover:border-strong hover:text-interactive"
                   >
                     <Link href={`tel:${DATA.contact.tel}`} title="Call">
                       <Phone className="h-5 w-5" />
@@ -131,7 +131,7 @@ export function Hero() {
                   <Button
                     asChild
                     variant="outline"
-                    className="h-12 px-5 border-border hover:border-primary hover:text-primary font-mono"
+                    className="h-12 px-5 border-border hover:border-strong hover:text-interactive font-mono"
                   >
                     <Link href={DATA.resumeUrl} target="_blank" prefetch={false}>
                       <Icons.download className="mr-2 h-4 w-4" />
@@ -148,7 +148,7 @@ export function Hero() {
             <BlurFade delay={BLUR_FADE_DELAY * 3}>
               <div className="relative">
                 {/* Animated outer ring */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-80 md:h-80 border-2 border-primary/20 rounded-full dark:border-primary/10 animate-[spin_10s_linear_infinite]" />
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 md:w-80 md:h-80 border-2 border-brand-vivid/20 rounded-full dark:border-brand-vivid/10 animate-[spin_10s_linear_infinite]" />
                 
                 {/* Static outer ring */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[19rem] md:w-[21rem] h-[19rem] md:h-[21rem] border border-border rounded-full" />
@@ -156,7 +156,7 @@ export function Hero() {
                 {/* Profile image container */}
                 <div className="relative w-64 h-64 md:w-72 md:h-72">
                   {/* Glow effect */}
-                  <div className="absolute inset-0 bg-linear-to-tr from-primary to-blue-500 rounded-full opacity-20 blur-2xl transform translate-x-4 translate-y-4" />
+                  <div className="absolute inset-0 bg-linear-to-tr from-primary to-interactive rounded-full opacity-20 blur-2xl transform translate-x-4 translate-y-4" />
                   
                   {/* Image */}
                   <div className="relative w-full h-full rounded-full border-4 border-background shadow-2xl overflow-hidden group">
@@ -171,7 +171,7 @@ export function Hero() {
                   
                   {/* Open to work badge */}
                   <div className="absolute -bottom-2 -right-2 bg-background p-3 rounded-xl shadow-lg border border-border flex items-center gap-2">
-                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+                    <div className="w-3 h-3 bg-brand-vivid rounded-full animate-pulse" />
                     <span className="text-xs font-bold text-foreground">Open to work</span>
                   </div>
                 </div>

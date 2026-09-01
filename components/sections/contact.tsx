@@ -41,7 +41,7 @@ export function Contact() {
                   asChild
                   variant="outline"
                   size="icon"
-                  className="h-12 w-12 border-border hover:border-primary hover:text-primary"
+                  className="h-12 w-12 border-border hover:border-strong hover:text-interactive"
                 >
                   <Link
                     href={`https://wa.me/${DATA.contact.tel.replace(/\+/g, "")}?text=${encodeURIComponent("Hi Jeril, I found your portfolio and would like to connect!")}`}
@@ -56,7 +56,7 @@ export function Contact() {
                   asChild
                   variant="outline"
                   size="icon"
-                  className="h-12 w-12 border-border hover:border-primary hover:text-primary"
+                  className="h-12 w-12 border-border hover:border-strong hover:text-interactive"
                 >
                   <Link href={`tel:${DATA.contact.tel}`} title="Call">
                     <Phone className="h-5 w-5" />
@@ -65,7 +65,7 @@ export function Contact() {
                 <Button
                   asChild
                   variant="outline"
-                  className="h-12 px-5 border-border hover:border-primary hover:text-primary font-mono"
+                  className="h-12 px-5 border-border hover:border-strong hover:text-interactive font-mono"
                 >
                   <Link href={DATA.resumeUrl} target="_blank" prefetch={false}>
                     <Icons.download className="mr-2 h-4 w-4" />

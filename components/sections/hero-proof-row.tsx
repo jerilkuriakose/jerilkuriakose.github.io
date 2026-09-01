@@ -15,7 +15,7 @@ export function HeroProofRow({ metrics }: { metrics: readonly Metric[] }) {
     <dl className="flex flex-wrap gap-x-10 gap-y-4 py-2">
       {metrics.map((m) => (
         <div key={m.id} className="flex flex-col">
-          <dt className="font-mono text-2xl font-bold text-primary">
+          <dt className="font-mono text-2xl font-bold text-display-accent">
             {m.value}
           </dt>
           <dd className="text-sm text-muted-foreground">{m.label}</dd>

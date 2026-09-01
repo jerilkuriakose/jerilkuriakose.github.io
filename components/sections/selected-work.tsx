@@ -33,9 +33,9 @@ export function SelectedWork() {
               <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
                 {DATA.projects.slice(4).map((project, i) => (
                   <BlurFade key={project.title} delay={BLUR_FADE_DELAY * (19 + i)}>
-                    <div className="card-hover bg-card rounded-lg border border-border p-6 h-full flex flex-col hover:border-primary/50">
+                    <div className="card-hover bg-card rounded-lg border border-border p-6 h-full flex flex-col hover:border-brand-vivid/50">
                       <div className="flex items-center justify-between mb-4">
-                        <Terminal className="h-10 w-10 text-primary" />
+                        <Terminal className="h-10 w-10 text-brand-vivid" />
                         <span className="text-xs font-mono text-muted-foreground">
                           {project.company}
                         </span>

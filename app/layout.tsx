@@ -19,8 +19,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a192f" },
+    { media: "(prefers-color-scheme: light)", color: "#F4F9F7" },
+    { media: "(prefers-color-scheme: dark)", color: "#17342D" },
   ],
 };
 
@@ -92,7 +92,7 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >

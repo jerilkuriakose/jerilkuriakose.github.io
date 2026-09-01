@@ -22,14 +22,12 @@ hand-maintained, so none of it can go stale.**
 
 ## The only hand-maintained state
 
-**Next action:** **Phase 1a is complete and committed** (`d926de5` + `b7eecb9`, 27/27 steps,
-`verify.sh` all green). The **Phase 2 plan is on its third pass** and is ready to execute —
-the two `REDESIGN` verdicts behind it are in `reviews/`, and its closing table lists every
-defect the earlier drafts shipped so they are not reintroduced. Phase 1b remains blocked on
-**G3**. Nothing is pushed: `origin/main` is still at `31648c3`, so the live site serves the
-old Next 14 build.
+**Next action:** **Phases 0, 1a and 2 are complete** (`verify.sh` all green, 52 tests). The
+site is now light-default deep teal on a 9-step OKLCH ramp with per-theme, surface-scoped
+roles. **Phase 3 (type system) is next** and is unblocked. Phase 1b remains blocked on **G3**;
+Phase 5 shipping on **G4**.
 
-Three rules this project has paid for. They apply to every later phase:
+Four rules this project has paid for. They apply to every later phase:
 
 1. **No contrast number enters a plan or a test unless a browser produced it** — and the
    measurement must be a **round-trip**: render `oklch(...)`, sample the bytes, read them back
@@ -38,10 +36,18 @@ Three rules this project has paid for. They apply to every later phase:
    not the gamut edge. That error put three ramp steps outside sRGB.
 2. **Every colour check reuses `sample8bit()` and `setTheme()` from `tests/visual/helpers.ts`**,
    and `setTheme()` runs **before** `goto()` — it only installs an init script.
-3. **A role that is legal on one surface is often illegal on another.** Verify every role
-   against every surface it can land on, per theme. Single-value-per-role is provably
-   unsatisfiable here: no one `--focus` clears 3:1 on all six surfaces, and no ramp step works
-   as a border on both the light canvas and the deep panel.
+3. **A role legal on one surface is often illegal on another.** Verify every role against every
+   surface it can land on, per theme. Single-value-per-role is provably unsatisfiable here: no
+   one `--focus` clears 3:1 on all six surfaces, and no ramp step works as a border on both the
+   light canvas and the deep panel.
+4. **Overriding a role does NOT reach the base tokens.** `--muted-foreground: var(--ink-muted)`
+   declared on `:root` substitutes its `var()` *at `:root`*, and the resolved colour inherits —
+   so a scope that re-points `--ink-muted` leaves `text-muted-foreground` untouched. Any surface
+   scope must re-declare the base tokens too. Caught only by asserting the **painted** colour of
+   a real utility; the role-level assertion passed while `text-foreground` sat at 1.14:1.
+
+Do not read serialized colour strings to compare colours: the build downlevels `oklch()` to a
+hex + `lab()` pair, and OKLab `L` and CIELab `L*` are different scales. Compare **bytes**.
 
 ---
 

@@ -31,7 +31,7 @@ export function SocialRail() {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-primary hover:-translate-y-1 transition-all duration-200"
+                  className="text-muted-foreground hover:text-interactive hover:-translate-y-1 transition-all duration-200"
                 >
                   <social.icon className="h-5 w-5" />
                 </Link>
@@ -45,7 +45,7 @@ export function SocialRail() {
         <BlurFade delay={BLUR_FADE_DELAY * 14}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <div className="text-muted-foreground hover:text-primary hover:-translate-y-1 transition-all duration-200">
+              <div className="text-muted-foreground hover:text-interactive hover:-translate-y-1 transition-all duration-200">
                 <ThemeToggle />
               </div>
             </TooltipTrigger>

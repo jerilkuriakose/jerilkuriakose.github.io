@@ -19,16 +19,16 @@ export function ExperienceCard({
 
   return (
     <BlurFade delay={delay}>
-      <div className="card-hover group relative bg-card rounded-lg border border-border p-6 hover:border-primary/50">
+      <div className="card-hover group relative bg-card rounded-lg border border-border p-6 hover:border-brand-vivid/50">
         {/* Timeline dot */}
         <div className="absolute -left-[41px] top-8 w-3 h-3 rounded-full bg-primary border-4 border-background hidden md:block" />
         
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4">
           <div>
-            <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+            <h3 className="text-lg font-semibold text-foreground group-hover:text-interactive transition-colors">
               {job.title}
             </h3>
-            <p className="text-primary font-medium flex items-center gap-2">
+            <p className="text-interactive font-medium flex items-center gap-2">
               <Building2 className="h-4 w-4" />
               <a
                 href={job.url}
@@ -65,7 +65,7 @@ export function ExperienceCard({
               onClick={() => setIsOpen(!isOpen)}
               aria-expanded={isOpen}
               aria-controls={panelId}
-              className="flex items-center gap-2 text-sm font-medium text-primary hover:underline"
+              className="flex items-center gap-2 text-sm font-medium text-interactive hover:underline"
             >
               <span>Key achievements ({job.highlights.length})</span>
               <motion.div
@@ -91,7 +91,7 @@ export function ExperienceCard({
                 {job.highlights.map((highlight, j) => (
                   <li
                     key={j}
-                    className="text-sm text-muted-foreground pl-4 relative before:content-['▹'] before:absolute before:left-0 before:text-primary"
+                    className="text-sm text-muted-foreground pl-4 relative before:content-['▹'] before:absolute before:left-0 before:text-brand-vivid"
                   >
                     {highlight}
                   </li>

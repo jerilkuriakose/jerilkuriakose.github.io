@@ -18,7 +18,7 @@ export function RoleMetrics({ metrics }: { metrics?: readonly Metric[] }) {
     <dl className="flex flex-wrap gap-x-6 gap-y-2 pt-1">
       {metrics.map((m) => (
         <div key={m.id} className="flex items-baseline gap-1.5">
-          <dt className="font-mono text-sm font-semibold text-primary">
+          <dt className="font-mono text-sm font-semibold text-interactive">
             {m.value}
           </dt>
           <dd className="text-xs text-muted-foreground">{m.label}</dd>

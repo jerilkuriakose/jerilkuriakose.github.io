@@ -15,7 +15,7 @@ export function Publications() {
           <div className="space-y-4">
             {DATA.publications.map((pub, i) => (
               <BlurFade key={pub.title} delay={BLUR_FADE_DELAY * (21 + i)}>
-                <div className="card-hover bg-card rounded-lg border border-border p-6 hover:border-primary/50">
+                <div className="card-hover bg-card rounded-lg border border-border p-6 hover:border-brand-vivid/50">
                   <div className="flex items-start justify-between gap-4">
                     <div className="grow">
                       <h3 className="font-medium text-foreground mb-1 leading-tight">
@@ -24,11 +24,11 @@ export function Publications() {
                       <p className="text-sm text-muted-foreground mb-1">
                         {pub.authors}
                       </p>
-                      <p className="text-sm text-primary font-mono">{pub.journal}</p>
+                      <p className="text-sm text-interactive font-mono">{pub.journal}</p>
                     </div>
                     <Badge
                       variant="outline"
-                      className="shrink-0 border-primary/50 text-primary font-mono"
+                      className="shrink-0 border-brand-vivid/50 text-interactive font-mono"
                     >
                       {pub.year}
                     </Badge>
@@ -47,7 +47,7 @@ export function Publications() {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 font-mono text-sm text-primary hover:underline"
+                className="inline-flex items-center gap-2 font-mono text-sm text-interactive hover:underline"
               >
                 View all 30+ publications on Google Scholar
                 <ExternalLink className="h-4 w-4" />

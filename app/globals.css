@@ -19,13 +19,31 @@
   --color-secondary-foreground: var(--secondary-foreground);
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
+  --color-accent: var(--accent-bg);
   --color-accent-foreground: var(--accent-foreground);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Phase 2 layer 2 - semantic roles as utilities (text-ink, bg-canvas,
+     border-strong, ...). The ramp primitives are deliberately absent: mapping
+     --color-teal-* would clobber Tailwind's built-in teal scale. Components
+     consume roles; if a raw step is ever genuinely needed, use
+     bg-[var(--teal-500)] and justify it. */
+  --color-canvas: var(--canvas);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-brand-vivid: var(--brand-vivid);
+  --color-on-brand: var(--on-brand);
+  --color-interactive: var(--interactive);
+  --color-display-accent: var(--display-accent);
+  --color-border-strong: var(--border-strong);
+  --color-border-subtle: var(--border-subtle);
+  --color-surface-muted: var(--surface-muted);
+  --color-focus: var(--focus);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -50,63 +68,209 @@
 
 @layer base {
   :root {
-    /* Brittany Chiang inspired dark navy theme */
-    --navy: oklch(0.206386 0.0388189 265.563);
-    --navy-light: oklch(0.246353 0.044206 265.658);
-    --navy-lighter: oklch(0.287384 0.0434264 266.007);
-    --slate: oklch(0.653765 0.0298572 256.848);
-    --slate-light: oklch(0.731253 0.0241064 255.167);
-    --lightest-slate: oklch(0.840314 0.0129873 253.463);
-    --white: oklch(0.976613 0.00179905 248.893);
+    /* ---------------------------------------------------------------------
+       Phase 2 layer 1 - RAMP PRIMITIVES. Raw colour, no meaning, no theme.
+       9 steps at H=171 per spec §3.
+
+       Every value is round-trip verified in the sRGB gamut: rendered, sampled
+       from a 1x1 canvas, then read back with `oklch(from rgb(...) l c h)` and
+       compared. This matters because an out-of-gamut OKLCH colour is
+       GAMUT-MAPPED, not clamped - the browser keeps emitting different bytes
+       past the boundary, so growing chroma until the bytes stop changing finds
+       where the mapping saturates, not the gamut edge. Steps 500/600/800 carry
+       chromas corrected after that error put them outside sRGB with hue
+       drifting up to 3.3 degrees.
+
+       Deliberately NOT exposed via @theme inline: `--color-teal-*` would
+       clobber Tailwind 4's built-in teal scale (50..950) and leave a mixed
+       scale. Components consume ROLES, not primitives.
+       --------------------------------------------------------------------- */
+    --teal-100: oklch(0.977 0.006 171);
+    --teal-200: oklch(0.93 0.022 171);
+    --teal-300: oklch(0.86 0.070 171);
+    --teal-400: oklch(0.773 0.147 171);
+    --teal-500: oklch(0.66 0.128 171);
+    --teal-600: oklch(0.55 0.107 171);
+    --teal-700: oklch(0.44 0.0862 171);
+    --teal-800: oklch(0.35 0.068 171);
+    --teal-900: oklch(0.26 0.030 171);
+
+    /* ---------------------------------------------------------------------
+       Phase 2 layer 2 - SEMANTIC ROLES, light theme. Canvas is --teal-100.
+       Measured floors (light): ink 14.41 (>=7) | ink-muted 5.59 (>=4.5)
+       interactive 5.34 canvas / 4.66 muted (>=4.5) | border-strong 4.33 (>=3)
+       focus 4.12 canvas / 3.60 muted (>=3) | on-brand on brand 7.99 (>=4.5)
+       destructive 5.68 canvas / 4.96 muted (>=4.5) | fg-on-destructive 5.68
+
+       brand-vivid is 1.80:1 on this canvas: FILL ONLY, never text at any size -
+       that is below even the 3:1 large-text floor, so there is no exemption.
+       --------------------------------------------------------------------- */
+    --canvas: var(--teal-100);
+    --panel: oklch(0.30 0.038 175);
+    --ink: var(--teal-900);
+    --ink-muted: oklch(0.50 0.020 171);
+    --brand-vivid: var(--teal-400);
+    --on-brand: var(--teal-900);
+    --interactive: oklch(0.50 0.0979 171);
+    --display-accent: oklch(0.50 0.0979 171);
+    --border-strong: var(--teal-600);
+    --border-subtle: var(--teal-200);
+    --surface-muted: var(--teal-200);
+    --focus: oklch(0.56 0.110 171);
+
+    /* Non-consuming, deliberately: the base --destructive token below still
+       holds the OLD value until the migration wires it up. Task 1's contrast
+       test samples these, so it tests what Task 1 actually defines. */
+    --destructive-role: oklch(0.52 0.170 25);
+    --destructive-role-foreground: var(--teal-100);
+
+    /* The navy/slate family is RETIRED. It had zero Tailwind utility consumers
+       and zero var() references in app/ or components/ - retiring beats
+       retuning a colour nothing reads. The teal ramp above replaces it. */
+
+    /* --accent is GONE: it held the vivid teal while --accent-bg, the muted
+       surface shadcn's convention intends, was referenced by nothing - so
+       hover:bg-accent flashed full-saturation teal. @theme inline now maps
+       --color-accent at --accent-bg (see above). --accent-tint is retuned in
+       place, not deleted: source-contract asserts it exists and pins the
+       total alpha-site count. */
+    --accent-tint: color-mix(in srgb, var(--brand-vivid) 10%, transparent);
     
-    /* Accent colors - Teal/Cyan */
-    --accent: oklch(0.908635 0.139697 174.846);
-    --accent-tint: color-mix(in srgb, oklch(0.908635 0.139697 174.846) 10%, transparent);
-    
-    /* Light mode defaults */
-    --background: oklch(0.999994 0.0000497986 23.7884);
-    --foreground: oklch(0.206386 0.0388189 265.563);
-    --card: oklch(0.999994 0.0000497986 23.7884);
-    --card-foreground: oklch(0.206386 0.0388189 265.563);
-    --popover: oklch(0.999994 0.0000497986 23.7884);
-    --popover-foreground: oklch(0.206386 0.0388189 265.563);
-    --primary: oklch(0.773355 0.147425 170.885);
-    --primary-foreground: oklch(0.206386 0.0388189 265.563);
-    --secondary: oklch(0.968362 0.00679146 248.212);
-    --secondary-foreground: oklch(0.206386 0.0388189 265.563);
-    --muted: oklch(0.968362 0.00679146 248.212);
-    --muted-foreground: oklch(0.556355 0.0397728 256.833);
-    --accent-bg: oklch(0.968362 0.00679146 248.212);
-    --accent-foreground: oklch(0.206386 0.0388189 265.563);
-    --destructive: oklch(0.635533 0.208201 25.3792);
-    --destructive-foreground: oklch(0.984758 0.0000489213 23.7073);
-    --border: oklch(0.925687 0.0131782 255.192);
-    --input: oklch(0.925687 0.0131782 255.192);
-    --ring: oklch(0.773355 0.147425 170.885);
+    /* ---------------------------------------------------------------------
+       Phase 2 layer 4 - BASE shadcn TOKENS, now derived from roles.
+
+       This is the layer that actually renders: text-muted-foreground (27 uses),
+       text-foreground (21), border-border (17), bg-card (7) and bg-background
+       (4) all resolve through here. Roles alone changed nothing.
+
+       --input takes --border-strong, NOT --border-subtle: button.tsx's outline
+       variant uses `border border-input`, making it a CONTROL boundary held to
+       3:1 by WCAG 1.4.11. --border-subtle has no floor and is for decorative
+       separators only.
+       --------------------------------------------------------------------- */
+    --background: var(--canvas);
+    --foreground: var(--ink);
+    --card: var(--canvas);
+    --card-foreground: var(--ink);
+    --popover: var(--canvas);
+    --popover-foreground: var(--ink);
+    --primary: var(--brand-vivid);
+    --primary-foreground: var(--on-brand);
+    --secondary: var(--surface-muted);
+    --secondary-foreground: var(--ink);
+    --muted: var(--surface-muted);
+    --muted-foreground: var(--ink-muted);
+    --accent-bg: var(--surface-muted);
+    --accent-foreground: var(--ink);
+    --destructive: var(--destructive-role);
+    --destructive-foreground: var(--destructive-role-foreground);
+    --border: var(--border-subtle);
+    --input: var(--border-strong);
+    --ring: var(--focus);
     --radius: 0.75rem;
   }
 
   .dark {
-    /* Dark mode - inspired by brittanychiang.com */
-    --background: oklch(0.206386 0.0388189 265.563);
-    --foreground: oklch(0.840314 0.0129873 253.463);
-    --card: oklch(0.246353 0.044206 265.658);
-    --card-foreground: oklch(0.840314 0.0129873 253.463);
-    --popover: oklch(0.246353 0.044206 265.658);
-    --popover-foreground: oklch(0.840314 0.0129873 253.463);
-    --primary: oklch(0.908635 0.139697 174.846);
-    --primary-foreground: oklch(0.206386 0.0388189 265.563);
-    --secondary: oklch(0.287384 0.0434264 266.007);
-    --secondary-foreground: oklch(0.840314 0.0129873 253.463);
-    --muted: oklch(0.287384 0.0434264 266.007);
-    --muted-foreground: oklch(0.653765 0.0298572 256.848);
-    --accent-bg: oklch(0.287384 0.0434264 266.007);
-    --accent-foreground: oklch(0.840314 0.0129873 253.463);
-    --destructive: oklch(0.399619 0.134795 25.7689);
-    --destructive-foreground: oklch(0.984758 0.0000489213 23.7073);
-    --border: oklch(0.341105 0.0547404 265.896);
-    --input: oklch(0.341105 0.0547404 265.896);
-    --ring: oklch(0.908635 0.139697 174.846);
+    /* ---------------------------------------------------------------------
+       Phase 2 layer 2 - SEMANTIC ROLES, dark theme. Canvas IS the deep panel.
+       The ramp does not change; only which step each role points at.
+
+       Measured floors (dark): ink 12.61 (>=7) | ink-muted 8.98 (>=4.5)
+       interactive 6.99 canvas / 5.67 muted (>=4.5) - brand-vivid IS legal as
+       text here | border-strong 4.59 canvas / 3.73 muted (>=3)
+       focus 4.19 canvas / 3.40 muted (>=3) | destructive 4.71 (>=4.5)
+       fg-on-destructive 5.38 (>=4.5)
+
+       --focus differs from light because NO single value clears 3:1 on all six
+       surfaces a ring can land on - swept L 0.30..0.80 at max in-gamut chroma,
+       zero candidates. Likewise no ramp step works as border-strong on both the
+       light canvas and the deep panel (--teal-600 is 4.33 vs 2.91).
+
+       --destructive-role-foreground is --teal-900 here, NOT --teal-100:
+       light-on-light measures 2.68:1, and button.tsx / badge.tsx really do
+       render that foreground on that fill.
+       --------------------------------------------------------------------- */
+    --canvas: oklch(0.30 0.038 175);
+    --panel: var(--teal-900);
+    --ink: var(--teal-100);
+    --ink-muted: var(--teal-300);
+    --brand-vivid: var(--teal-400);
+    --on-brand: var(--teal-900);
+    --interactive: var(--teal-400);
+    --display-accent: var(--teal-400);
+    --border-strong: var(--teal-500);
+    --border-subtle: var(--teal-600);
+    --surface-muted: var(--teal-800);
+    --focus: oklch(0.64 0.110 171);
+    --destructive-role: oklch(0.70 0.150 25);
+    --destructive-role-foreground: var(--teal-900);
+
+    /* Base shadcn tokens, dark - same derivation, dark role values. */
+    --background: var(--canvas);
+    --foreground: var(--ink);
+    --card: var(--panel);
+    --card-foreground: var(--ink);
+    --popover: var(--panel);
+    --popover-foreground: var(--ink);
+    --primary: var(--brand-vivid);
+    --primary-foreground: var(--on-brand);
+    --secondary: var(--surface-muted);
+    --secondary-foreground: var(--ink);
+    --muted: var(--surface-muted);
+    --muted-foreground: var(--ink-muted);
+    --accent-bg: var(--surface-muted);
+    --accent-foreground: var(--ink);
+    --destructive: var(--destructive-role);
+    --destructive-foreground: var(--destructive-role-foreground);
+    --border: var(--border-subtle);
+    --input: var(--border-strong);
+    --ring: var(--focus);
+  }
+
+  /* -----------------------------------------------------------------------
+     Phase 2 layer 3 - SURFACE SCOPE. Content sitting on the deep panel, in
+     EITHER theme. Declared once outside both theme blocks because the panel is
+     the same surface either way, so the overrides are identical.
+
+     This exists because a role legal on the canvas is often illegal on the
+     panel: light --ink on the panel is 1.14:1 and light --interactive is
+     2.36:1. A panel without this scope ships unreadable text.
+
+     Custom properties, not utilities, precisely so DESCENDANTS inherit the
+     correction. A parent `text-*` utility cannot do this - it loses to any
+     descendant carrying text-foreground / text-muted-foreground /
+     text-interactive.
+
+     Measured on the panel: ink 12.61 | ink-muted 8.98 | interactive 6.99
+     border-strong 4.59 | focus 4.19 - every floor met.
+     ----------------------------------------------------------------------- */
+  .on-panel {
+    --ink: var(--teal-100);
+    --ink-muted: var(--teal-300);
+    --interactive: var(--teal-400);
+    --display-accent: var(--teal-400);
+    --border-strong: var(--teal-500);
+    --focus: oklch(0.64 0.110 171);
+
+    /* The BASE tokens must be re-declared here too, and this is not
+       belt-and-braces - it is required by how custom properties resolve.
+       `--muted-foreground: var(--ink-muted)` is declared on :root, so its var()
+       is substituted AT :ROOT and the already-resolved colour inherits
+       downward. Overriding --ink-muted in this scope does NOT retroactively
+       change it.
+
+       Measured before this block existed: inside .on-panel in light theme,
+       `text-foreground` still painted lab(14.55%) - near-black ink on the deep
+       panel, 1.14:1 - while --ink itself had correctly flipped to lab(97.41%).
+       Roles alone are not enough; the layer components actually consume has to
+       be overridden as well. */
+    --foreground: var(--teal-100);
+    --muted-foreground: var(--teal-300);
+    --card-foreground: var(--teal-100);
+    --popover-foreground: var(--teal-100);
+    --border: var(--teal-600);
+    --input: var(--teal-500);
+    --ring: var(--focus);
   }
 }
 
@@ -118,7 +282,7 @@
   html {
     scroll-behavior: smooth;
     scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--muted-foreground) 30%, transparent) transparent;
+    scrollbar-color: var(--border-strong) var(--background);
   }
   
   body {
@@ -140,18 +304,21 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--muted-foreground) 30%, transparent);
+  /* Solid, not alpha: this is a meaningful non-text control boundary (WCAG
+     1.4.11) and the previous muted-foreground tint measured 1.52:1 against its
+     track. border-strong measures 4.33 light / 4.59 dark. */
+  background: var(--border-strong);
   border-radius: 5px;
   border: 2px solid var(--background);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--muted-foreground) 50%, transparent);
+  background: var(--interactive);
 }
 
 /* Selection */
 ::selection {
-  background: color-mix(in srgb, var(--primary) 30%, transparent);
+  background: color-mix(in srgb, var(--brand-vivid) 30%, transparent);
   color: var(--foreground);
 }
 
@@ -171,7 +338,7 @@
   counter-increment: section 1;
   content: "0" counter(section) ".";
   margin-right: 10px;
-  color: var(--primary);
+  color: var(--interactive);
   font-family: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
   font-size: clamp(1rem, 3vw, 1.25rem);
   font-weight: 400;
@@ -200,7 +367,11 @@ main {
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg in srgb, var(--primary) 0%, hsl(166 100% 50%) 50%, var(--primary) 100%);
+  /* The legacy gamut-boundary mid-stop is retired here. Phase 0 preserved that
+     literal only because it sat on the sRGB gamut boundary (R=0) and could not
+     round-trip through OKLCH without moving a pixel; Phase 2 retunes this
+     gradient anyway. Interpolation stays pinned `in srgb`. */
+  background: linear-gradient(135deg in srgb, var(--display-accent) 0%, var(--brand-vivid) 50%, var(--display-accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -210,7 +381,7 @@ main {
 .hero-gradient {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 50% at 50% -20% in srgb, color-mix(in srgb, var(--primary) 15%, transparent), transparent);
+  background: radial-gradient(ellipse 80% 50% at 50% -20% in srgb, color-mix(in srgb, var(--brand-vivid) 15%, transparent), transparent);
   pointer-events: none;
 }
 
@@ -221,12 +392,12 @@ main {
 
 .card-hover:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 30px -15px color-mix(in srgb, var(--primary) 20%, transparent);
+  box-shadow: 0 10px 30px -15px color-mix(in srgb, var(--brand-vivid) 20%, transparent);
 }
 
 /* Glow effect */
 .glow {
-  box-shadow: 0 0 40px color-mix(in srgb, var(--primary) 15%, transparent);
+  box-shadow: 0 0 40px color-mix(in srgb, var(--brand-vivid) 15%, transparent);
 }
 
 /* Animated underline */
@@ -242,7 +413,7 @@ main {
   height: 2px;
   bottom: -2px;
   left: 0;
-  background-color: var(--primary);
+  background-color: var(--brand-vivid);
   transition: width 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
@@ -256,15 +427,15 @@ main {
   font-size: 0.75rem;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
-  background: color-mix(in srgb, var(--primary) 10%, transparent);
-  color: var(--primary);
-  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+  background: color-mix(in srgb, var(--brand-vivid) 10%, transparent);
+  color: var(--interactive);
+  border: 1px solid color-mix(in srgb, var(--brand-vivid) 30%, transparent);
   transition: all 0.2s;
 }
 
 .tech-badge:hover {
-  background: color-mix(in srgb, var(--primary) 20%, transparent);
-  border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+  background: color-mix(in srgb, var(--brand-vivid) 20%, transparent);
+  border-color: color-mix(in srgb, var(--brand-vivid) 50%, transparent);
 }
 
 /* Timeline styles */
@@ -280,7 +451,7 @@ main {
   top: 0;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(to bottom in srgb, var(--primary), var(--border));
+  background: linear-gradient(to bottom in srgb, var(--brand-vivid), var(--border));
 }
 
 .timeline-item::after {
@@ -291,7 +462,7 @@ main {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--primary);
+  background: var(--brand-vivid);
   border: 2px solid var(--background);
 }
 
@@ -312,10 +483,10 @@ main {
 /* Pulse glow */
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 30%, transparent);
+    box-shadow: 0 0 20px color-mix(in srgb, var(--brand-vivid) 30%, transparent);
   }
   50% {
-    box-shadow: 0 0 40px color-mix(in srgb, var(--primary) 50%, transparent);
+    box-shadow: 0 0 40px color-mix(in srgb, var(--brand-vivid) 50%, transparent);
   }
 }
 
@@ -340,7 +511,7 @@ main {
 
 /* Focus styles */
 :focus {
-  outline: 2px dashed var(--primary);
+  outline: 2px dashed var(--focus);
   outline-offset: 3px;
 }
 
@@ -349,7 +520,7 @@ main {
 }
 
 :focus-visible {
-  outline: 2px dashed var(--primary);
+  outline: 2px dashed var(--focus);
   outline-offset: 3px;
 }
 
@@ -385,5 +556,5 @@ main {
 .cursor::after {
   content: "|";
   animation: blink 1s infinite;
-  color: var(--primary);
+  color: var(--interactive);
 }

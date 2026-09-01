@@ -1,23 +1,21 @@
 import { test, expect } from "@playwright/test";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { sample8bit, setTheme, type Theme } from "./helpers";
 
 /**
- * Pre-conversion the tokens hold HSL *channels* ("0 0% 100%"), which are only
- * a valid colour inside hsl(). Post-conversion they hold complete oklch()
- * values, usable bare. So the RENDERED colour is representation-independent
- * but the REFERENCE FORM is not - wrap accordingly.
+ * Expected USED 8-bit sRGB per token: what the browser actually PAINTS.
  *
- * That asymmetry is what makes this a genuine before/after contract: the same
- * expected 8-bit values must hold through the representation change.
+ * Screenshots cannot prove every call site is correct - they never exercise
+ * focus, hover, selection, scrollbar states, or tokens with no consumer at all.
+ *
+ * References are bare var(). An earlier `CONVERTED = /--background:\s*oklch\(/`
+ * sniff chose between var() and hsl(var()) forms; Phase 2 repoints --background
+ * to var(--canvas), which would have flipped that sniff false and silently
+ * switched 5 tests to invalid hsl(var(--background)) references while reporting
+ * green. Phase 0 is committed, so only the bare form remains.
  */
-const CSS = readFileSync(join(process.cwd(), "app", "globals.css"), "utf8");
-const CONVERTED = /--background:\s*oklch\(/.test(CSS);
 
-/** Reference a colour token in whichever form the current CSS requires. */
-const ref = (token: string) =>
-  CONVERTED ? `var(${token})` : `hsl(var(${token}))`;
+/** Reference a colour token. Bare var() is the only supported form. */
+const ref = (token: string) => `var(${token})`;
 
 /**
  * Reference a token at partial alpha, in whichever form applies.
@@ -26,9 +24,7 @@ const ref = (token: string) =>
  * bytes identical. Mixing in oklab shifts them.
  */
 const refAlpha = (token: string, pct: number) =>
-  CONVERTED
-    ? `color-mix(in srgb, var(${token}) ${pct}%, transparent)`
-    : `hsl(var(${token}) / ${pct / 100})`;
+  `color-mix(in srgb, var(${token}) ${pct}%, transparent)`;
 
 
 /**
@@ -44,59 +40,51 @@ const refAlpha = (token: string, pct: number) =>
  */
 const EXPECTED: Record<Theme, Record<string, number[]>> = {
   light: {
-    "--background": [255, 255, 255, 255],
-    "--foreground": [15, 23, 41, 255],
-    "--card": [255, 255, 255, 255],
-    "--card-foreground": [15, 23, 41, 255],
-    "--popover": [255, 255, 255, 255],
-    "--popover-foreground": [15, 23, 41, 255],
-    "--primary": [29, 211, 168, 255],
-    "--primary-foreground": [15, 23, 41, 255],
-    "--secondary": [241, 245, 249, 255],
-    "--secondary-foreground": [15, 23, 41, 255],
-    "--muted": [241, 245, 249, 255],
-    "--muted-foreground": [101, 117, 139, 255],
-    "--accent": [102, 255, 219, 255],
-    "--accent-bg": [241, 245, 249, 255],
-    "--accent-foreground": [15, 23, 41, 255],
-    "--destructive": [239, 67, 67, 255],
-    "--destructive-foreground": [250, 250, 250, 255],
-    "--border": [225, 231, 239, 255],
-    "--input": [225, 231, 239, 255],
-    "--ring": [29, 211, 168, 255],
-    "--navy": [15, 23, 41, 255],
-    "--navy-light": [23, 32, 54, 255],
-    "--navy-lighter": [32, 42, 64, 255],
-    "--slate": [133, 145, 163, 255],
-    "--slate-light": [158, 169, 183, 255],
-    "--lightest-slate": [197, 203, 211, 255],
-    "--white": [246, 247, 248, 255],
+    "--background": [244, 249, 247, 255],
+    "--foreground": [20, 41, 34, 255],
+    "--card": [244, 249, 247, 255],
+    "--card-foreground": [20, 41, 34, 255],
+    "--popover": [244, 249, 247, 255],
+    "--popover-foreground": [20, 41, 34, 255],
+    "--primary": [30, 211, 169, 255],
+    "--primary-foreground": [20, 41, 34, 255],
+    "--secondary": [218, 237, 230, 255],
+    "--secondary-foreground": [20, 41, 34, 255],
+    "--muted": [218, 237, 230, 255],
+    "--muted-foreground": [88, 103, 98, 255],
+    "--accent-bg": [218, 237, 230, 255],
+    "--accent-foreground": [20, 41, 34, 255],
+    "--destructive": [182, 49, 50, 255],
+    "--destructive-foreground": [244, 249, 247, 255],
+    "--border": [218, 237, 230, 255],
+    "--input": [3, 133, 105, 255],
+    "--ring": [0, 137, 108, 255],
   },
   dark: {
-    "--background": [15, 23, 41, 255],
-    "--foreground": [197, 203, 211, 255],
-    "--card": [23, 32, 54, 255],
-    "--card-foreground": [197, 203, 211, 255],
-    "--popover": [23, 32, 54, 255],
-    "--popover-foreground": [197, 203, 211, 255],
-    "--primary": [102, 255, 219, 255],
-    "--primary-foreground": [15, 23, 41, 255],
-    "--secondary": [32, 42, 64, 255],
-    "--secondary-foreground": [197, 203, 211, 255],
-    "--muted": [32, 42, 64, 255],
-    "--muted-foreground": [133, 145, 163, 255],
-    "--accent-bg": [32, 42, 64, 255],
-    "--accent-foreground": [197, 203, 211, 255],
-    "--destructive": [129, 29, 29, 255],
-    "--destructive-foreground": [250, 250, 250, 255],
-    "--border": [43, 55, 85, 255],
-    "--input": [43, 55, 85, 255],
-    "--ring": [102, 255, 219, 255],
+    "--background": [23, 52, 45, 255],
+    "--foreground": [244, 249, 247, 255],
+    "--card": [20, 41, 34, 255],
+    "--card-foreground": [244, 249, 247, 255],
+    "--popover": [20, 41, 34, 255],
+    "--popover-foreground": [244, 249, 247, 255],
+    "--primary": [30, 211, 169, 255],
+    "--primary-foreground": [20, 41, 34, 255],
+    "--secondary": [1, 70, 54, 255],
+    "--secondary-foreground": [244, 249, 247, 255],
+    "--muted": [1, 70, 54, 255],
+    "--muted-foreground": [162, 224, 203, 255],
+    "--accent-bg": [1, 70, 54, 255],
+    "--accent-foreground": [244, 249, 247, 255],
+    "--destructive": [237, 117, 110, 255],
+    "--destructive-foreground": [20, 41, 34, 255],
+    "--border": [3, 133, 105, 255],
+    "--input": [9, 171, 136, 255],
+    "--ring": [49, 161, 131, 255],
   },
 };
 
 for (const theme of ["light", "dark"] as const) {
-  test(`token contract: ${theme} (${CONVERTED ? "oklch" : "hsl channels"})`, async ({
+  test(`token contract: ${theme}`, async ({
     page,
   }) => {
     await setTheme(page, theme);
@@ -127,7 +115,7 @@ test("alpha sites keep their colour and gain the right alpha", async ({
 
   // Canvas getImageData un-premultiplies a semi-transparent fill, which rounds
   // each channel by up to ~1. The composited test below is the strict one.
-  const want = [29, 211, 168];
+  const want = [30, 211, 169];
   for (let i = 0; i < 3; i++) {
     expect(
       Math.abs(got[i] - want[i]),
@@ -150,12 +138,12 @@ test("alpha sites keep their colour and gain the right alpha", async ({
  */
 const COMPOSITED: Record<Theme, Array<[string, number, number[]]>> = {
   light: [
-    ["--primary", 10, [232, 251, 246]],
-    ["--primary", 20, [210, 246, 238]],
-    ["--primary", 30, [187, 242, 229]],
-    ["--border", 50, [240, 243, 247]],
+    ["--primary", 10, [222, 245, 238]],
+    ["--primary", 20, [201, 241, 231]],
+    ["--primary", 30, [179, 238, 223]],
+    ["--border", 50, [231, 243, 238]],
   ],
-  dark: [["--primary", 10, [23, 46, 58]]],
+  dark: [["--primary", 10, [23, 68, 57]]],
 };
 
 for (const theme of ["light", "dark"] as const) {
@@ -241,9 +229,9 @@ test("Tailwind generated opacity utilities render unchanged", async ({
     };
   });
 
-  // Measured from the pre-conversion build, composited over the light page.
-  expect(got.solid, "bg-primary").toEqual([29, 211, 168]);
-  expect(got.a10, "bg-primary/10").toEqual([232, 251, 246]);
-  expect(got.a20, "bg-primary/20").toEqual([210, 246, 238]);
-  expect(got.b20, "border-primary/20").toEqual([210, 246, 238]);
+  // Re-measured after the Phase 2 palette retune, composited over the light page.
+  expect(got.solid, "bg-primary").toEqual([30, 211, 169]);
+  expect(got.a10, "bg-primary/10").toEqual([222, 245, 238]);
+  expect(got.a20, "bg-primary/20").toEqual([201, 241, 231]);
+  expect(got.b20, "border-primary/20").toEqual([201, 241, 231]);
 });

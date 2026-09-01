@@ -205,11 +205,11 @@ well-formed before anything depends on them.
 
 **Files:** modify `app/globals.css`; create `tests/visual/contrast-contract.spec.ts`
 
-- [ ] **Step 1: Add the 9 ramp primitives to `:root`** — from the ramp table. Theme-independent; declare once.
+- [x] **Step 1: Add the 9 ramp primitives to `:root`** — from the ramp table. Theme-independent; declare once.
 
-- [ ] **Step 2: Add the light roles to `:root`, the dark roles to `.dark`** — exactly as tabulated. `--focus` differs per theme; `--destructive-foreground` is `--teal-900` in dark.
+- [x] **Step 2: Add the light roles to `:root`, the dark roles to `.dark`** — exactly as tabulated. `--focus` differs per theme; `--destructive-foreground` is `--teal-900` in dark.
 
-- [ ] **Step 3: Add the `.on-panel` scope**
+- [x] **Step 3: Add the `.on-panel` scope**
 
 ```css
 .on-panel {
@@ -226,16 +226,16 @@ so the overrides are identical. Because these are custom properties, every desce
 resolves `var(--ink)` inherits them automatically. That is exactly what a parent `text-*`
 utility cannot do.
 
-- [ ] **Step 4: Add a NON-CONSUMING `--destructive-role`**
+- [x] **Step 4: Add a NON-CONSUMING `--destructive-role`**
 
 Task 1's test must not sample `--destructive`: that base token still holds the **old** value
 until 3a, where it measures ~3.55:1 light and ~1.36:1 dark against the new canvases — so Task 1
 would fail on a value Task 1 never set. Declare `--destructive-role` and
 `--destructive-role-foreground` here, test those, and wire the base token to them in 3a.
 
-- [ ] **Step 5: Expose ramp, roles and scope through `@theme inline`** — `--color-teal-100..900` plus one `--color-*` per role.
+- [x] **Step 5: Expose ramp, roles and scope through `@theme inline`** — `--color-teal-100..900` plus one `--color-*` per role.
 
-- [ ] **Step 6: Prove nothing rendered changed**
+- [x] **Step 6: Prove nothing rendered changed**
 
 ```bash
 bash scripts/ensure-browser-deps.sh
@@ -244,7 +244,7 @@ npm run build && npx playwright test
 
 Expected: **all green, including the 6 screenshots.** Unused tokens must move no pixel.
 
-- [ ] **Step 7: Write `tests/visual/contrast-contract.spec.ts`**
+- [x] **Step 7: Write `tests/visual/contrast-contract.spec.ts`**
 
 Seven requirements, each one a defect an earlier draft shipped:
 
@@ -256,7 +256,7 @@ Seven requirements, each one a defect an earlier draft shipped:
 6. Assert `--brand-vivid` on the light canvas is **< 3** — documenting that 1.80:1 earns no large-text exemption.
 7. Assert the scrollbar thumb clears 3:1 against its track, both themes.
 
-- [ ] **Step 8: `bash scripts/verify.sh`** green. **No commit yet** (see Task 3).
+- [x] **Step 8: `bash scripts/verify.sh`** green. **No commit yet** (see Task 3).
 
 ---
 
@@ -266,7 +266,7 @@ Seven requirements, each one a defect an earlier draft shipped:
 
 **Files:** modify `tests/visual/source-contract.spec.ts`, `tests/visual/token-contract.spec.ts`
 
-- [ ] **Step 1: Remove the dual-mode branch from both**
+- [x] **Step 1: Remove the dual-mode branch from both**
 
 Both contain at line 16 `const CONVERTED = /--background:\s*oklch\(/.test(CSS);`. 3a rewrites
 `--background` to `var(--canvas)`, making it `false` — at which point `source-contract`
@@ -277,14 +277,14 @@ Phase 0 is committed, so the branch is dead. Delete `CONVERTED` and its conditio
 **all 8 source tests and all 6 token tests** — replace only reference syntax and conditional
 titles. Coverage must not drop.
 
-- [ ] **Step 2: Keep the NARROW hsl invariant here**
+- [x] **Step 2: Keep the NARROW hsl invariant here**
 
 Assert only `no hsl(var(...)) call sites remain`. Do **not** add `no raw hsl()` yet — the
 Phase-0 gamut-boundary literal `hsl(166 100% 50%)` is still present and
 `source-contract.spec.ts:31` still asserts it, so the broad assertion would demand that literal
 be simultaneously present and absent. It moves to 3g, with the retirement.
 
-- [ ] **Step 3: Prove no test silently vanished**
+- [x] **Step 3: Prove no test silently vanished**
 
 ```bash
 npx playwright test source-contract.spec.ts token-contract.spec.ts --reporter=list
@@ -293,7 +293,7 @@ npx playwright test source-contract.spec.ts token-contract.spec.ts --reporter=li
 Count the reported tests; confirm **zero skipped**. A green run with skips is the exact failure
 this task exists to prevent.
 
-- [ ] **Step 4: `bash scripts/verify.sh`** green. **No commit yet.**
+- [x] **Step 4: `bash scripts/verify.sh`** green. **No commit yet.**
 
 ---
 
@@ -305,7 +305,7 @@ ends with its own check. Commit only after 3h.
 
 **Files:** `app/globals.css`, `app/layout.tsx`, `components/**/*.tsx`, `app/**/*.tsx`, `tests/visual/*.spec.ts`
 
-- [ ] **3a — Repoint the base shadcn tokens at roles.** The layer that actually renders.
+- [x] **3a — Repoint the base shadcn tokens at roles.** The layer that actually renders.
 
 ```css
   --background: var(--canvas);          --foreground: var(--ink);
@@ -330,7 +330,7 @@ Also **delete or repoint the stale `--accent`** at `globals.css:63`. 3b repoints
 
 *Check:* `npx tsc --noEmit` and `npm run build` exit 0.
 
-- [ ] **3b — Fix the orphaned-accent defect.** `--accent` holds the vivid teal while
+- [x] **3b — Fix the orphaned-accent defect.** `--accent` holds the vivid teal while
 `--accent-bg` — the correctly muted surface — is referenced by nothing, so `hover:bg-accent`
 flashes full-saturation teal on ghost and outline buttons. Point `--color-accent` at
 `var(--accent-bg)` and `--color-accent-foreground` at `var(--accent-foreground)`. Retune
@@ -339,7 +339,7 @@ flashes full-saturation teal on ghost and outline buttons. Point `--color-accent
 
 *Check:* ghost/outline hover renders a muted surface in a real browser, not saturated teal.
 
-- [ ] **3c — Retire the legacy navy/slate family.** `--navy*`, `--slate*`, `--lightest-slate`,
+- [x] **3c — Retire the legacy navy/slate family.** `--navy*`, `--slate*`, `--lightest-slate`,
 `--white` have zero Tailwind utility consumers. Check CSS-internal references first:
 
 ```bash
@@ -349,7 +349,7 @@ grep -nE 'var\(--(navy|slate|lightest-slate|white)' app components
 Unreferenced → delete the declarations **and** their `token-contract` entries. Referenced →
 repoint at ramp steps. *Check:* the grep returns nothing; build green.
 
-- [ ] **3d — Migrate the TSX call sites**, per the inventory. Small text/links →
+- [x] **3d — Migrate the TSX call sites**, per the inventory. Small text/links →
 `text-interactive`; large display text (≥24px, or ≥18.5px bold) → `text-display-accent`;
 meaningful icon → `text-interactive`; decorative glyph → `text-brand-vivid`; control boundary →
 `border-strong`; decorative separator → `border-subtle`; the 3 raw palette utilities → a ramp
@@ -358,14 +358,14 @@ the 3:1 large-text floor.
 
 *Check:* `grep -rn 'text-primary\|border-primary' app components --include='*.tsx'` returns nothing unexpected.
 
-- [ ] **3e — Migrate the authored CSS**, per the table: the three text sites (`:174`, `:260`,
+- [x] **3e — Migrate the authored CSS**, per the table: the three text sites (`:174`, `:260`,
 `:388`) → `var(--interactive)`; the two outlines (`:343`, `:352`) → `var(--focus)`; fills,
 shadows, tints and gradients → `var(--brand-vivid)`, keeping `in srgb` everywhere. **And fix
 the scrollbar**: thumb → `--border-strong` to clear 3:1 against its track.
 
 *Check:* `grep -c 'var(--primary)' app/globals.css` returns 1 — only the `@theme inline` mapping.
 
-- [ ] **3f — Apply the deep panel with its scope.** Choose the surfaces **explicitly** — the
+- [x] **3f — Apply the deep panel with its scope.** Choose the surfaces **explicitly** — the
 hero's contrasting band and the featured-project cards — and put `.on-panel` on each panel
 container. Do not rely on a parent `text-*` utility: it will not override descendants carrying
 `text-foreground`, `text-muted-foreground` or `text-interactive`, and light `--interactive` on
@@ -374,7 +374,7 @@ no descendant hardcodes a colour outside the role system.
 
 *Check:* `contrast-contract`'s panel-scope pairs pass; panel text legible in both themes in a real browser.
 
-- [ ] **3g — Re-measure every hardcoded expectation, flip the theme, retire the literal, regenerate.**
+- [x] **3g — Re-measure every hardcoded expectation, flip the theme, retire the literal, regenerate.**
 
 Enumerate **all five** groups this migration invalidates — draft 2 counted only two:
 
@@ -406,7 +406,7 @@ npx playwright test --repeat-each=3
 **Inspect all six diffs** — three widths × two themes. A defect confined to dark or to 375px is
 invisible in the light desktop diff.
 
-- [ ] **3h — Full gates, then the single commit**
+- [x] **3h — Full gates, then the single commit**
 
 ```bash
 bash scripts/verify.sh   # must exit 0
@@ -418,9 +418,9 @@ bash scripts/verify.sh   # must exit 0
 
 Verification only. **No commit.**
 
-- [ ] **Step 1:** `npx playwright test contrast-contract.spec.ts --repeat-each=3`
+- [x] **Step 1:** `npx playwright test contrast-contract.spec.ts --repeat-each=3`
 
-- [ ] **Step 2: No stale colour survives**
+- [x] **Step 2: No stale colour survives**
 
 ```bash
 grep -c 'hsl(' app/globals.css                    # expect 0
@@ -431,14 +431,14 @@ grep -nE '\-\-(background|foreground|card|primary|border|input|ring):\s*oklch\('
   && echo "STALE: base token holds a literal" || echo "CLEAN: base tokens derive from roles"
 ```
 
-- [ ] **Step 3: Use the site in a real browser.** Serve `out/` and drive Chromium at
+- [x] **Step 3: Use the site in a real browser.** Serve `out/` and drive Chromium at
 `~/.cache/ms-playwright/chromium-1194/chrome-linux/chrome`. Confirm by looking: canvas off-white
 not white; deep panel legible in **both** themes; ghost/outline buttons hover to a muted
 surface; focus rings visible on canvas, muted **and** panel; section numbers and tech badges
 legible; scrollbar thumb discernible against its track. Kill the server by recorded PID —
 `pkill -f "http.server 809"` kills the agent's own shell.
 
-- [ ] **Step 4:** `git status --porcelain` clean.
+- [x] **Step 4:** `git status --porcelain` clean.
 
 ---
 

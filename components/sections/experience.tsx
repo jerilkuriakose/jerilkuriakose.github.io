@@ -18,7 +18,7 @@ export function Experience() {
                 <p key={i} className="text-muted-foreground leading-relaxed">
                   {paragraph.split("**").map((part, j) =>
                     j % 2 === 1 ? (
-                      <span key={j} className="text-primary font-medium">
+                      <span key={j} className="text-interactive font-medium">
                         {part}
                       </span>
                     ) : (

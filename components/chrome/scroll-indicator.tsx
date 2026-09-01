@@ -15,7 +15,7 @@ export function ScrollIndicator() {
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
-          <ArrowDown className="h-4 w-4 text-primary" />
+          <ArrowDown className="h-4 w-4 text-brand-vivid" />
         </motion.div>
       </div>
     </BlurFade>
