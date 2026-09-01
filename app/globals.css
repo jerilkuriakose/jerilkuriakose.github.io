@@ -1,6 +1,52 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Tailwind v4: class-based dark mode (replaces v3 `darkMode: ["class"]`) */
+@custom-variant dark (&:is(.dark *));
+
+/* Tailwind v4: theme mapping (replaces v3 tailwind.config.ts `theme.extend`).
+   `inline` keeps utilities referencing the raw vars below, so light/dark
+   overrides on :root/.dark continue to work exactly as they did in v3. */
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+
+  --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
+
+  --animate-fade-in: fade-in 0.5s ease-out forwards;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 @layer base {
   :root {
@@ -126,7 +172,7 @@
   content: "0" counter(section) ".";
   margin-right: 10px;
   color: hsl(var(--primary));
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
   font-size: clamp(1rem, 3vw, 1.25rem);
   font-weight: 400;
 }
@@ -206,7 +252,7 @@ main {
 
 /* Tech badge styles */
 .tech-badge {
-  font-family: var(--font-mono), ui-monospace, monospace;
+  font-family: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
   font-size: 0.75rem;
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;

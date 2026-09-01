@@ -7,7 +7,7 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
-} from "framer-motion";
+} from "motion/react";
 import React, { useRef } from "react";
 import { cn } from "@/lib/utils";
 
@@ -42,13 +42,17 @@ const Dock = React.forwardRef<HTMLDivElement, DockProps>(
 
     const renderChildren = () => {
       return React.Children.map(children, (child) => {
-        if (React.isValidElement(child) && child.type === DockIcon) {
+        if (
+          React.isValidElement<DockIconProps>(child) &&
+          child.type === DockIcon
+        ) {
+          // cloneElement merges these over the element's existing props,
+          // so spreading child.props explicitly is unnecessary.
           return React.cloneElement(child, {
-            ...child.props,
             mouseX: mouseX,
             magnification: magnification,
             distance: distance,
-          } as DockIconProps);
+          });
         }
         return child;
       });

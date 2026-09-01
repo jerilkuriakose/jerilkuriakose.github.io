@@ -16,7 +16,7 @@ import {
 import { Icons } from "@/components/icons";
 import Link from "next/link";
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import {
   MapPin,
   Mail,
@@ -55,7 +55,7 @@ function FeaturedProject({
             isOdd ? "md:col-start-1" : "md:col-start-6"
           } md:row-start-1`}
         >
-          <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-primary/20 via-primary/10 to-transparent p-8 aspect-video flex items-center justify-center border border-primary/20">
+          <div className="relative overflow-hidden rounded-lg bg-linear-to-br from-primary/20 via-primary/10 to-transparent p-8 aspect-video flex items-center justify-center border border-primary/20">
             <div className="absolute inset-0 bg-grid-pattern opacity-10" />
             <div className="relative z-10 text-center">
               <div className="text-4xl font-bold text-primary/40 font-mono mb-2">
@@ -63,7 +63,7 @@ function FeaturedProject({
               </div>
               <div className="text-sm text-muted-foreground">{project.company}</div>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-linear-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
 
@@ -217,14 +217,14 @@ export default function Home() {
 
             {/* Name - Big Heading */}
             <BlurFade delay={BLUR_FADE_DELAY * 2}>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-4 tracking-tight leading-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-4 tracking-tight">
                 {DATA.name}
               </h1>
             </BlurFade>
 
             {/* Tagline */}
             <BlurFade delay={BLUR_FADE_DELAY * 3}>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-muted-foreground mb-8 leading-tight">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-muted-foreground mb-8">
                 I build intelligent AI systems.
               </h2>
             </BlurFade>
@@ -248,13 +248,13 @@ export default function Home() {
             <BlurFade delay={BLUR_FADE_DELAY * 5}>
               <div className="flex flex-wrap items-center gap-2 text-sm font-mono text-muted-foreground py-2">
                 <span className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4 text-primary flex-shrink-0" />
+                  <MapPin className="h-4 w-4 text-primary shrink-0" />
                   <span>{DATA.location}</span>
                 </span>
-                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-semibold whitespace-nowrap">
+                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded-sm text-xs font-semibold whitespace-nowrap">
                   {DATA.extraInfo}
                 </span>
-                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded text-xs font-semibold whitespace-nowrap">
+                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded-sm text-xs font-semibold whitespace-nowrap">
                   {DATA.yearsOfExperience} Years Experience
                 </span>
               </div>
@@ -330,7 +330,7 @@ export default function Home() {
                 {/* Profile image container */}
                 <div className="relative w-64 h-64 md:w-72 md:h-72">
                   {/* Glow effect */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-primary to-blue-500 rounded-full opacity-20 blur-2xl transform translate-x-4 translate-y-4" />
+                  <div className="absolute inset-0 bg-linear-to-tr from-primary to-blue-500 rounded-full opacity-20 blur-2xl transform translate-x-4 translate-y-4" />
                   
                   {/* Image */}
                   <div className="relative w-full h-full rounded-full border-4 border-background shadow-2xl overflow-hidden group">
@@ -548,7 +548,7 @@ export default function Home() {
                       <h4 className="text-lg font-semibold text-foreground mb-2">
                         {project.title}
                       </h4>
-                      <p className="text-sm text-muted-foreground flex-grow mb-4">
+                      <p className="text-sm text-muted-foreground grow mb-4">
                         {project.description}
                       </p>
                       <div className="flex flex-wrap gap-2 font-mono text-xs text-muted-foreground">
@@ -575,7 +575,7 @@ export default function Home() {
               <BlurFade key={pub.title} delay={BLUR_FADE_DELAY * (21 + i)}>
                 <div className="card-hover bg-card rounded-lg border border-border p-6 hover:border-primary/50">
                   <div className="flex items-start justify-between gap-4">
-                    <div className="flex-grow">
+                    <div className="grow">
                       <h3 className="font-medium text-foreground mb-1 leading-tight">
                         {pub.title}
                       </h3>
