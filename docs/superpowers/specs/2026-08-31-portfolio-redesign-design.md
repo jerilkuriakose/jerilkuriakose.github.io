@@ -22,7 +22,8 @@ restate gate status anywhere else. Tick a box only when Jeril has actually confi
       dark-mode policy) were agent-made and are unreviewed by a design-informed human.
       Detail: §2.
 - [ ] **G3 — Two impact claims** named for the hero and confirmed cleared for public
-      attribution. **Blocks Phase 1.** Detail: §5.
+      attribution. Blocks **Phase 1b only** — Phase 1a ships the containers empty.
+      Detail: §5.
 - [ ] **G4 — Photography** supplied: 6–10 abstract material macro shots (landscape,
       high-res, cool/neutral). Blocks *shipping* Phase 5, not developing it. Detail: §13.
 
@@ -691,17 +692,35 @@ Touches: `.numbered-heading`, `.gradient-text`, `.hero-gradient`, `.card-hover`,
 `.glow`, `.animated-underline`, `.tech-badge`, `.timeline-item`, `.grid-pattern`,
 `.glass`, focus rings, scrollbar, `::selection`.
 
-### Phase 1 — evidence model + IA + component decomposition ← *most valuable, ships first*
+### Phase 1 — evidence model + IA + component decomposition ← *most valuable*
 
-The recruiter-facing win must not wait behind cosmetics. Requires the §5 content
-prerequisite (approved featured claims) to be satisfied first.
+**Split, because an earlier draft of this spec said Phase 1 "requires the §5 content
+prerequisite satisfied first" while §5's own container contract says the proof row is
+"omitted entirely if none are approved". Those contradicted. The contract wins: the
+containers ship empty, so only the content half is gated.**
 
-- Add `id`s and nested `metrics` to `work` / `projects`; resolve featured IDs in the hero.
-- Resequence to §5; split About into hero positioning + Experience context.
-- **Decompose `app/page.tsx`** (794 lines, currently one big Client Component) into
-  section components with small client leaves only where state or motion is genuinely
-  needed — disclosure, theme toggle, dock. This reduces hydration cost and makes every
-  later phase easier.
+#### Phase 1a — unblocked, needs nothing from Jeril
+
+- **Decompose `app/page.tsx`.** 794 lines, currently one Client Component, containing
+  only **2 `useState`** and **6 `motion.*`** uses across 9 sections. Split into section
+  components with client leaves only where state or motion is genuinely needed —
+  the experience disclosure, theme toggle, dock, and the BlurFade wrappers. Everything
+  else becomes a Server Component. This cuts hydration cost and makes every later phase
+  easier to work in.
+- **Resequence to §5**: hero → Experience → Selected work → Skills → Publications →
+  Education + Awards → Contact.
+- **Split About**: positioning summary into the hero, leadership context opens Experience.
+  Neither is called "About".
+- **Add the schema**: `id` fields plus nested `metrics` arrays on `work` / `projects`
+  entries, and the build-time check that a featured metric ID resolves. Schema only — no
+  values.
+- **Build the containers**: hero proof row and per-role evidence, both rendering nothing
+  when empty, per the §5 container contract.
+
+#### Phase 1b — gated on G3
+
+Populate the two approved featured claims and switch the hero proof row on. Small, and
+purely content.
 
 ### Phase 2 — palette retune
 
