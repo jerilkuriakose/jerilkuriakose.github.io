@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { settle, freezeVisuals, lockMotion, setTheme } from "./helpers";
+import { settle, freezeVisuals, lockMotion, revealAll, setTheme } from "./helpers";
 
 /**
  * Broad rendering coverage - NOT proof of the migration.
@@ -27,6 +27,9 @@ for (const theme of ["light", "dark"] as const) {
         )
         .toBe(true);
 
+      await revealAll(page); // Phase 4: reveals are observer-driven, so trigger
+      // them all before capturing - lockMotion neutralises transform but not
+      // opacity, so an untriggered element would screenshot fully transparent.
       await freezeVisuals(page); // kills CSS animation/transition + blur artifacts
       await settle(page); // lets Motion's finite entrance animations finish
       await lockMotion(page); // neutralises the infinite scroll-indicator loop

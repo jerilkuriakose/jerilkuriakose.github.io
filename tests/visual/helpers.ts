@@ -100,3 +100,58 @@ export async function sample8bit(page: Page, css: string): Promise<number[]> {
     return Array.from(ctx.getImageData(0, 0, 1, 1).data);
   }, css);
 }
+
+/**
+ * Trigger every scroll-linked reveal, then return to the top.
+ *
+ * Phase 4 made BlurFade observer-driven. The screenshot suite captures
+ * `fullPage: true`, and `lockMotion()` sets `transform: none` but does NOT touch
+ * opacity - so without this, every below-fold element would screenshot at
+ * opacity 0 and the baseline would bake in invisible content, after which every
+ * future run happily matches it.
+ *
+ * `useInView` is configured `{ once: true }`, so a single pass down the document
+ * reveals everything permanently.
+ */
+export async function revealAll(page: Page): Promise<void> {
+  const reached = await page.evaluate(async () => {
+    // `html { scroll-behavior: smooth }` makes window.scrollTo ANIMATE, so each
+    // call is interrupted by the next and the loop never arrives. Measured: a
+    // loop requesting 8642px only ever reached 3338px, leaving Publications,
+    // Education, Contact and the footer permanently unrevealed at opacity 0.
+    // Force instant scrolling for the duration.
+    const root = document.documentElement;
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+
+    const height = Math.max(root.scrollHeight, document.body.scrollHeight);
+    const step = Math.floor(window.innerHeight * 0.8);
+    let deepest = 0;
+    for (let y = 0; y <= height; y += step) {
+      window.scrollTo({ top: Math.min(y, height), behavior: "instant" });
+      // Yield across two animation frames so IntersectionObserver delivers
+      // rather than coalescing; a bare setTimeout is not a contract.
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      await new Promise((r) => setTimeout(r, 90));
+      deepest = Math.max(deepest, window.scrollY);
+    }
+    window.scrollTo({ top: height, behavior: "instant" });
+    await new Promise((r) => setTimeout(r, 150));
+    deepest = Math.max(deepest, window.scrollY);
+    window.scrollTo({ top: 0, behavior: "instant" });
+    root.style.scrollBehavior = previous;
+
+    return { deepest, maxScroll: height - window.innerHeight };
+  });
+
+  // Fail loudly rather than baking blank sections into a baseline that every
+  // future run then matches.
+  if (reached.deepest < reached.maxScroll - 20) {
+    throw new Error(
+      `revealAll only reached ${reached.deepest}px of ${reached.maxScroll}px - ` +
+        `content below that is still unrevealed`,
+    );
+  }
+
+  await page.waitForTimeout(900);
+}

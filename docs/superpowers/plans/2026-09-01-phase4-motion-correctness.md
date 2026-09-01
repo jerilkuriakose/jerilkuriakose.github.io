@@ -68,7 +68,7 @@ returns to the top **before** `settle()`.
 
 **Files:** modify `components/magicui/blur-fade.tsx`; delete `components/magicui/blur-fade-text.tsx`
 
-- [ ] **Step 1: Confirm `BlurFadeText` is genuinely unreferenced, then delete it**
+- [x] **Step 1: Confirm `BlurFadeText` is genuinely unreferenced, then delete it**
 
 ```bash
 grep -rn 'BlurFadeText\|blur-fade-text' app components tests --include='*.tsx' --include='*.ts'
@@ -76,7 +76,7 @@ grep -rn 'BlurFadeText\|blur-fade-text' app components tests --include='*.tsx' -
 
 Expected: only the file itself. Then `git rm components/magicui/blur-fade-text.tsx`.
 
-- [ ] **Step 2: Rewrite the variants — opacity and transform only**
+- [x] **Step 2: Rewrite the variants — opacity and transform only**
 
 ```tsx
 const defaultVariants: Variants = {
@@ -93,7 +93,7 @@ ESLint error and `verify.sh` treats lint as a gate. Mark it `@deprecated` in the
 nobody re-wires it. Spec §7 permits retaining the interface while the default effect changes,
 and no call site passes it.
 
-- [ ] **Step 3: Flip `inView` to default `true`**
+- [x] **Step 3: Flip `inView` to default `true`**
 
 ```tsx
 inView = true,
@@ -113,7 +113,7 @@ inViewMargin = "0px 0px -50px 0px",
 and type the prop to Motion's accepted margin type instead of hiding an arbitrary string behind
 `as \`${number}px\``.
 
-- [ ] **Step 4: Add reduced motion — CSS first, hook second**
+- [x] **Step 4: Add reduced motion — CSS first, hook second**
 
 The obvious version of this is wrong. `useReducedMotion()` returns `null` on the server but
 `true` immediately on a reduced-motion client, so gating `initial` on it makes the **server HTML
@@ -156,7 +156,7 @@ CSS has already forced the visual end state. No mismatch, no flash.
 Task 3 assertions both select on it. Merge it with any incoming `className` rather than
 replacing it.
 
-- [ ] **Step 5: Gate** — `npx tsc --noEmit`, `npm run lint`, `npm run build` all clean.
+- [x] **Step 5: Gate** — `npx tsc --noEmit`, `npm run lint`, `npm run build` all clean.
 
 ---
 
@@ -164,13 +164,13 @@ replacing it.
 
 **Files:** modify `components/chrome/scroll-indicator.tsx`, `components/sections/experience-card.tsx`, `components/magicui/dock.tsx`
 
-- [ ] **Step 1: Scroll indicator — stop the loop**
+- [x] **Step 1: Scroll indicator — stop the loop**
 
 It runs `animate={{ y: [0, 8, 0] }}` with `repeat: Infinity`. Under reduced motion, render the
 arrow static: no `animate`, no `transition`. An infinite loop is the single most disruptive
 motion on the page for a vestibular-sensitive user.
 
-- [ ] **Step 2: Disclosure — instant open/close**
+- [x] **Step 2: Disclosure — instant open/close**
 
 Two animations here, and **both** need it: the panel's `height`/`opacity` (currently
 `duration: 0.3`) and the chevron's `rotate` (`duration: 0.2`). Set `duration: 0` for both when
@@ -181,7 +181,7 @@ one-shot, user-initiated surface, which the motion-performance skill's rule 2 pe
 explicitly. Do **not** convert it to a transform-based reveal: that changes the interaction and
 is outside this phase.
 
-- [ ] **Step 3: Dock — disable magnification**
+- [x] **Step 3: Dock — disable magnification**
 
 `dock.tsx` drives icon width from pointer distance via `useTransform` + `useSpring`. Do **not**
 "bypass the spring" by calling hooks conditionally — that breaks the rules of hooks. Call both
@@ -198,7 +198,7 @@ const width = useSpring(widthSync, { /* …unchanged… */ });
 Use the component's existing resting-size constant rather than a literal. This removes the
 *magnification*, not the dock — it stays mounted and interactive.
 
-- [ ] **Step 4: Gate** — tsc, lint, build clean.
+- [x] **Step 4: Gate** — tsc, lint, build clean.
 
 ---
 
@@ -217,13 +217,13 @@ stays.
 
 **Files:** modify `components/sections/skills.tsx`, `components/chrome/social-rail.tsx`, `components/sections/publications.tsx`, `components/sections/education-awards.tsx`, `components/sections/selected-work.tsx`
 
-- [ ] **Step 1: Inventory the reveal sites**
+- [x] **Step 1: Inventory the reveal sites**
 
 ```bash
 grep -rn '<BlurFade' components --include='*.tsx' | sed 's|components/||'
 ```
 
-- [ ] **Step 2: Keep section-level reveals, remove per-item ones**
+- [x] **Step 2: Keep section-level reveals, remove per-item ones**
 
 Retain a reveal on: the hero's staged content, each `<section>`'s heading, and each *featured
 project* (four narrative moments). Remove the per-item wrapper from: skill chips, social rail
@@ -232,20 +232,24 @@ links, publication rows, award cards, education rows, and the "other noteworthy"
 Where a container previously staggered its children, wrap the **container** once instead. The
 list still arrives with the section; the individual items no longer each stage in.
 
-- [ ] **Step 3: Assert the distribution, not just the effect**
+- [x] **Step 3: Assert the distribution, not just the effect**
 
 ```ts
 test("motion is applied at narrative moments, not to every element", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   await revealAll(page);
   const count = await page.locator("main .motion-reveal").count();
-  // 92 pre-audit. A ceiling, not an exact number, so later phases can add a
-  // deliberate moment without editing this test - but not 40 of them.
-  expect(count, `${count} reveal wrappers - §7 forbids uniform decoration`).toBeLessThanOrEqual(20);
+  // 92 pre-audit, 33 after. The ceiling is 40, not 20: an earlier draft of this
+  // plan guessed 20 before measuring, which is unreachable while keeping what §7
+  // calls narrative - the hero's 8 staged elements, 8 experience cards and 4
+  // featured projects are 20 on their own. A ceiling with headroom lets a later
+  // phase add a deliberate moment without editing this test, while still failing
+  // loudly if per-item decoration returns.
+  expect(count, `${count} reveal wrappers - §7 forbids uniform decoration`).toBeLessThanOrEqual(40);
 });
 ```
 
-- [ ] **Step 4: Gate** — tsc, lint, build clean. Expect the screenshot baseline to move here too; it is regenerated once, in Task 4.
+- [x] **Step 4: Gate** — tsc, lint, build clean. Expect the screenshot baseline to move here too; it is regenerated once, in Task 4.
 
 ---
 
@@ -256,7 +260,7 @@ test("motion is applied at narrative moments, not to every element", async ({ pa
 Each assertion below targets one of the defects; each must be verified to FAIL against the
 pre-fix code before it is trusted.
 
-- [ ] **Step 1: Assert the settled position is identity, not −6px**
+- [x] **Step 1: Assert the settled position is identity, not −6px**
 
 The regression this phase's headline defect represents:
 
@@ -288,7 +292,7 @@ Measured on production before the fix: **92** elements carry `matrix(1, 0, 0, 1,
 three times larger. Each non-`none` filter also creates a containing block and promotes a
 compositing layer for zero visual effect.
 
-- [ ] **Step 2: Assert no filter animation survives, anywhere**
+- [x] **Step 2: Assert no filter animation survives, anywhere**
 
 ```ts
 test("no component animates filter or blur", () => {
@@ -311,7 +315,7 @@ useTransform`, and assert none contains an animated `filter`, `backdropFilter`,
 too — only animated values are forbidden. A source assertion is right here because the point is
 that no future edit reintroduces one, which a rendered check cannot express.
 
-- [ ] **Step 3: Assert reveals are scroll-triggered — with the timing that makes it real**
+- [x] **Step 3: Assert reveals are scroll-triggered — with the timing that makes it real**
 
 The naive version of this test **passes against the unfixed component.** Contact's reveal
 carries `delay: BLUR_FADE_DELAY * 36` = 1.44s, plus 0.04s and a 0.4s duration — **1.88s total**.
@@ -356,7 +360,7 @@ test("below-fold content stays hidden past the old animation budget, then reveal
 Contact is unambiguously below the fold at 1280×900: the hero alone is `min-h-screen`, and
 Experience, Selected work, Skills, Publications and Education + Awards all precede it.
 
-- [ ] **Step 4: Assert each reduced-motion outcome separately**
+- [x] **Step 4: Assert each reduced-motion outcome separately**
 
 Four interactions, four assertions, using `page.emulateMedia({ reducedMotion: "reduce" })`:
 
@@ -373,7 +377,7 @@ Four interactions, four assertions, using `page.emulateMedia({ reducedMotion: "r
 A single "reduced motion is on" assertion is not acceptable — §7 requires per-interaction
 outcomes, and a blanket check passes even when three of the four still animate.
 
-- [ ] **Step 5: Prove every assertion fails pre-fix**
+- [x] **Step 5: Prove every assertion fails pre-fix**
 
 `git stash` the component changes, run the contract, and confirm each test fails for its own
 reason. Restore. **Any assertion that passes against the old code is not testing anything** —
@@ -385,7 +389,7 @@ this has been the decisive defect in three consecutive phases.
 
 **Files:** modify `tests/visual/helpers.ts`, `tests/visual/tokens.spec.ts`
 
-- [ ] **Step 1: Add `revealAll()`**
+- [x] **Step 1: Add `revealAll()`**
 
 ```ts
 /**
@@ -421,9 +425,9 @@ export async function revealAll(page: Page): Promise<void> {
 }
 ```
 
-- [ ] **Step 2: Call it in `tokens.spec.ts` before `settle()`** — order matters: reveal, then let the entrance animations finish, then freeze.
+- [x] **Step 2: Call it in `tokens.spec.ts` before `settle()`** — order matters: reveal, then let the entrance animations finish, then freeze.
 
-- [ ] **Step 3: Verify no element is left transparent**
+- [x] **Step 3: Verify no element is left transparent**
 
 Before regenerating, assert the harness actually worked:
 
@@ -443,7 +447,7 @@ test("revealAll leaves nothing transparent", async ({ page }) => {
 Without this, a silently-broken `revealAll` produces a baseline of blank sections that all
 future runs then match.
 
-- [ ] **Step 4: Gate all contracts, then regenerate**
+- [x] **Step 4: Gate all contracts, then regenerate**
 
 ```bash
 npx playwright test motion-contract.spec.ts type-contract.spec.ts contrast-contract.spec.ts \
@@ -456,7 +460,7 @@ npx playwright test --repeat-each=3
 **Inspect all six diffs.** Expect a ~6px downward shift on revealed elements — that is defect 2
 being fixed and is the *point* of the phase. Anything else is suspect.
 
-- [ ] **Step 5: `bash scripts/verify.sh`** exits 0. Then **one commit** for Tasks 1–4.
+- [x] **Step 5: `bash scripts/verify.sh`** exits 0. Then **one commit** for Tasks 1–4.
 
 ---
 
@@ -464,15 +468,15 @@ being fixed and is the *point* of the phase. Anything else is suspect.
 
 Verification only. **No commit.**
 
-- [ ] **Step 1:** `npx playwright test --repeat-each=3` green.
-- [ ] **Step 2: Drive a real browser, normal motion.** Load the live-equivalent build, scroll
+- [x] **Step 1:** `npx playwright test --repeat-each=3` green.
+- [x] **Step 2: Drive a real browser, normal motion.** Load the live-equivalent build, scroll
 slowly, and confirm: sections reveal as they enter view rather than all at once on load; nothing
 flashes blurred; revealed elements sit flush, not 6px high; the disclosure expands smoothly; the
 dock magnifies on hover.
-- [ ] **Step 3: Repeat with reduced motion forced.** Confirm all four outcomes: content is
+- [x] **Step 3: Repeat with reduced motion forced.** Confirm all four outcomes: content is
 present immediately without scrolling, the scroll arrow is static, the disclosure snaps open,
 and the dock does not magnify.
-- [ ] **Step 4:** `git status --porcelain` clean.
+- [x] **Step 4:** `git status --porcelain` clean.
 
 ---
 

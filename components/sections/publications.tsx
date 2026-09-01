@@ -13,9 +13,11 @@ export function Publications() {
           </BlurFade>
 
           <div className="space-y-4">
-            {DATA.publications.map((pub, i) => (
-              <BlurFade key={pub.title} delay={BLUR_FADE_DELAY * (21 + i)}>
-                <div className="card-hover bg-card rounded-lg border border-border p-6 hover:border-brand-vivid/50">
+            {DATA.publications.map((pub) => (
+              <div
+                key={pub.title}
+                className="card-hover bg-card rounded-lg border border-border p-6 hover:border-brand-vivid/50"
+              >
                   <div className="flex items-start justify-between gap-4">
                     <div className="grow">
                       <h3 className="display-4 text-foreground mb-1">
@@ -33,8 +35,7 @@ export function Publications() {
                       {pub.year}
                     </Badge>
                   </div>
-                </div>
-              </BlurFade>
+              </div>
             ))}
           </div>
 

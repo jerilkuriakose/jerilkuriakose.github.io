@@ -22,39 +22,39 @@ import { DATA } from "@/data/resume";
 export function SocialRail() {
   return (
     <div className="hidden lg:flex fixed left-6 xl:left-10 bottom-0 flex-col items-center gap-6 after:content-[''] after:w-px after:h-24 after:bg-muted-foreground/30">
+      {/* One reveal for the whole rail. Per-link reveals were uniform decoration
+          (spec §7) - five icons staging in one at a time. */}
+      <BlurFade delay={BLUR_FADE_DELAY * 10} className="flex flex-col items-center gap-6">
       <TooltipProvider>
-        {DATA.contact.social.map((social, i) => (
-          <BlurFade key={social.name} delay={BLUR_FADE_DELAY * (10 + i)}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-muted-foreground hover:text-interactive hover:-translate-y-1 transition-all duration-200"
-                >
-                  <social.icon className="h-5 w-5" />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>{social.name}</p>
-              </TooltipContent>
-            </Tooltip>
-          </BlurFade>
-        ))}
-        <BlurFade delay={BLUR_FADE_DELAY * 14}>
-          <Tooltip>
+        {DATA.contact.social.map((social) => (
+          <Tooltip key={social.name}>
             <TooltipTrigger asChild>
-              <div className="text-muted-foreground hover:text-interactive hover:-translate-y-1 transition-all duration-200">
-                <ThemeToggle />
-              </div>
+              <Link
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-interactive hover:-translate-y-1 transition-all duration-200"
+              >
+                <social.icon className="h-5 w-5" />
+              </Link>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Toggle theme</p>
+              <p>{social.name}</p>
             </TooltipContent>
           </Tooltip>
-        </BlurFade>
+        ))}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="text-muted-foreground hover:text-interactive hover:-translate-y-1 transition-all duration-200">
+              <ThemeToggle />
+            </div>
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            <p>Toggle theme</p>
+          </TooltipContent>
+        </Tooltip>
       </TooltipProvider>
+      </BlurFade>
     </div>
   );
 }

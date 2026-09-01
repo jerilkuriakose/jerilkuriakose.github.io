@@ -8,12 +8,13 @@ export function Skills() {
           <section id="skills" className="py-12">
             <h2 className="numbered-heading display-3 text-foreground">Skills & Technologies</h2>
             <div className="flex flex-wrap gap-3">
-              {DATA.skills.map((skill, i) => (
-                <BlurFade key={skill} delay={BLUR_FADE_DELAY * 11 + i * 0.02}>
-                  <span className="tech-badge hover:scale-105 transition-transform cursor-default">
-                    {skill}
-                  </span>
-                </BlurFade>
+              {DATA.skills.map((skill) => (
+                <span
+                  key={skill}
+                  className="tech-badge hover:scale-105 transition-transform cursor-default"
+                >
+                  {skill}
+                </span>
               ))}
             </div>
           </section>

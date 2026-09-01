@@ -564,6 +564,35 @@ main {
   font-weight: 600;
 }
 
+/* ---------------------------------------------------------------------------
+   Reduced motion (spec §7), specified PER INTERACTION rather than as a blanket
+   disable.
+
+   This block is the source of truth for the entrance guarantee, not the React
+   hook. `useReducedMotion()` returns null during SSR and true immediately on a
+   reduced-motion client, so gating `initial` on it would ship HIDDEN server HTML
+   to exactly the users the feature protects - a hydration mismatch plus a
+   visible flash. CSS applies before any JavaScript, so the first paint is
+   already correct and the hook only zeroes the transition duration afterwards.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  /* entrance reveals become instant: no translate, no fade */
+  .motion-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* belt and braces for anything CSS-driven that Motion does not own */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Focus styles */
 :focus {
   outline: 2px dashed var(--focus);

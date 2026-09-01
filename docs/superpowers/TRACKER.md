@@ -22,12 +22,15 @@ hand-maintained, so none of it can go stale.**
 
 ## The only hand-maintained state
 
-**Next action:** **Phases 0, 1a, 1b, 2 and 3 are complete, pushed and deployed**
-(`verify.sh` green, 60 tests). **G3 is resolved** — the hero proof row now carries two
-cleared claims. **Phase 4 (motion correctness) is next** and is unblocked, then Phase 6.
-Only **G4** (photography) still blocks anything, and only the *shipping* of Phase 5 —
-Phase 5 can be developed on placeholders now. **G2** (owner sign-off) is best answered once
-Phase 5 has a real image in the first viewport.
+**Next action:** **Phases 0, 1a, 1b, 2, 3 and 4 are complete** (`verify.sh` green, 71 tests).
+**Phase 6 (AX + polish) is next** and is unblocked — `sitemap.ts`, `robots.ts`, `llms.txt`,
+JSON-LD, the OG image, and clipping the pre-existing hero blur-blob overflow. Only **G4**
+(photography) still blocks anything, and only the *shipping* of Phase 5; it can be developed on
+placeholders now. **G2** is best answered once Phase 5 has a real image in the first viewport.
+
+Phase 4 removed per-item reveal decoration on Jeril's explicit approval after an A/B: 92 reveal
+elements down to 33. He was shown both mid-transition and chose removal. Do not reintroduce
+per-item staggering.
 
 Four rules this project has paid for. They apply to every later phase:
 

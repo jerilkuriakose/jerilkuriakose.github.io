@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState } from "react";
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { Building2, Calendar, ChevronDown, MapPin } from "lucide-react";
 import BlurFade from "@/components/magicui/blur-fade";
 import { RoleMetrics } from "@/components/sections/role-metrics";
@@ -15,6 +15,7 @@ export function ExperienceCard({
   delay: number;
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const shouldReduce = useReducedMotion();
   const panelId = useId();
 
   return (
@@ -70,7 +71,7 @@ export function ExperienceCard({
               <span>Key achievements ({job.highlights.length})</span>
               <motion.div
                 animate={{ rotate: isOpen ? 180 : 0 }}
-                transition={{ duration: 0.2 }}
+                transition={{ duration: shouldReduce ? 0 : 0.2 }}
               >
                 <ChevronDown className="h-4 w-4" />
               </motion.div>
@@ -84,7 +85,11 @@ export function ExperienceCard({
                 height: isOpen ? "auto" : 0,
                 opacity: isOpen ? 1 : 0,
               }}
-              transition={{ duration: 0.3 }}
+              /* The panel still opens - only the animation is removed. Note this
+                 animates `height`, the one layout animation permitted in the
+                 codebase: §7 names it explicitly, and it is a small, isolated,
+                 one-shot, user-initiated surface. */
+              transition={{ duration: shouldReduce ? 0 : 0.3 }}
               className="overflow-hidden"
             >
               <ul className="mt-4 space-y-2">

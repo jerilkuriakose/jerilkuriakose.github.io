@@ -5,6 +5,7 @@ import {
   motion,
   MotionValue,
   useMotionValue,
+  useReducedMotion,
   useSpring,
   useTransform,
 } from "motion/react";
@@ -115,10 +116,21 @@ const DockIcon = ({
     damping: 12,
   });
 
+  /**
+   * Reduced motion disables the MAGNIFICATION, not the dock - it stays mounted
+   * and interactive.
+   *
+   * Both hooks above are called unconditionally: skipping useSpring behind a
+   * condition would break the rules of hooks. The switch happens at the
+   * consumption point instead, and a plain number is valid Motion style input,
+   * so there is no MotionValue type error.
+   */
+  const shouldReduce = useReducedMotion();
+
   return (
     <motion.div
       ref={ref}
-      style={{ width }}
+      style={{ width: shouldReduce ? 40 : width }}
       className={cn(
         "flex aspect-square cursor-pointer items-center justify-center rounded-full",
         className
