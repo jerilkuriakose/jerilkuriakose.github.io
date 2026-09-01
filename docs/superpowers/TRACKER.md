@@ -22,11 +22,23 @@ hand-maintained, so none of it can go stale.**
 
 ## The only hand-maintained state
 
-**Next action:** Phase 0 is **complete** (`9747896`). Phase 1 is next and is the
-highest-value phase, but it is blocked on gate **G3** — Jeril must name the two impact
-claims and confirm they are cleared for public attribution. Phases 2, 4 and 6 are
-unblocked and could proceed in the meantime; each needs a plan written and Oracle-reviewed
-first.
+**Next action:** **Phase 1a is complete** (27/27 steps, `verify.sh` all green, 114 passed over
+`--repeat-each=3`) but **not committed** — 18 files are uncommitted pending an explicit commit
+request. **Phase 2 needs a third pass before execution:** its 2nd Oracle review returned
+`REDESIGN` again (`reviews/2026-09-01-phase2-rewrite-oracle-2nd.md`, 8 blockers, all verified
+true). The role table must be **re-derived** from the corrected ramp rather than patched,
+because fixing the gamut changes the contrast numbers — `border-strong` on dark is already
+known broken at 2.91:1.
+
+Two rules this project has now paid for twice. Both belong in every later phase:
+
+1. **No contrast number enters a plan or a test unless a browser produced it** — and the
+   browser measurement must be a **round-trip**: render `oklch(...)`, sample the bytes, then
+   read them back with `oklch(from rgb(...) l c h)`. Out-of-gamut colours are *gamut-mapped*,
+   not clamped, so comparing rendered bytes as chroma rises finds where the mapping saturates,
+   not the gamut edge. That mistake put three ramp steps out of gamut.
+2. **Every colour check reuses `sample8bit()` and `setTheme()` from `tests/visual/helpers.ts`**,
+   and `setTheme()` runs **before** `goto()` — it only installs an init script.
 
 ---
 

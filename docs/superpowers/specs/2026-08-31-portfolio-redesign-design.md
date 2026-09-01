@@ -663,8 +663,24 @@ and responsive/contrast behaviour — not isolated functions. Cover:
 
 ### Other
 
-Measured contrast report; real-browser interaction pass; confirm the 39px mobile
-overflow is eliminated.
+Measured contrast report; real-browser interaction pass; eliminate the horizontal overflow.
+
+**Horizontal overflow — measured precisely 2026-09-01, and it is not mobile-only.**
+An earlier note here called it "the 39px mobile overflow". It is in fact present at every
+width and scales with the viewport:
+
+| Viewport | `scrollWidth − clientWidth` |
+|---|---|
+| 375 | **38px** |
+| 768 | **77px** |
+| 1280 | **128px** |
+
+Cause: the hero's two decorative blur blobs are positioned at `left-[-10%]` and
+`right-[-10%]` inside an `absolute inset-0` container that has no `overflow-hidden`, so the
+bleed is 10% of the viewport on the right edge. Confirmed **pre-existing** — identical values
+measured at commit `4a6994f` via a clean `git worktree` build, before the Phase 1a
+decomposition. `tests/visual/ia-order.spec.ts` now locks these values so the defect cannot
+grow silently; tighten the assertion to 0 in whichever phase clips the container.
 
 ---
 
