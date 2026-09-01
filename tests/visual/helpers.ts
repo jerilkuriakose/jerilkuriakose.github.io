@@ -26,13 +26,19 @@ export async function settle(page: Page): Promise<void> {
         ),
     );
   });
-  await page.waitForTimeout(800);
+  // BlurFade entrances are staggered (~0.04s * index, then 0.4s each), so with
+  // ~40 wrapped elements the last one finishes well after 1.5s. Measured: they
+  // are still converging on y:-6 at 800ms.
+  await page.waitForTimeout(3000);
 }
 
 /**
  * Headless SwiftShader renders large blur radii as concentric ring
  * artifacts - a rasterisation artifact, not a CSS bug - which makes
- * diffs meaningless. Also stop animation so frames are deterministic.
+ * diffs meaningless. Also stop CSS animation and transitions.
+ *
+ * NOTE: this cannot stop Motion (framer-motion), which animates via JS by
+ * writing inline transforms. Use lockMotion() after settle() for that.
  */
 export async function freezeVisuals(page: Page): Promise<void> {
   await page.addStyleTag({
@@ -45,6 +51,29 @@ export async function freezeVisuals(page: Page): Promise<void> {
       html { scroll-behavior: auto !important; }
     `,
   });
+}
+
+/**
+ * Force every element to its untransformed position.
+ *
+ * Required because the hero scroll indicator uses Motion's
+ * `animate={{ y: [0, 8, 0] }}` - an INFINITE loop that never settles, so
+ * Playwright can never take two consecutive stable screenshots. CSS
+ * `animation: none` does not stop it, because Motion drives inline transforms
+ * from JS.
+ *
+ * Forcing `transform: none` is deterministic in a way that freezing the
+ * current transform is not: a frozen loop lands at a random phase each run.
+ * The only cost is that BlurFade's settled -6px offset disappears, which is
+ * applied identically to baseline and post-conversion runs, so colour
+ * equivalence - the only thing Phase 0 asserts - is unaffected.
+ * (That -6px resting offset is itself a bug, slated for Phase 4.)
+ */
+export async function lockMotion(page: Page): Promise<void> {
+  await page.addStyleTag({
+    content: `* { transform: none !important; }`,
+  });
+  await page.waitForTimeout(250);
 }
 
 /**

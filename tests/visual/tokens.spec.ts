@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { settle, freezeVisuals, setTheme } from "./helpers";
+import { settle, freezeVisuals, lockMotion, setTheme } from "./helpers";
 
 /**
  * Broad rendering coverage - NOT proof of the migration.
@@ -27,8 +27,9 @@ for (const theme of ["light", "dark"] as const) {
         )
         .toBe(true);
 
-      await freezeVisuals(page);
-      await settle(page);
+      await freezeVisuals(page); // kills CSS animation/transition + blur artifacts
+      await settle(page); // lets Motion's finite entrance animations finish
+      await lockMotion(page); // neutralises the infinite scroll-indicator loop
 
       await expect(page).toHaveScreenshot(`tokens-${theme}-${width}.png`, {
         fullPage: true,

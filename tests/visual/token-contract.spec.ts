@@ -1,5 +1,30 @@
 import { test, expect } from "@playwright/test";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { sample8bit, setTheme, type Theme } from "./helpers";
+
+/**
+ * Pre-conversion the tokens hold HSL *channels* ("0 0% 100%"), which are only
+ * a valid colour inside hsl(). Post-conversion they hold complete oklch()
+ * values, usable bare. So the RENDERED colour is representation-independent
+ * but the REFERENCE FORM is not - wrap accordingly.
+ *
+ * That asymmetry is what makes this a genuine before/after contract: the same
+ * expected 8-bit values must hold through the representation change.
+ */
+const CSS = readFileSync(join(process.cwd(), "app", "globals.css"), "utf8");
+const CONVERTED = /--background:\s*oklch\(/.test(CSS);
+
+/** Reference a colour token in whichever form the current CSS requires. */
+const ref = (token: string) =>
+  CONVERTED ? `var(${token})` : `hsl(var(${token}))`;
+
+/** Reference a token at partial alpha, in whichever form applies. */
+const refAlpha = (token: string, pct: number) =>
+  CONVERTED
+    ? `color-mix(in oklab, var(${token}) ${pct}%, transparent)`
+    : `hsl(var(${token}) / ${pct / 100})`;
+
 
 /**
  * Expected USED 8-bit sRGB per token. Must not change in Phase 0.
@@ -66,7 +91,9 @@ const EXPECTED: Record<Theme, Record<string, number[]>> = {
 };
 
 for (const theme of ["light", "dark"] as const) {
-  test(`token contract: ${theme}`, async ({ page }) => {
+  test(`token contract: ${theme} (${CONVERTED ? "oklch" : "hsl channels"})`, async ({
+    page,
+  }) => {
     await setTheme(page, theme);
     await page.goto("/", { waitUntil: "networkidle" });
     await expect
@@ -79,7 +106,7 @@ for (const theme of ["light", "dark"] as const) {
       .toBe(true);
 
     for (const [token, want] of Object.entries(EXPECTED[theme])) {
-      const got = await sample8bit(page, `var(${token})`);
+      const got = await sample8bit(page, ref(token));
       expect(got, `${theme} ${token}`).toEqual(want);
     }
   });
@@ -91,14 +118,22 @@ test("alpha sites keep their colour and gain the right alpha", async ({
   await setTheme(page, "light");
   await page.goto("/", { waitUntil: "networkidle" });
 
-  // color-mix(in oklab, X p%, transparent) must equal X with alpha p.
-  // Premultiplied interpolation gives premultiplied p*C and alpha p;
-  // unpremultiplying divides by p, restoring C exactly.
-  const got = await sample8bit(
-    page,
-    "color-mix(in oklab, var(--primary) 30%, transparent)",
-  );
-  expect(got.slice(0, 3)).toEqual([29, 211, 168]);
+  // Post-conversion this is color-mix(in oklab, X 30%, transparent), which is
+  // provably equivalent to alpha 0.3: premultiplied interpolation gives
+  // premultiplied 0.3*C and alpha 0.3; unpremultiplying restores C exactly.
+  const got = await sample8bit(page, refAlpha("--primary", 30));
+
+  // Canvas getImageData un-premultiplies a semi-transparent fill, which rounds
+  // each channel by up to ~1. Exact bytes are already covered by the opaque
+  // token assertions above; this test's job is that the HUE survives and the
+  // alpha is right, so a small per-channel tolerance is correct here.
+  const want = [29, 211, 168];
+  for (let i = 0; i < 3; i++) {
+    expect(
+      Math.abs(got[i] - want[i]),
+      `channel ${i}: got ${got[i]}, want ~${want[i]}`,
+    ).toBeLessThanOrEqual(2);
+  }
   expect(got[3]).toBeGreaterThanOrEqual(75);
   expect(got[3]).toBeLessThanOrEqual(78); // 0.3 * 255 = 76.5
 });
