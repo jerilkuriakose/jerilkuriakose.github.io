@@ -35,7 +35,7 @@ test.describe("source contract (post-conversion)", () => {
     expect(CSS).toContain("hsl(166 100% 50%)");
   });
 
-  test("all 16 alpha sites are color-mix with the right percentages", () => {
+  test("all 16 alpha sites are color-mix(in srgb) with the right percentages", () => {
     const counts = new Map<string, number>([
       ["var(--muted-foreground) 30%", 2],
       ["var(--muted-foreground) 50%", 1],
@@ -54,6 +54,24 @@ test.describe("source contract (post-conversion)", () => {
       total += found;
     }
     expect(total).toBe(16);
+  });
+
+  test("alpha mixing is in srgb, never oklab", () => {
+    // The tokens originated as HSL. Mixing in sRGB reproduces the original
+    // composited bytes exactly; mixing in oklab shifts them.
+    expect(CSS).not.toContain("in oklab");
+    expect((CSS.match(/color-mix\(in srgb/g) ?? []).length).toBe(17); // 16 sites + --accent-tint
+  });
+
+  test("every gradient pins interpolation to srgb", () => {
+    // Introducing any non-legacy stop (oklch/color-mix) flips a gradient's
+    // default interpolation space from sRGB to Oklab, which measurably shifts
+    // the middle of the ramp by up to 30/255. `in srgb` pins it back.
+    const gradients = CSS.match(/(linear|radial)-gradient\(/g) ?? [];
+    expect(gradients.length).toBe(5);
+    for (const m of CSS.matchAll(/(?:linear|radial)-gradient\(([^;]*?)\)/g)) {
+      expect(m[0].slice(0, 120)).toContain("in srgb");
+    }
   });
 
   test("--accent-tint is preserved (no consumer, but token compat)", () => {
