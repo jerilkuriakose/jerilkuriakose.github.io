@@ -67,7 +67,7 @@ export function Contact() {
                   variant="outline"
                   className="h-12 px-5 border-border hover:border-primary hover:text-primary font-mono"
                 >
-                  <Link href={DATA.resumeUrl} target="_blank">
+                  <Link href={DATA.resumeUrl} target="_blank" prefetch={false}>
                     <Icons.download className="mr-2 h-4 w-4" />
                     <span>Resume</span>
                   </Link>
