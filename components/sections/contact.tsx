@@ -15,7 +15,7 @@ export function Contact() {
   return (
         <section id="contact" className="py-24 text-center">
           <BlurFade delay={BLUR_FADE_DELAY * 36}>
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
+            <h2 className="display-2 text-foreground mb-6">
               Get In Touch
             </h2>
             <p className="max-w-md mx-auto text-muted-foreground mb-8 leading-relaxed">

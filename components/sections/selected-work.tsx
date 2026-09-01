@@ -8,7 +8,7 @@ export function SelectedWork() {
   return (
         <section id="selected-work" className="py-24">
           <BlurFade delay={BLUR_FADE_DELAY * 14}>
-            <h2 className="numbered-heading font-bold text-foreground">Things I&apos;ve Built</h2>
+            <h2 className="numbered-heading display-3 text-foreground">Things I&apos;ve Built</h2>
           </BlurFade>
 
           <div className="space-y-24">
@@ -26,7 +26,7 @@ export function SelectedWork() {
           {DATA.projects.length > 4 && (
             <div className="mt-24">
               <BlurFade delay={BLUR_FADE_DELAY * 18}>
-                <h3 className="text-center text-xl font-semibold mb-8 text-foreground">
+                <h3 className="display-4 text-center mb-8 text-foreground">
                   Other Noteworthy Projects
                 </h3>
               </BlurFade>
@@ -40,7 +40,7 @@ export function SelectedWork() {
                           {project.company}
                         </span>
                       </div>
-                      <h4 className="text-lg font-semibold text-foreground mb-2">
+                      <h4 className="display-4 text-foreground mb-2">
                         {project.title}
                       </h4>
                       <p className="text-sm text-muted-foreground grow mb-4">

@@ -48,7 +48,7 @@ export function FeaturedProject({
           } md:row-start-1`}
         >
           <p className="font-mono text-sm text-interactive mb-2">Featured Project</p>
-          <h3 className="text-xl md:text-2xl font-bold mb-4 text-foreground">
+          <h3 className="display-3 mb-4 text-foreground">
             {project.title}
           </h3>
           <div className="bg-card p-6 rounded-lg shadow-xl border border-border mb-4">

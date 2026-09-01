@@ -6,7 +6,7 @@ export function Skills() {
   return (
         <BlurFade delay={BLUR_FADE_DELAY * 10}>
           <section id="skills" className="py-12">
-            <h2 className="numbered-heading font-bold text-foreground">Skills & Technologies</h2>
+            <h2 className="numbered-heading display-3 text-foreground">Skills & Technologies</h2>
             <div className="flex flex-wrap gap-3">
               {DATA.skills.map((skill, i) => (
                 <BlurFade key={skill} delay={BLUR_FADE_DELAY * 11 + i * 0.02}>

@@ -51,6 +51,7 @@
 
   --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains-mono), "JetBrains Mono", monospace;
+  --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
 
   --animate-fade-in: fade-in 0.5s ease-out forwards;
 }
@@ -329,8 +330,9 @@
   position: relative;
   margin: 10px 0 40px;
   width: 100%;
-  font-size: clamp(1.5rem, 5vw, 2rem);
   white-space: nowrap;
+  /* Size and leading come from .display-3, applied alongside this class - a size
+     declared here as well would be the "same value in two places" §4 warns about. */
 }
 
 .numbered-heading::before {
@@ -341,6 +343,11 @@
   color: var(--interactive);
   font-family: var(--font-jetbrains-mono), "JetBrains Mono", ui-monospace, monospace;
   font-size: clamp(1rem, 3vw, 1.25rem);
+  /* Explicit, so this fluid step is not the one exception to §4's rule. Matches
+     .display-3 so the number shares the heading's baseline. The family stays
+     mono on purpose: the number is a label, and Phase 1a's positional counter
+     depends on this rule. */
+  line-height: 1.18;
   font-weight: 400;
 }
 
@@ -507,6 +514,54 @@ main {
   background: color-mix(in srgb, var(--background) 80%, transparent);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+/* ---------------------------------------------------------------------------
+   Phase 3 display scale (spec §4).
+
+   Every step pins font-size AND line-height in the SAME rule. Tailwind 4
+   reversed text-{size} vs leading-* precedence, which silently grew the hero h1
+   from 72px to 90px on the Next 16 upgrade - §4 calls a new scale "exactly where
+   it recurs". Leading tightens as size grows, which is why no single bundled
+   value can serve the whole scale.
+
+   These are PLAIN CSS, not @layer components. Verified empirically: Tailwind
+   4.3.3 strips author content written inside `@layer components` - the classes
+   were absent from the built stylesheet entirely (0 occurrences), while the
+   file's existing unlayered `.tech-badge` and `.numbered-heading` survived.
+
+   Consequence to know: unlayered CSS outranks EVERY Tailwind layer, so these
+   classes beat a leftover `text-lg` or `leading-tight` utility rather than
+   losing to it. Safer for this phase, but it means a stale utility fails
+   silently instead of loudly - which is why type-contract.spec.ts asserts the
+   rendered result on real headings and greps for survivors.
+   --------------------------------------------------------------------------- */
+.display-1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 1.2rem + 5.2vw, 4.5rem);   /*  36 ->  72px */
+  line-height: 1.04;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.display-2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1rem + 4.4vw, 3.75rem);   /*  30 ->  60px */
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+.display-3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.05rem + 2.2vw, 2.25rem);  /*  24 ->  36px */
+  line-height: 1.18;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.display-4 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.1rem + 0.75vw, 1.5rem);  /*  20 ->  24px */
+  line-height: 1.3;
+  font-weight: 600;
 }
 
 /* Focus styles */

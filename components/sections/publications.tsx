@@ -9,7 +9,7 @@ export function Publications() {
   return (
         <section id="publications" className="py-24">
           <BlurFade delay={BLUR_FADE_DELAY * 20}>
-            <h2 className="numbered-heading font-bold text-foreground">Research & Publications</h2>
+            <h2 className="numbered-heading display-3 text-foreground">Research & Publications</h2>
           </BlurFade>
 
           <div className="space-y-4">
@@ -18,7 +18,7 @@ export function Publications() {
                 <div className="card-hover bg-card rounded-lg border border-border p-6 hover:border-brand-vivid/50">
                   <div className="flex items-start justify-between gap-4">
                     <div className="grow">
-                      <h3 className="font-medium text-foreground mb-1 leading-tight">
+                      <h3 className="display-4 text-foreground mb-1">
                         {pub.title}
                       </h3>
                       <p className="text-sm text-muted-foreground mb-1">

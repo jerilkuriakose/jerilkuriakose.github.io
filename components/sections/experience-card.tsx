@@ -25,7 +25,7 @@ export function ExperienceCard({
         
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-4">
           <div>
-            <h3 className="text-lg font-semibold text-foreground group-hover:text-interactive transition-colors">
+            <h3 className="display-4 text-foreground group-hover:text-interactive transition-colors">
               {job.title}
             </h3>
             <p className="text-interactive font-medium flex items-center gap-2">

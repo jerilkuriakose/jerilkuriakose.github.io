@@ -38,14 +38,14 @@ export function Hero() {
 
             {/* Name - Big Heading */}
             <BlurFade delay={BLUR_FADE_DELAY * 2}>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-foreground mb-4 tracking-tight">
+              <h1 className="display-1 text-foreground mb-4">
                 {DATA.name}
               </h1>
             </BlurFade>
 
             {/* Tagline */}
             <BlurFade delay={BLUR_FADE_DELAY * 3}>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-muted-foreground mb-8">
+              <h2 className="display-2 text-display-accent mb-8">
                 I build intelligent AI systems.
               </h2>
             </BlurFade>

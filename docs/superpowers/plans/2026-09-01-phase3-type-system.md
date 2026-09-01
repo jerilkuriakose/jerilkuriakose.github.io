@@ -62,7 +62,7 @@ step here sets `font-size` and `line-height` in the same rule and a test asserts
 
 **Files:** modify `app/layout.tsx`, `app/globals.css`
 
-- [ ] **Step 1: Register Newsreader in `app/layout.tsx`**
+- [x] **Step 1: Register Newsreader in `app/layout.tsx`**
 
 ```ts
 import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
@@ -77,13 +77,13 @@ const newsreader = Newsreader({
 
 Add `newsreader.variable` to the `<html>` (or `<body>`) className alongside the existing two.
 
-- [ ] **Step 2: Map the token in `@theme inline`**
+- [x] **Step 2: Map the token in `@theme inline`**
 
 ```css
   --font-display: var(--font-newsreader), Georgia, "Times New Roman", serif;
 ```
 
-- [ ] **Step 3: Prove the face actually loads and the token resolves**
+- [x] **Step 3: Prove the face actually loads and the token resolves**
 
 The failure mode here is silent, so assert it rather than eyeballing. Create
 `tests/visual/type-contract.spec.ts`:
@@ -124,7 +124,7 @@ test("--font-display resolves through the provider variable on a real element", 
 });
 ```
 
-- [ ] **Step 4: Gate** — `npm run build`, `npx tsc --noEmit`, `npm run lint`, then the two new tests. Screenshots are expected to still pass: nothing consumes `--font-display` yet.
+- [x] **Step 4: Gate** — `npm run build`, `npx tsc --noEmit`, `npm run lint`, then the two new tests. Screenshots are expected to still pass: nothing consumes `--font-display` yet.
 
 ---
 
@@ -132,7 +132,7 @@ test("--font-display resolves through the provider variable on a real element", 
 
 **Files:** modify `app/globals.css`
 
-- [ ] **Step 1: Add the scale**
+- [x] **Step 1: Add the scale**
 
 Each step pins `font-size` **and** `line-height` in the same rule. Tighter leading as size
 grows, which is why a single bundled value cannot serve the whole scale.
@@ -172,7 +172,7 @@ grows, which is why a single bundled value cannot serve the whole scale.
 `@layer components` is deliberate: it keeps these below Tailwind utilities, so a one-off
 `leading-*` or `text-*` on a specific element can still override without `!important`.
 
-- [ ] **Step 2: Assert the scale is fluid AND pinned**
+- [x] **Step 2: Assert the scale is fluid AND pinned**
 
 Add to `type-contract.spec.ts`. This is the test that would have caught the 72→90px
 regression:
@@ -224,7 +224,7 @@ for (const { cls, min, max, leading } of STEPS) {
 }
 ```
 
-- [ ] **Step 3: Gate** — build, tsc, lint, the type contract. Screenshots still pass; no element uses the classes yet.
+- [x] **Step 3: Gate** — build, tsc, lint, the type contract. Screenshots still pass; no element uses the classes yet.
 
 ---
 
@@ -232,7 +232,7 @@ for (const { cls, min, max, leading } of STEPS) {
 
 **Files:** modify `components/sections/hero.tsx`, `components/sections/*.tsx`, `app/globals.css`
 
-- [ ] **Step 1: Hero — two-tone**
+- [x] **Step 1: Hero — two-tone**
 
 §4: "line one ink, line two accent teal", and calls it "the highest-leverage single move".
 The hero already has the right structure — `h1` is the name, `h2` is the tagline — so this is
@@ -246,7 +246,7 @@ passes with margin — Phase 2 measured it. Remove the now-redundant `text-4xl s
 md:text-6xl lg:text-7xl` (and the `h2` equivalents): the fluid step replaces them, and
 leaving both is how the precedence bug returns.
 
-- [ ] **Step 2: Fold `.numbered-heading` into the scale — including its counter**
+- [x] **Step 2: Fold `.numbered-heading` into the scale — including its counter**
 
 `.numbered-heading` sets `font-size: clamp(1.5rem, 5vw, 2rem)` with **no line-height**, and
 its `::before` counter sets `font-size: clamp(1rem, 3vw, 1.25rem)` — also with no
@@ -258,7 +258,7 @@ declare a size in two places), and give the counter an explicit `line-height: 1.
 shares the element's baseline. Keep `counter-increment`, the content string, and the mono
 family: the number is deliberately mono, and Phase 1a's positional numbering depends on it.
 
-- [ ] **Step 3: Map EVERY heading explicitly — no grep**
+- [x] **Step 3: Map EVERY heading explicitly — no grep**
 
 A `text-4xl…7xl` grep misses `text-lg`, `text-xl` and `text-2xl`, which is where most card
 titles live. Full inventory, verified against the tree at `c446c38`:
@@ -287,7 +287,7 @@ Note `selected-work.tsx:43` is an **`h4`**, not an `h3`.
 - `hero.tsx:41` `tracking-tight` → **delete**. `display-1` already declares `letter-spacing: -0.02em`.
 - Every `text-*` size utility listed above → **delete**. Leaving both is precisely how the 72→90px precedence bug returns.
 
-- [ ] **Step 3b: Assert the mapping on REAL headings, not a synthetic probe**
+- [x] **Step 3b: Assert the mapping on REAL headings, not a synthetic probe**
 
 Task 2's probe proves the classes are correct in isolation; it cannot see a utility that
 overrides them on an actual element. Add to `type-contract.spec.ts`:
@@ -322,12 +322,12 @@ test("every heading uses the display face with an explicit line-height", async (
 
 This is the assertion that makes "all headings" a contract rather than an intention.
 
-- [ ] **Step 4: Expect screenshots to fail, and inspect all six**
+- [x] **Step 4: Expect screenshots to fail, and inspect all six**
 
 Typography changed on purpose. Confirm the change is type — not a layout break, not a
 reflow that clips something — at **all three widths in both themes**.
 
-- [ ] **Step 5: Gate, then regenerate**
+- [x] **Step 5: Gate, then regenerate**
 
 ```bash
 npx playwright test type-contract.spec.ts contrast-contract.spec.ts source-contract.spec.ts token-contract.spec.ts ia-order.spec.ts evidence-schema.spec.ts
@@ -339,7 +339,7 @@ npx playwright test --repeat-each=3
 The contracts passing first is what makes regeneration evidence rather than rubber-stamping.
 `ia-order` matters here: it asserts heading structure, and this task touches headings.
 
-- [ ] **Step 6: `bash scripts/verify.sh`** must exit 0. Then **one commit** for Tasks 1–3.
+- [x] **Step 6: `bash scripts/verify.sh`** must exit 0. Then **one commit** for Tasks 1–3.
 
 ---
 
@@ -347,8 +347,8 @@ The contracts passing first is what makes regeneration evidence rather than rubb
 
 Verification only. **No commit.**
 
-- [ ] **Step 1:** `npx playwright test --repeat-each=3` — full suite green.
-- [ ] **Step 2: No competing declarations survive**
+- [x] **Step 1:** `npx playwright test --repeat-each=3` — full suite green.
+- [x] **Step 2: No competing declarations survive**
 
 ```bash
 # every font-size in globals.css must have a line-height in the SAME rule.
@@ -360,11 +360,11 @@ grep -rnE '<h[1-4][^>]*(text-(xs|sm|base|lg|xl|[2-9]xl)|leading-)' components ap
   || echo "CLEAN: no competing size/leading utility on any heading"
 ```
 
-- [ ] **Step 3: Read the rendered page in a real browser**, both themes, 375 and 1280.
+- [x] **Step 3: Read the rendered page in a real browser**, both themes, 375 and 1280.
 Confirm by looking: the name renders in the serif and not a fallback; the second headline
 line is teal and legible; no heading is clipped or overlapping at 375; the mono eyebrow and
 metrics are unchanged; body copy is still Inter.
-- [ ] **Step 4:** `git status --porcelain` clean.
+- [x] **Step 4:** `git status --porcelain` clean.
 
 ---
 
