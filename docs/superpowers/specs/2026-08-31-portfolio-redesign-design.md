@@ -21,9 +21,14 @@ restate gate status anywhere else. Tick a box only when Jeril has actually confi
       image, plus one representative content section. Decisions 7–9 (OKLCH, serif,
       dark-mode policy) were agent-made and are unreviewed by a design-informed human.
       Detail: §2.
-- [ ] **G3 — Two impact claims** named for the hero and confirmed cleared for public
-      attribution. Blocks **Phase 1b only** — Phase 1a ships the containers empty.
-      Detail: §5.
+- [x] **G3 — Two impact claims** named for the hero and confirmed cleared for public
+      attribution. **✅ Resolved 2026-09-01.** Jeril approved two, both explicitly cleared
+      for public attribution:
+      **`~100,000` man-hours saved / year** (Phoenix, Mizuho Bank) and
+      **`~35%` faster model convergence** (curriculum SFT, ALLaM / SDAIA).
+      Chosen to be complementary: one business outcome and one technical capability, one
+      per employer, so the pair speaks to a non-technical recruiter and a technical
+      screener at once. Phase 1b is unblocked. Detail: §5.
 - [ ] **G4 — Photography** supplied: 6–10 abstract material macro shots (landscape,
       high-res, cool/neutral). Blocks *shipping* Phase 5, not developing it. Detail: §13.
 

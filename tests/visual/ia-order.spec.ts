@@ -79,13 +79,40 @@ test("the hardcoded section number is gone from Contact", async ({ page }) => {
   await expect(page.locator("section#contact")).not.toContainText("05.");
 });
 
-test("both evidence containers are absent while no metrics exist", async ({
-  page,
-}) => {
+test("both evidence containers render the approved claims", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
-  // Container contract: omitted entirely, not an empty box.
-  expect(await page.locator("section#hero dl").count()).toBe(0);
-  expect(await page.locator("section#experience dl").count()).toBe(0);
+
+  // Phase 1a shipped these empty and this test asserted their ABSENCE. G3 was
+  // resolved and Phase 1b populated two approved claims, so the assertion
+  // inverts: the containers must now be present and correct. The null-return
+  // behaviour at zero is still covered, by the container-contract test in
+  // evidence-schema.spec.ts which calls both components with an empty array.
+  const heroRow = page.locator("section#hero dl");
+  await expect(heroRow).toHaveCount(1);
+  expect(
+    await heroRow.locator("dt").count(),
+    "the §5 contract caps the hero proof row at two claims",
+  ).toBe(2);
+
+  // display order: business outcome first, technical capability second
+  await expect(heroRow.locator("dt").nth(0)).toHaveText("~100,000");
+  await expect(heroRow.locator("dd").nth(0)).toHaveText("man-hours saved / year");
+  await expect(heroRow.locator("dt").nth(1)).toHaveText("~35%");
+  await expect(heroRow.locator("dd").nth(1)).toHaveText("faster model convergence");
+
+  // per-role evidence appears only on the two roles that carry a metric
+  const roleRows = page.locator("section#experience dl");
+  await expect(roleRows).toHaveCount(2);
+
+  // and it sits OUTSIDE the collapsed disclosure, per §5 - readable without
+  // expanding anything
+  for (const row of await roleRows.all()) {
+    await expect(row).toBeVisible();
+    expect(
+      await row.evaluate((el) => !!el.closest("[inert]")),
+      "role metrics must not be inside the collapsed panel",
+    ).toBe(false);
+  }
 });
 
 test("the experience disclosure is keyboard operable and reports state", async ({

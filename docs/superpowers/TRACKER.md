@@ -22,10 +22,12 @@ hand-maintained, so none of it can go stale.**
 
 ## The only hand-maintained state
 
-**Next action:** **Phases 0, 1a, 2 and 3 are complete, pushed and deployed** (`verify.sh`
-green, 60 tests). The site is light-default deep teal on a 9-step OKLCH ramp, with Newsreader
-as the serif display face on a fully pinned type scale. **Phase 4 (motion correctness) is
-next** and is unblocked. Phase 1b is blocked on **G3**; Phase 5 shipping on **G4**.
+**Next action:** **Phases 0, 1a, 1b, 2 and 3 are complete, pushed and deployed**
+(`verify.sh` green, 60 tests). **G3 is resolved** — the hero proof row now carries two
+cleared claims. **Phase 4 (motion correctness) is next** and is unblocked, then Phase 6.
+Only **G4** (photography) still blocks anything, and only the *shipping* of Phase 5 —
+Phase 5 can be developed on placeholders now. **G2** (owner sign-off) is best answered once
+Phase 5 has a real image in the first viewport.
 
 Four rules this project has paid for. They apply to every later phase:
 

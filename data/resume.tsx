@@ -130,6 +130,14 @@ export const DATA = {
       end: "Present",
       description:
         "Leading ALLaM (Arabic Large Language Model) development - data processing, training pipelines, and inference optimization at scale.",
+      metrics: [
+        {
+          id: "allam-convergence",
+          value: "~35%",
+          label: "faster model convergence",
+          note: "curriculum SFT for agentic capabilities",
+        },
+      ],
       highlights: [
         "Lead data processing and inference optimization for ALLaM; managed training/inference stacks with PyTorch, Transformers, TRL, vLLM/TGI/Triton, Ray, Kubernetes, Azure",
         "Processed 50TB RedPajama-Data-v2 via Data-Juicer; implemented LLaMA-2 pretraining strategies (from-scratch and continual)",
@@ -158,6 +166,14 @@ export const DATA = {
       end: "Dec 2023",
       description:
         "Led multiple award-winning AI/ML projects for banking operations, achieving significant productivity gains and cost savings.",
+      metrics: [
+        {
+          id: "phoenix-man-hours",
+          value: "~100,000",
+          label: "man-hours saved / year",
+          note: "Phoenix NLP extraction platform",
+        },
+      ],
       highlights: [
         "Phoenix: Generic NLP IE platform using BERT + hybrid CNN + Bloom embeddings; ~90% accuracy; saved ~100,000 man-hours/year",
         "PIGEON: Document classification with RoBERTa and summarization (GPT-2/GPT Neo); achieved 97% accuracy",
@@ -447,5 +463,8 @@ export const DATA = {
    * public attribution. The row renders nothing while this is empty, which the
    * spec's container contract explicitly permits.
    */
-  featuredMetricIds: [] as readonly string[],
+  featuredMetricIds: [
+    "phoenix-man-hours",
+    "allam-convergence",
+  ] as readonly string[],
 } as const;
