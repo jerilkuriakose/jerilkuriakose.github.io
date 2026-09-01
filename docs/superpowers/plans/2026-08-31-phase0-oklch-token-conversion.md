@@ -1,6 +1,6 @@
 # Phase 0 — Mechanical OKLCH Token Conversion — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Convert every colour **token** in `app/globals.css` from space-separated HSL channels to full OKLCH values at pixel-identical rendered output, proven by a committed verification harness.
 
@@ -109,21 +109,21 @@ This is **provably equivalent**, not an approximation: `color-mix` interpolates 
 - Consumes: nothing (first task).
 - Produces: `npm run test:visual`, `npm run test:visual:update`. `helpers.ts` exports `setTheme(page, theme)`, `settle(page)`, `freezeVisuals(page)`, `sample8bit(page, css)`, and type `Theme`.
 
-- [ ] **Step 1: Install the runner**
+- [x] **Step 1: Install the runner**
 
 ```bash
 cd /home/sagemaker-user/others/mydata/portfolio/jerilkuriakose.github.io
 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install -D @playwright/test
 ```
 
-- [ ] **Step 2: Add scripts to `package.json`**
+- [x] **Step 2: Add scripts to `package.json`**
 
 ```json
 "test:visual": "playwright test",
 "test:visual:update": "playwright test --update-snapshots"
 ```
 
-- [ ] **Step 3: Create `playwright.config.ts`**
+- [x] **Step 3: Create `playwright.config.ts`**
 
 ```ts
 import { defineConfig, devices } from "@playwright/test";
@@ -165,7 +165,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 4: Create `tests/visual/helpers.ts`**
+- [x] **Step 4: Create `tests/visual/helpers.ts`**
 
 ```ts
 import type { Page } from "@playwright/test";
@@ -243,7 +243,7 @@ export async function sample8bit(page: Page, css: string): Promise<number[]> {
 }
 ```
 
-- [ ] **Step 5: Create `tests/visual/token-contract.spec.ts` — the real proof**
+- [x] **Step 5: Create `tests/visual/token-contract.spec.ts` — the real proof**
 
 Screenshots cannot prove all 49 replacements (they never exercise focus, hover, selection, or unused tokens). This does, per token, in both themes.
 
@@ -342,7 +342,7 @@ test("alpha sites keep their colour and gain the right alpha", async ({
 });
 ```
 
-- [ ] **Step 6: Create `tests/visual/source-contract.spec.ts`**
+- [x] **Step 6: Create `tests/visual/source-contract.spec.ts`**
 
 ```ts
 import { test, expect } from "@playwright/test";
@@ -391,7 +391,7 @@ test("--accent-tint is preserved (no consumer, but token compat)", () => {
 });
 ```
 
-- [ ] **Step 7: Create `tests/visual/tokens.spec.ts` — screenshots (broad coverage only)**
+- [x] **Step 7: Create `tests/visual/tokens.spec.ts` — screenshots (broad coverage only)**
 
 ```ts
 import { test, expect } from "@playwright/test";
@@ -426,7 +426,7 @@ for (const theme of ["light", "dark"] as const) {
 }
 ```
 
-- [ ] **Step 8: Ignore Playwright output**
+- [x] **Step 8: Ignore Playwright output**
 
 Append to `.gitignore`:
 
@@ -437,7 +437,7 @@ Append to `.gitignore`:
 /blob-report/
 ```
 
-- [ ] **Step 9: Clean-install gates**
+- [x] **Step 9: Clean-install gates**
 
 ```bash
 PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm ci
@@ -448,7 +448,7 @@ npm run lint
 
 All must exit 0. `tsc` typechecks `playwright.config.ts` and `tests/visual/**` because `tsconfig.json` includes `**/*.ts`.
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 ```bash
 git add package.json package-lock.json playwright.config.ts tests/visual .gitignore
@@ -467,7 +467,7 @@ git commit -m "test: add token verification harness (pixel, source, screenshot l
 - Consumes: Task 1's harness, committed.
 - Produces: committed baseline snapshots for the 6 screenshot cases.
 
-- [ ] **Step 1: Create a disposable worktree pinned to Task 1's commit**
+- [x] **Step 1: Create a disposable worktree pinned to Task 1's commit**
 
 ```bash
 cd /home/sagemaker-user/others/mydata/portfolio/jerilkuriakose.github.io
@@ -476,7 +476,7 @@ echo "$baseline_dir" > /tmp/opencode/phase0-baseline-path
 git worktree add "$baseline_dir" HEAD
 ```
 
-- [ ] **Step 2: Build and record snapshots inside the worktree**
+- [x] **Step 2: Build and record snapshots inside the worktree**
 
 ```bash
 baseline_dir="$(cat /tmp/opencode/phase0-baseline-path)"
@@ -486,7 +486,7 @@ npm run build
 npm run test:visual:update
 ```
 
-- [ ] **Step 3: Prove stability across repeats — one pass is not enough**
+- [x] **Step 3: Prove stability across repeats — one pass is not enough**
 
 ```bash
 npm run test:visual -- --repeat-each=3
@@ -494,7 +494,7 @@ npm run test:visual -- --repeat-each=3
 
 Expected: all pass. If anything flakes, **diagnose it** (fonts, Motion, images, server) — do **not** raise thresholds or regenerate snapshots to make it green. Record the smallest measured allowance only if flake is genuinely irreducible.
 
-- [ ] **Step 4: Prove the harness can FAIL**
+- [x] **Step 4: Prove the harness can FAIL**
 
 Inside the worktree, temporarily change one token:
 
@@ -506,7 +506,7 @@ npm run test:visual || echo "GOOD - harness detects change"
 
 Expected: failures in **both** `token-contract` and `screenshot` tests. A harness that cannot fail is worthless.
 
-- [ ] **Step 5: Revert inside the worktree only**
+- [x] **Step 5: Revert inside the worktree only**
 
 ```bash
 git restore app/globals.css
@@ -516,7 +516,7 @@ npm run test:visual
 
 Expected: all pass again.
 
-- [ ] **Step 6: Copy snapshots back to the main checkout**
+- [x] **Step 6: Copy snapshots back to the main checkout**
 
 ```bash
 main_dir=/home/sagemaker-user/others/mydata/portfolio/jerilkuriakose.github.io
@@ -524,7 +524,7 @@ baseline_dir="$(cat /tmp/opencode/phase0-baseline-path)"
 cp -r "$baseline_dir"/tests/visual/*-snapshots "$main_dir"/tests/visual/
 ```
 
-- [ ] **Step 7: Remove the worktree cleanly**
+- [x] **Step 7: Remove the worktree cleanly**
 
 ```bash
 cd /home/sagemaker-user/others/mydata/portfolio/jerilkuriakose.github.io
@@ -536,7 +536,7 @@ rm -f /tmp/opencode/phase0-baseline-path
 
 `status --short` must be empty before removal. **Never use `--force`** — a dirty worktree means step 5 failed and must be investigated.
 
-- [ ] **Step 8: Commit the baseline**
+- [x] **Step 8: Commit the baseline**
 
 ```bash
 git add tests/visual
@@ -555,7 +555,7 @@ One commit. `hsl(oklch(…))` is invalid CSS, so renaming values in place requir
 - Consumes: Task 2's committed baseline.
 - Produces: `globals.css` where each colour token holds a complete `oklch(...)`, consumed as bare `var(--token)`.
 
-- [ ] **Step 1: Convert the `:root` token block**
+- [x] **Step 1: Convert the `:root` token block**
 
 ```css
 :root {
@@ -593,7 +593,7 @@ One commit. `hsl(oklch(…))` is invalid CSS, so renaming values in place requir
 }
 ```
 
-- [ ] **Step 2: Convert the `.dark` token block**
+- [x] **Step 2: Convert the `.dark` token block**
 
 ```css
 .dark {
@@ -619,7 +619,7 @@ One commit. `hsl(oklch(…))` is invalid CSS, so renaming values in place requir
 }
 ```
 
-- [ ] **Step 3: Unwrap `@theme inline`**
+- [x] **Step 3: Unwrap `@theme inline`**
 
 Colour mappings lose their `hsl()` wrapper. Leave `--radius-*`, `--font-*`, `--animate-*` untouched — not colours.
 
@@ -656,22 +656,22 @@ Colour mappings lose their `hsl()` wrapper. Leave `--radius-*`, `--font-*`, `--a
 }
 ```
 
-- [ ] **Step 4: Convert the 33 plain call sites**
+- [x] **Step 4: Convert the 33 plain call sites**
 
 Mechanical: `hsl(var(--x))` → `var(--x)`.
 
-- [ ] **Step 5: Convert the 16 alpha call sites**
+- [x] **Step 5: Convert the 16 alpha call sites**
 
 Use the multiplicity table above. **Do not touch line 203's `hsl(166 100% 50%)`** — it is a deliberate exception.
 
-- [ ] **Step 6: Static assertion — the only `hsl(` left is line 203**
+- [x] **Step 6: Static assertion — the only `hsl(` left is line 203**
 
 ```bash
 grep -c 'hsl(var(' app/globals.css   # expect 0
 grep -n 'hsl(' app/globals.css       # expect exactly one hit: the line-203 gradient stop
 ```
 
-- [ ] **Step 7: Run the full harness — the real test**
+- [x] **Step 7: Run the full harness — the real test**
 
 ```bash
 npm run build
@@ -680,14 +680,14 @@ npm run test:visual
 
 Expected: **all pass** — token contract, source contract, and 6 screenshots. Any screenshot failure is a conversion defect: inspect `test-results/**/*-diff.png` and fix the call site. **Never update snapshots to make this pass.**
 
-- [ ] **Step 8: Remaining gates**
+- [x] **Step 8: Remaining gates**
 
 ```bash
 npx tsc --noEmit
 npm run lint
 ```
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add app/globals.css
@@ -719,7 +719,7 @@ Verification only. **This task makes no commit.**
 - Consumes: converted `globals.css`.
 - Produces: a clean bill of health for Phase 1.
 
-- [ ] **Step 1: No channel triplets, no stray `hsl(var(`**
+- [x] **Step 1: No channel triplets, no stray `hsl(var(`**
 
 ```bash
 grep -nE '^\s+--[a-z-]+:\s*[0-9.]+ [0-9.]+% [0-9.]+%' app/globals.css || echo CLEAN
@@ -728,7 +728,7 @@ grep -c 'hsl(var(' app/globals.css
 
 Expected: `CLEAN`, then `0`.
 
-- [ ] **Step 2: No HSL anywhere in TSX (should already be true)**
+- [x] **Step 2: No HSL anywhere in TSX (should already be true)**
 
 ```bash
 grep -rn 'hsl(' app components --include='*.tsx' || echo CLEAN
@@ -736,7 +736,7 @@ grep -rn 'hsl(' app components --include='*.tsx' || echo CLEAN
 
 Expected: `CLEAN`.
 
-- [ ] **Step 3: Full harness, repeated, to catch flake introduced by the change**
+- [x] **Step 3: Full harness, repeated, to catch flake introduced by the change**
 
 ```bash
 npm run build
@@ -745,7 +745,7 @@ npm run test:visual -- --repeat-each=3
 
 Expected: all pass, three times.
 
-- [ ] **Step 4: Confirm clean tree**
+- [x] **Step 4: Confirm clean tree**
 
 ```bash
 git status --short

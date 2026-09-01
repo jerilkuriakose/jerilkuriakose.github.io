@@ -22,8 +22,11 @@ hand-maintained, so none of it can go stale.**
 
 ## The only hand-maintained state
 
-**Next action:** execute Phase 0 — the plan is Oracle-reviewed and needs no human input.
-Phase 1 is the highest-value phase but is blocked on gate **G3**.
+**Next action:** Phase 0 is **complete** (`9747896`). Phase 1 is next and is the
+highest-value phase, but it is blocked on gate **G3** — Jeril must name the two impact
+claims and confirm they are cleared for public attribution. Phases 2, 4 and 6 are
+unblocked and could proceed in the meantime; each needs a plan written and Oracle-reviewed
+first.
 
 ---
 

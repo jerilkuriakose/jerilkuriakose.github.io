@@ -14,8 +14,9 @@ These are the only things an agent cannot clear itself. **This checkbox list is 
 single source of truth for gate state** — `scripts/redesign-status.sh` greps it, so do not
 restate gate status anywhere else. Tick a box only when Jeril has actually confirmed it.
 
-- [ ] **G1 — Commit decision.** Whether to commit the working tree. The Next 16 / React 19
-      / Tailwind 4 upgrade is unsaved; `git checkout .` would destroy it.
+- [x] **G1 — Commit decision.** ✅ Resolved 2026-08-31. The upgrade is committed as
+      `576c5c3` (framework upgrade) and `e737451` (redesign artifacts). `HEAD` is now the
+      upgraded stack, which Phase 0's baseline worktree requires.
 - [ ] **G2 — Owner sign-off** on one first-viewport prototype using a *real* final-quality
       image, plus one representative content section. Decisions 7–9 (OKLCH, serif,
       dark-mode policy) were agent-made and are unreviewed by a design-informed human.
