@@ -538,6 +538,18 @@ No `<header>`/`<nav>` landmark; no skip link; no `aria-expanded`/`aria-controls`
 experience disclosure; icon-only WhatsApp/phone links rely on `title` alone; custom SVG
 icons lack accessible names or `aria-hidden`.
 
+### Other pre-existing defects to close
+
+Verified against a pre-upgrade baseline worktree — these are not regressions from this
+work, and should not be reported as new breakage.
+
+- **Dead classes emit no CSS:** `animate-in`, `fade-in-0`, `bg-grid-pattern`.
+  `tailwindcss-animate` was never a dependency and the old v3 config had `plugins: []`.
+  Either adopt the plugin or delete the classes. → Phase 6.
+- **PDF prefetch 404:** `next/link` pointing at `/Jeril_Kuriakose_CV.pdf` makes Next
+  prefetch an RSC payload that 404s. The file itself serves 200. Use a plain `<a>`.
+  → Phase 6.
+
 ---
 
 ## 10. Risks and mitigations
