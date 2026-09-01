@@ -356,22 +356,51 @@ for (const theme of ["light", "dark"] as const) {
         ctx.fillRect(0, 0, 1, 1);
         return Array.from(ctx.getImageData(0, 0, 1, 1).data).slice(0, 3);
       };
+      const composite = (fg: string, bg: string) => {
+        const c = document.createElement("canvas");
+        c.width = 1;
+        c.height = 1;
+        const ctx = c.getContext("2d", { willReadFrequently: true })!;
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, 1, 1);
+        ctx.fillStyle = fg;
+        ctx.fillRect(0, 0, 1, 1);
+        return Array.from(ctx.getImageData(0, 0, 1, 1).data).slice(0, 3);
+      };
       return Array.from(document.querySelectorAll(".on-panel")).map((panel) => {
-        const bg = toBytes(getComputedStyle(panel).backgroundColor);
-        const texts = Array.from(
-          panel.querySelectorAll(".text-muted-foreground, .text-foreground"),
-        ).map((t) => toBytes(getComputedStyle(t).color));
+        const bgCss = getComputedStyle(panel).backgroundColor;
+        const bg = toBytes(bgCss);
+        // EVERY text leaf, not a hand-picked class list. An earlier version
+        // checked only .text-muted-foreground/.text-foreground and therefore
+        // missed a 36px watermark at 2.34:1 - real text, real WCAG 1.4.3
+        // failure. Semi-transparent colours are COMPOSITED over the panel,
+        // because that is what the eye actually receives.
+        const texts = Array.from(panel.querySelectorAll("*"))
+          .filter(
+            (el) =>
+              el.children.length === 0 && (el.textContent ?? "").trim().length > 0,
+          )
+          .map((el) => {
+            const cs = getComputedStyle(el);
+            const size = parseFloat(cs.fontSize);
+            const bold = parseInt(cs.fontWeight, 10) >= 700;
+            return {
+              fg: composite(cs.color, bgCss),
+              floor: size >= 24 || (size >= 18.5 && bold) ? 3 : 4.5,
+              label: `${el.tagName} @${size}px`,
+            };
+          });
         return { bg, texts };
       });
     });
 
     for (const [i, { bg, texts }] of sampled.entries()) {
-      for (const fg of texts) {
+      for (const { fg, floor, label } of texts) {
         const r = ratio(rgb(fg), rgb(bg));
         expect(
           Number(r.toFixed(2)),
-          `${theme}: panel #${i} text = ${r.toFixed(2)}:1 against its own background`,
-        ).toBeGreaterThanOrEqual(4.5);
+          `${theme}: panel #${i} ${label} = ${r.toFixed(2)}:1 against the panel, floor ${floor}`,
+        ).toBeGreaterThanOrEqual(floor);
       }
     }
   });

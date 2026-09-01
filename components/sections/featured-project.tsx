@@ -27,7 +27,7 @@ export function FeaturedProject({
           <div className="on-panel relative overflow-hidden rounded-lg bg-panel p-8 aspect-video flex items-center justify-center border border-brand-vivid/20">
             <div className="absolute inset-0 bg-grid-pattern opacity-10" />
             <div className="relative z-10 text-center">
-              <div className="text-4xl font-bold text-brand-vivid/40 font-mono mb-2">
+              <div className="text-4xl font-bold text-brand-vivid/60 font-mono mb-2">
                 {project.title.split(" ")[0]}
               </div>
               <div className="text-sm text-muted-foreground">{project.company}</div>
