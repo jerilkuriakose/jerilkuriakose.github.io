@@ -607,6 +607,45 @@ Recorded so future work does not treat these as settled:
 
 ---
 
+## 11b. Accepted after review — not defects, do not "fix"
+
+**The hero photograph is more prominent in light theme than in dark. Accepted by the
+owner on 2026-09-01 ("lets leave it, it looks okay in the mobile").**
+
+Measured over the oval area (photo region minus the portrait), in OKLab:
+
+| theme | mean \|dL\| vs canvas | area with \|dL\| > 0.02 |
+|---|---:|---:|
+| light | 0.0633 | 54.3% |
+| dark | 0.0120 | 14.8% |
+
+This is a **polarity mismatch, not a bug**: `hero-ink` has WCAG relative luminance
+0.0337, so it is inherently quiet against the dark canvas (L 0.30) and inherently loud
+against the near-white canvas (L 0.98).
+
+Do not attempt to close it with the scrim. Swept in-browser against the live page:
+
+| light scrim alpha | 0.42 | 0.65 | 0.84 | 0.90 | 0.94 |
+|---|---:|---:|---:|---:|---:|
+| mean \|dL\| | 0.0633 | 0.0424 | 0.0256 | 0.0199 | 0.0166 |
+
+It never converges on dark's 0.0120. At 0.94 the photograph is ~6% visible - erased - and
+still 1.4x. Substituting the pale `contact-glass` image for light theme was also tested and
+measured **worse** (0.0302, 2.5x): a pale image on a light canvas loses its own shape, so
+the mask edge becomes the thing that stands out.
+
+If this is ever revisited, the only approaches not already disproven are reducing the
+masked AREA in light theme rather than its contrast, or sourcing a genuinely high-key
+image that holds structure on white.
+
+### Known harness gap
+
+**No test asserts that the photographs are actually VISIBLE.** `photo-contract` verifies
+bounds, contrast, polarity, provenance and byte budgets, so veiling a photo into oblivion
+would pass all 99 tests while silently violating §6's "hero must be photo-backed". Any
+future change to `--scrim` or the photo opacity must be checked by eye, or that assertion
+must be written first.
+
 ## 12. Out of scope
 
 - Content/copy rewriting (including the 30 unquantified bullets) — Jeril's, and a
