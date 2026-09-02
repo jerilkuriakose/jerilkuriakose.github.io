@@ -236,8 +236,21 @@ export function Hero() {
                   {/* Glow effect */}
                   <div className="absolute inset-0 bg-linear-to-tr from-primary to-interactive rounded-full opacity-20 blur-2xl transform translate-x-4 translate-y-4" />
                   
-                  {/* Image */}
-                  <div className="relative w-full h-full rounded-full border-4 border-background shadow-2xl overflow-hidden group">
+                  {/* Image.
+
+                      The ring is `border-transparent`, NOT `border-background`.
+                      An opaque canvas-coloured ring was correct while the
+                      portrait sat on plain canvas, but Phase 5 put a photograph
+                      behind it and a ring can no longer assert the canvas
+                      colour. Measured 3px inside the portrait edge vs 6px
+                      outside it: light was rgb(244,249,247) against a
+                      rgb(125,156,153) photo - a near-white outline stuck on a
+                      mid-tone image - while dark was rgb(23,52,45) against
+                      rgb(17,58,53) and therefore invisible. Transparent keeps
+                      the 4px inset (so layout and the outer rings do not move)
+                      and lets the photograph show through, which is what makes
+                      both themes behave the same way. */}
+                  <div className="relative w-full h-full rounded-full border-4 border-transparent shadow-2xl overflow-hidden group">
                     <Image
                       src={DATA.avatarUrl}
                       alt={DATA.name}
