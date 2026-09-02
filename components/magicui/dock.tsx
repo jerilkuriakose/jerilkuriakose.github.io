@@ -24,7 +24,13 @@ const DEFAULT_MAGNIFICATION = 60;
 const DEFAULT_DISTANCE = 140;
 
 const dockVariants = cva(
-  "mx-auto w-max mt-8 h-[58px] p-2 flex gap-2 rounded-2xl border border-border supports-backdrop-blur:bg-background/10 supports-backdrop-blur:dark:bg-background/10 backdrop-blur-md"
+  // No backdrop-blur utilities here on purpose. This element also receives
+  // `.glass` from MobileDock, and carrying `backdrop-blur-md` +
+  // `supports-backdrop-blur:bg-background/10` alongside it put TWO
+  // backdrop-filter declarations on one element - which muddies §6's
+  // one-filter-per-stack rule and meant mutating `.glass` could not actually
+  // remove the blur. `.glass` is now the single authority for this surface.
+  "mx-auto w-max mt-8 h-[58px] p-2 flex gap-2 rounded-2xl border border-border"
 );
 
 const Dock = React.forwardRef<HTMLDivElement, DockProps>(

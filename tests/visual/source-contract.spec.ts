@@ -43,6 +43,12 @@ test.describe("source contract", () => {
     // --muted-foreground sites are gone entirely - they were the scrollbar
     // thumb, which measured 1.52:1 against its track and is now a solid
     // --border-strong (a meaningful non-text boundary, WCAG 1.4.11).
+    //
+    // Phase 5 removed the last one. `color-mix(in srgb, var(--background) 80%)`
+    // was the OLD .glass fill, and §6 names it as the specific defect: an 80%
+    // fill is not opaque, so with backdrop-filter unsupported busy photography
+    // shows through sharply. The glass surface is now driven by per-theme
+    // --glass-* tokens, so the count drops rather than moving.
     const counts = new Map<string, number>([
       // The prefix is REQUIRED: .gradient-text contains
       // `var(--brand-vivid) 50%` as a gradient STOP POSITION, which a bare
@@ -53,7 +59,6 @@ test.describe("source contract", () => {
       ["color-mix(in srgb, var(--brand-vivid) 30%", 3],
       ["color-mix(in srgb, var(--brand-vivid) 50%", 2],
       ["color-mix(in srgb, var(--border) 50%", 2],
-      ["color-mix(in srgb, var(--background) 80%", 1],
     ]);
     let total = 0;
     for (const [needle, want] of counts) {
@@ -61,24 +66,41 @@ test.describe("source contract", () => {
       expect(found, needle).toBe(want);
       total += found;
     }
-    expect(total).toBe(14);
+    expect(total).toBe(13);
     // and no alpha site escaped the audit
-    expect((CSS.match(/color-mix\(in srgb/g) ?? []).length).toBe(14);
+    expect((CSS.match(/color-mix\(in srgb/g) ?? []).length).toBe(13);
+
+    // The retired site must not come back. This is the NAMED invariant; the
+    // totals above are only a census, and a census that is merely re-pinned
+    // after every change stops being a contract.
+    expect(CSS, "the 80% glass fill is retired").not.toContain(
+      "color-mix(in srgb, var(--background) 80%",
+    );
   });
 
   test("alpha mixing is in srgb, never oklab", () => {
     // The tokens originated as HSL. Mixing in sRGB reproduces the original
     // composited bytes exactly; mixing in oklab shifts them.
     expect(CSS).not.toContain("in oklab");
-    expect((CSS.match(/color-mix\(in srgb/g) ?? []).length).toBe(14); // 13 sites + --accent-tint
+    expect((CSS.match(/color-mix\(in srgb/g) ?? []).length).toBe(13);
   });
 
   test("every gradient pins interpolation to srgb", () => {
     // Introducing any non-legacy stop (oklch/color-mix) flips a gradient's
     // default interpolation space from sRGB to Oklab, which measurably shifts
     // the middle of the ramp by up to 30/255. `in srgb` pins it back.
+    //
+    // Phase 5's glass enhancement adds the sixth: its stops are the
+    // --glass-translucent/--glass-solid oklch tokens, exactly the non-legacy
+    // case this rule exists for. It was authored without `in srgb` and this
+    // assertion is what caught it.
+    //
+    // Seven and eight are the hero photo mask, emitted twice for the -webkit-
+    // and standard properties. A mask gradient interpolates ALPHA, so an
+    // unpinned space changes the falloff curve rather than a hue - same class of
+    // silent drift, same fix.
     const gradients = CSS.match(/(linear|radial)-gradient\(/g) ?? [];
-    expect(gradients.length).toBe(5);
+    expect(gradients.length).toBe(8);
     for (const m of CSS.matchAll(/(?:linear|radial)-gradient\(([^;]*?)\)/g)) {
       expect(m[0].slice(0, 120)).toContain("in srgb");
     }

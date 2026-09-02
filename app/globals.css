@@ -119,6 +119,32 @@
     --surface-muted: var(--teal-200);
     --focus: oklch(0.56 0.110 171);
 
+    /* -----------------------------------------------------------------------
+       Phase 5 glass + scrim, LIGHT theme (spec §6).
+
+       Values are LITERAL, not var(--background), on purpose. A custom
+       property's var() is substituted where it is DECLARED, so a
+       --glass-solid: color-mix(..., var(--background), ...) declared here
+       would bake in the light canvas and ignore .on-panel entirely - the
+       same trap that broke Phase 2's --muted-foreground and Phase 3's
+       --font-display. Literals cannot silently inherit the wrong surface.
+
+       --glass-solid is the FALLBACK fill and is near-opaque (0.94). §6: with
+       no backdrop-filter an 80% fill lets busy photography through sharply
+       and contrast fails. The translucent value is the ENHANCEMENT, used
+       only inside @supports.
+
+       --scrim's polarity is theme-dependent, which is why it cannot be one
+       shared value: it LIGHTENS here so dark ink reads over the pale contact
+       photo (WCAG luminance 0.4102), and darkens in .dark so light ink reads
+       over that same photo.
+       ----------------------------------------------------------------------- */
+    --glass-solid: oklch(0.977 0.006 171 / 0.94);
+    --glass-translucent: oklch(0.977 0.006 171 / 0.70);
+    --glass-rim: oklch(0.55 0.107 171 / 0.28);
+    --glass-shadow: oklch(0.26 0.030 171 / 0.12);
+    --scrim: oklch(0.977 0.006 171 / 0.42);
+
     /* Non-consuming, deliberately: the base --destructive token below still
        holds the OLD value until the migration wires it up. Task 1's contrast
        test samples these, so it tests what Task 1 actually defines. */
@@ -205,6 +231,18 @@
     --focus: oklch(0.64 0.110 171);
     --destructive-role: oklch(0.70 0.150 25);
     --destructive-role-foreground: var(--teal-900);
+
+    /* Phase 5 glass + scrim, DARK theme (spec §6).
+       Literal for the same reason as light. §6: "a white-based fill washes out
+       on dark" - so the fill is the dark canvas, not white at low alpha, and
+       the rim brightens instead of darkening. --scrim DARKENS here: the
+       contact photo is pale (0.4102) but dark-theme ink is light, so the
+       veil has to move the backdrop the other way. */
+    --glass-solid: oklch(0.30 0.038 175 / 0.94);
+    --glass-translucent: oklch(0.30 0.038 175 / 0.68);
+    --glass-rim: oklch(0.86 0.070 171 / 0.22);
+    --glass-shadow: oklch(0.16 0.020 171 / 0.55);
+    --scrim: oklch(0.26 0.030 171 / 0.46);
 
     /* Base shadcn tokens, dark - same derivation, dark role values. */
     --background: var(--canvas);
@@ -509,11 +547,140 @@ main {
   background-size: 50px 50px;
 }
 
-/* Glassmorphism */
+/* ---------------------------------------------------------------------------
+   Phase 5 glass (spec §6).
+
+   POLARITY: the base rule is NEAR-OPAQUE and carries no filter at all. The
+   previous version had this backwards - an 80% fill plus an unconditional
+   backdrop-filter - which §6 calls out directly: without blur support an 80%
+   fill lets busy photography through sharply and contrast fails. The
+   translucent fill and the blur are an ENHANCEMENT, gated together so they can
+   never come apart.
+
+   Both -webkit- and standard filters live in the SAME rule. A source-presence
+   check would be satisfied by finding them in two unrelated rules, so
+   co-location is the actual invariant.
+
+   Written as plain CSS, NOT inside @layer components: Tailwind 4.3.3 strips
+   author content from that layer. The consequence is that these declarations
+   outrank every Tailwind utility, so a utility that contradicts them loses
+   SILENTLY - which is why photo-contract asserts the RENDERED surface rather
+   than trusting the token.
+   --------------------------------------------------------------------------- */
 .glass {
-  background: color-mix(in srgb, var(--background) 80%, transparent);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: var(--glass-solid);
+  border-color: var(--glass-rim);
+  box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass {
+    background: linear-gradient(
+      to bottom right in srgb,
+      var(--glass-translucent),
+      var(--glass-solid)
+    );
+    -webkit-backdrop-filter: blur(12px) saturate(1.4);
+    backdrop-filter: blur(12px) saturate(1.4);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Bounded photo region + scrim (spec §6).
+
+   .photo-region is the ONLY sanctioned way a photograph enters the page. It
+   clips itself rather than its parent, so the hero's portrait rings and the
+   "Open to work" badge - which intentionally overflow the cell - survive.
+
+   .scrim covers the photo region and NOTHING else. §6 forbids a
+   whole-section scrim; scoping it to the region is what keeps the metric row,
+   Skills, Publications and Education on plain canvas.
+   --------------------------------------------------------------------------- */
+.photo-region {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Hero photo region.
+
+   inset-0 is WRONG here and shipping it looked like a bug: the portrait cell
+   measures 320x288 around a 288px portrait, so only a ~32px sliver of
+   photograph showed - invisible in light theme and, in dark, a faint rectangle
+   edge that read as an accident rather than as photography.
+
+   Expanding it is safe at BOTH breakpoints, for different reasons, and neither
+   is an accident of the current copy:
+     - at >=lg the metric row is in the OTHER grid column (measured x96-800,
+       while this region starts at x816), so vertical growth cannot reach it;
+     - below lg the grid is one column and this cell is ordered FIRST, so the
+       metric row sits far below (measured y912 against a region ending y376).
+   photo-contract's rendered-rectangle test verifies both, so if either premise
+   changes the gate fails rather than the layout silently violating §6.
+
+   Insets are declared HERE, not as Tailwind utilities: this file's custom
+   classes sit outside @layer (Tailwind 4.3.3 strips author content from
+   @layer components), so they outrank every utility - `lg:-inset-y-28` would
+   have lost to `inset: 0` SILENTLY.
+
+   The radial mask exists so the region has no hard edge to misread; without it
+   any bounded photo panel announces itself as a rectangle.
+
+   `closest-side` is REQUIRED and is not interchangeable with the default
+   sizing. With `farthest-corner`, the radii are set by the far corner, so the
+   NEAREST edge sits only ~43% of the way along the gradient - still essentially
+   opaque - and the panel shipped a crisp vertical line down its right side and
+   a horizontal one across its bottom. `closest-side` sets the radii to the
+   nearest edges, which is the only sizing that guarantees the gradient reaches
+   transparent on all four.
+   --------------------------------------------------------------------------- */
+.photo-region-hero {
+  inset: -2.5rem -1rem;
+  /* `in srgb` is pinned like every other gradient in this file (Phase 0), and
+     the stops are plain hex rather than color-mix() deliberately: a color-mix
+     here would be counted by source-contract's alpha-site census, which exists
+     to audit ALPHA sites, and would also satisfy its `in srgb` check by
+     accident rather than because the interpolation is actually pinned. */
+  -webkit-mask-image: radial-gradient(
+    ellipse closest-side at 50% 48% in srgb,
+    #000 38%,
+    #0000008c 70%,
+    #0000 100%
+  );
+  mask-image: radial-gradient(
+    ellipse closest-side at 50% 48% in srgb,
+    #000 38%,
+    #0000008c 70%,
+    #0000 100%
+  );
+}
+
+@media (min-width: 1024px) {
+  .photo-region-hero {
+    inset: -7rem -0.5rem -5rem -3rem;
+  }
+}
+
+/* Descendant, not child: the <img> sits inside a <picture> wrapper, so `>`
+   would silently fail to match and the image would collapse to intrinsic size.
+   Positioned absolutely so it fills the region regardless of that wrapper. */
+.photo-region img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--scrim);
+  pointer-events: none;
 }
 
 /* ---------------------------------------------------------------------------

@@ -14,22 +14,51 @@ export async function settle(page: Page): Promise<void> {
   await page.mouse.move(4, 4);
   await page.evaluate(() => document.fonts.ready);
   await page.evaluate(async () => {
-    await Promise.all(
-      Array.from(document.images)
-        .filter((i) => !i.complete)
-        .map(
+    // Phase 5 added a `loading="lazy"` photo far below the fold. A lazy image
+    // that has never been scrolled toward NEVER loads, so `i.complete` stays
+    // false forever and awaiting it hangs - measured: settle() timed out at
+    // 30s against the contact band. Skip images the browser is deliberately
+    // not fetching yet, and cap the rest so one stalled request cannot wedge
+    // the whole suite.
+    const nearViewport = (i: HTMLImageElement) => {
+      const r = i.getBoundingClientRect();
+      return r.bottom > -window.innerHeight && r.top < window.innerHeight * 2;
+    };
+    const pending = Array.from(document.images).filter(
+      (i) => !i.complete && (i.loading !== "lazy" || nearViewport(i)),
+    );
+    await Promise.race([
+      Promise.all(
+        pending.map(
           (i) =>
             new Promise<void>((res) => {
               i.addEventListener("load", () => res(), { once: true });
               i.addEventListener("error", () => res(), { once: true });
             }),
         ),
-    );
+      ),
+      new Promise<void>((res) => setTimeout(res, 8000)),
+    ]);
   });
   // BlurFade entrances are staggered (~0.04s * index, then 0.4s each), so with
   // ~40 wrapped elements the last one finishes well after 1.5s. Measured: they
   // are still converging on y:-6 at 800ms.
   await page.waitForTimeout(3000);
+}
+
+/**
+ * Wait until every declared photo has actually decoded.
+ *
+ * Needed because settle() deliberately does NOT block on offscreen lazy images,
+ * so a contrast measurement taken straight after it could sample an empty box
+ * and pass trivially. Call this after revealAll(), which is what triggers the
+ * lazy fetch in the first place.
+ */
+export async function awaitPhotos(page: Page): Promise<void> {
+  await page.waitForFunction(() => {
+    const imgs = Array.from(document.querySelectorAll<HTMLImageElement>("img[data-photo]"));
+    return imgs.length > 0 && imgs.every((i) => i.complete && i.naturalWidth > 0);
+  });
 }
 
 /**

@@ -12,7 +12,12 @@ export function HeroProofRow({ metrics }: { metrics: readonly Metric[] }) {
   if (metrics.length === 0) return null;
 
   return (
-    <dl className="flex flex-wrap gap-x-10 gap-y-4 py-2">
+    // data-proof-row is a stable test hook, not styling. Phase 5's photo
+    // contract has to prove no photography sits geometrically behind this row
+    // (§6), and `section#hero dl` would silently stop matching the day another
+    // definition list appears in the hero - failing open, which is the exact
+    // class of defect that has bitten every phase of this redesign.
+    <dl data-proof-row className="flex flex-wrap gap-x-10 gap-y-4 py-2">
       {metrics.map((m) => (
         <div key={m.id} className="flex flex-col">
           <dt className="font-mono text-2xl font-bold text-display-accent">

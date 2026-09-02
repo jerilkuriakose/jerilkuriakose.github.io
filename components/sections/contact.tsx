@@ -5,15 +5,58 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
 import { BLUR_FADE_DELAY } from "@/components/sections/constants";
 import { DATA } from "@/data/resume";
+import { CONTACT_PHOTO, fallbackFor, srcSetFor } from "@/data/media";
+
+/** Band spans max-w-4xl (896px) at desktop, the content column below that. */
+const CONTACT_SIZES = "(min-width: 1024px) 896px, calc(100vw - 3rem)";
+
+const CONTACT_FALLBACK = fallbackFor(CONTACT_PHOTO);
 
 /**
  * The hardcoded `05. What's Next?` eyebrow was deleted: section numbers come
  * from `.numbered-heading`'s positional counter, and this literal was already
  * wrong before the resequence.
+ *
+ * Phase 5 adds the second (and final) photographic region. The photo is a
+ * BOUNDED band, not a section background, and the content sits on a glass card
+ * inset within it - §6's "glass cards appear only where they overlap a
+ * photography band". That inset is also the contrast strategy: because
+ * `.glass`'s base fill is near-opaque, the text stays legible even when
+ * backdrop-filter is unsupported, which a translucent card could not promise.
  */
 export function Contact() {
   return (
-        <section id="contact" aria-labelledby="contact-heading" className="py-24 text-center">
+        <section id="contact" aria-labelledby="contact-heading" className="py-24">
+          <div className="relative isolate mx-auto max-w-4xl">
+            <div className="photo-region rounded-3xl" aria-hidden="true">
+              <picture>
+                <source
+                  type="image/webp"
+                  srcSet={srcSetFor(CONTACT_PHOTO, "image/webp")}
+                  sizes={CONTACT_SIZES}
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element --
+                    see hero.tsx: images.unoptimized makes next/image emit no
+                    srcset, so hand-written variants are the only correct path.
+                    Lazy here, the exact opposite of the hero: this band is far
+                    below the fold and must not compete with the LCP image. */}
+                <img
+                  src={CONTACT_FALLBACK.src}
+                  srcSet={srcSetFor(CONTACT_PHOTO, "image/jpeg")}
+                  sizes={CONTACT_SIZES}
+                  width={CONTACT_FALLBACK.w}
+                  height={CONTACT_FALLBACK.h}
+                  alt=""
+                  data-photo={CONTACT_PHOTO.id}
+                  loading="lazy"
+                  decoding="async"
+                  style={{ objectPosition: CONTACT_PHOTO.objectPosition }}
+                />
+              </picture>
+              <div className="scrim" />
+            </div>
+
+            <div className="glass relative z-10 m-6 rounded-3xl border px-6 py-14 text-center md:m-10">
           <BlurFade delay={BLUR_FADE_DELAY * 36}>
             <h2 id="contact-heading" className="display-2 text-foreground mb-6">
               Get In Touch
@@ -80,6 +123,8 @@ export function Contact() {
               </div>
             </div>
           </BlurFade>
+            </div>
+          </div>
         </section>
   );
 }

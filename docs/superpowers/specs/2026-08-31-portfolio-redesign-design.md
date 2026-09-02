@@ -17,10 +17,18 @@ restate gate status anywhere else. Tick a box only when Jeril has actually confi
 - [x] **G1 — Commit decision.** ✅ Resolved 2026-08-31. The upgrade is committed as
       `576c5c3` (framework upgrade) and `e737451` (redesign artifacts). `HEAD` is now the
       upgraded stack, which Phase 0's baseline worktree requires.
-- [ ] **G2 — Owner sign-off** on one first-viewport prototype using a *real* final-quality
+- [x] **G2 — Owner sign-off** on one first-viewport prototype using a *real* final-quality
       image, plus one representative content section. Decisions 7–9 (OKLCH, serif,
       dark-mode policy) were agent-made and are unreviewed by a design-informed human.
       Detail: §2.
+      **✅ Resolved 2026-09-01.** Jeril approved both artefacts, rendered with the real
+      final-quality `hero-ink` / `contact-glass` images (not placeholders, per §2's explicit
+      exclusion): the first viewport in both themes at 1280 and 375, and the Contact section as
+      the representative content section. Artefacts: `motion-compare/phase5/`. Measured at
+      approval: worst-pixel contrast over photography 5.05:1 light / 7.06:1 dark against a 4.5
+      floor across 5 text runs per theme; 0px horizontal overflow at every theme/width;
+      `verify.sh` green at 99 tests with 8/8 mutation categories caught. Phase 5 is unblocked
+      for shipping, which closes the last gate in this redesign.
 - [x] **G3 — Two impact claims** named for the hero and confirmed cleared for public
       attribution. **✅ Resolved 2026-09-01.** Jeril approved two, both explicitly cleared
       for public attribution:
@@ -29,8 +37,15 @@ restate gate status anywhere else. Tick a box only when Jeril has actually confi
       Chosen to be complementary: one business outcome and one technical capability, one
       per employer, so the pair speaks to a non-technical recruiter and a technical
       screener at once. Phase 1b is unblocked. Detail: §5.
-- [ ] **G4 — Photography** supplied: 6–10 abstract material macro shots (landscape,
+- [x] **G4 — Photography** supplied: 6–10 abstract material macro shots (landscape,
       high-res, cool/neutral). Blocks *shipping* Phase 5, not developing it. Detail: §13.
+      **✅ Resolved 2026-09-01.** Jeril chose AI generation over own-photography and stock;
+      8 candidates generated and independently verified — all landscape, **0.0% warm
+      pixels**, 98.9–100% cool. Two selected: `hero-ink` (1774×887, WCAG relative
+      luminance 0.0337) and `contact-glass` (1536×1024, 0.4102). Deliberately opposite
+      polarity, which is what forces `--scrim` to be defined per theme. Usage-right basis
+      recorded in `data/media.ts`; the six rejected candidates are recorded there too, with
+      reasons, so the selection is reproducible. Detail: §13.
 
 ---
 

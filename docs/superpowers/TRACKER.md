@@ -22,14 +22,23 @@ hand-maintained, so none of it can go stale.**
 
 ## The only hand-maintained state
 
-**Next action:** **Every phase except 5 is complete** — 0, 1a, 1b, 2, 3, 4 and 6 are shipped
-(`verify.sh` green, 89 tests). **Phase 5 (photography + glass) is the only work left, and it is
-blocked on G4**: 6–10 abstract material macro shots, landscape, high-res, cool/neutral. It can be
-*developed* on placeholders; it cannot ship without them. **G2** (owner sign-off) is best
-answered once Phase 5 has a real image in the first viewport.
+**Next action:** **The redesign is complete.** All seven phases (0, 1a, 1b, 2, 3, 4, 5, 6) are
+shipped and all four human gates G1–G4 are closed. G2 was approved on 2026-09-01 against the real
+`hero-ink` / `contact-glass` imagery, which was the last blocker. `verify.sh` is green at **99
+tests**; Phase 5's 8 mutation categories are all proven to fail via
+`/tmp/opencode/phase5-mutations.sh`.
 
-Phase 6 also closed every §9 accessibility gap and eliminated the horizontal overflow that
-predated this project (38/77/128px → 0).
+There is no queued work. Anything further is new scope — the out-of-scope list in the spec §12
+(LaTeX→Typst/Puppeteer PDF migration, Arabic/RTL, print styles, contact form, analytics) is the
+place to start, and none of it is committed to.
+
+Phase 6 closed every §9 accessibility gap. Phase 5 finished the overflow story: Phase 6 reported
+0px, but that gate sampled once immediately after `networkidle`, i.e. at animation frame 0. The
+hero's outer ring was a 288px **square** with `rounded-full` spun by `animate-[spin]`, so its
+*rotated bounding box* grew to 404.6px and overflowed a 375px viewport — 0px at t=0, 7px from
+500ms on. The live pre-Phase-5 site measures the same 7px, so it was never a Phase 5 regression.
+Spinning a uniform annulus is a visual no-op, so the animation was removed and the gate now
+samples over time and takes the worst reading.
 
 Four rules this project has paid for. They apply to every later phase:
 
@@ -87,3 +96,21 @@ the status script outranks any sentence written here.
 6. **Tailwind 4.3.3 strips author content inside `@layer components`.** Write custom classes as
    plain CSS. They then outrank every Tailwind layer, so a stale utility loses silently rather
    than loudly — assert the rendered result.
+7. **A gate that samples once samples frame 0.** Phase 6's overflow gate read `scrollWidth`
+   immediately after `networkidle` and reported 0 while the page genuinely overflowed by 7px for
+   ~95% of every animation cycle, because a rotating square's bounding box is smallest at
+   rotation 0. Anything driven by an animation must be sampled **over time** and reduced to the
+   worst reading.
+8. **Chromium's CSSOM aliases `-webkit-backdrop-filter` onto the standard property.**
+   `rule.style.cssText` reports only `backdrop-filter`, so a CSSOM check for the prefix can
+   never fail — it passes even with the prefix deleted. Assert vendor prefixes against the
+   **built stylesheet**, not the CSSOM.
+9. **`transition-property`'s initial value is `all`.** `getComputedStyle(el).transitionProperty`
+   returns `"all"` for every element that declares no transition, so auditing it alone flags
+   everything. A transition only exists if `transition-duration` is non-zero.
+10. **`backdrop-filter: none` cannot emulate missing support.** `@supports` still matches, so the
+    enhancement stays active and a fallback test proves nothing. Delete the gated rule from the
+    CSSOM instead, and confirm the computed value actually changed.
+11. **A radial mask needs `closest-side`.** With the default `farthest-corner`, the nearest edge
+    sits only ~43% along the gradient and stays opaque, so a masked panel ships a hard line down
+    one side. Only `closest-side` guarantees all four edges reach transparent.

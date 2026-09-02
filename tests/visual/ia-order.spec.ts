@@ -48,8 +48,21 @@ test("the duplicated skill teaser and decorative photo are gone", async ({
 
   // Two <Image>s existed: the hero portrait and the About decorative photo.
   // Only the portrait survives.
-  expect(await page.locator("main img").count()).toBe(1);
-  expect(await page.locator("section#hero img").count()).toBe(1);
+  //
+  // This was `main img` count === 1 until Phase 5, which legitimately adds two
+  // photographic regions. Bumping that number to 3 would have kept the test
+  // green while discarding the guarantee it existed for, so it is now asserted
+  // SEMANTICALLY: exactly one portrait, and every other image in <main> is a
+  // declared photo region. A reintroduced decorative About photo fails the
+  // second assertion because it would carry no data-photo.
+  expect(await page.locator(`section#hero img[alt="${DATA.name}"]`).count()).toBe(1);
+  expect(await page.locator("section#about img").count()).toBe(0);
+
+  const mainImgs = await page.locator("main img").count();
+  const accounted =
+    (await page.locator(`section#hero img[alt="${DATA.name}"]`).count()) +
+    (await page.locator("main img[data-photo]").count());
+  expect(accounted).toBe(mainImgs);
 });
 
 test("Education and Awards are ONE section with one numbered heading", async ({
@@ -155,11 +168,27 @@ for (const width of [375, 768, 1280]) {
   test(`no horizontal overflow at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/", { waitUntil: "networkidle" });
-    const overflow = await page.evaluate(
-      () =>
-        document.documentElement.scrollWidth -
-        document.documentElement.clientWidth,
+
+    // Sampled OVER TIME, not once. A single reading right after networkidle is
+    // taken while every CSS animation is still at its first frame, so any
+    // element whose ROTATED bounding box grows over the cycle is invisible to
+    // it. Measured on the hero's outer ring: overflow read 0px at t=0 and 7px
+    // from 500ms onward, peaking at a 404.6px bbox in a 375px viewport - the
+    // gate reported 0 while the page genuinely overflowed for 95% of the time.
+    const readings = await page.evaluate(async () => {
+      const read = () =>
+        document.documentElement.scrollWidth - document.documentElement.clientWidth;
+      const out: number[] = [read()];
+      for (let i = 0; i < 12; i++) {
+        await new Promise((r) => setTimeout(r, 220));
+        out.push(read());
+      }
+      return out;
+    });
+
+    const worst = Math.max(...readings);
+    expect(worst, `${width}px overflows by up to ${worst}px (samples: ${readings.join(",")})`).toBe(
+      0,
     );
-    expect(overflow, `${width}px overflows by ${overflow}px`).toBe(0);
   });
 }

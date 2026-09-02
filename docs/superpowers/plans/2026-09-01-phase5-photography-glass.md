@@ -77,9 +77,9 @@ Note the blurred element itself computes as `static`; its `<nav>` ancestor is `f
 
 **Files:** create `public/media/*`, `data/media.ts`; modify the spec (tick `G4`)
 
-- [ ] **Step 1: Move only the two finalists in.** The six unused candidates are ~13MB of dead weight — leave them in `/tmp` and record in the manifest that they exist and why they were rejected.
+- [x] **Step 1: Move only the two finalists in.** The six unused candidates are ~13MB of dead weight — leave them in `/tmp` and record in the manifest that they exist and why they were rejected.
 
-- [ ] **Step 2: Variants at source-capped widths — never upscale**
+- [x] **Step 2: Variants at source-capped widths — never upscale**
 
 `02-ink` is **1774** wide and `07-glass-alt` is **1536**. A 1920 variant would upscale them by 8% and 25%, which contradicts this plan's own performance gate. So:
 
@@ -90,15 +90,15 @@ Note the blurred element itself computes as `static`; its `<nav>` ancestor is `f
 
 WebP plus a JPEG fallback at the same widths, via Pillow. Every `srcSet` width descriptor must equal the file's **actual** width — assert each from its header, not from the resize call.
 
-- [ ] **Step 3: `data/media.ts` — the auditable manifest**
+- [x] **Step 3: `data/media.ts` — the auditable manifest**
 
 Per image: id, variants with real dimensions, the **named** metrics (WCAG relative luminance and mean OKLab L, not an undefined "mean L"), per-third spatial statistics, focal/crop bounds, chosen scrim strength, and provenance.
 
 **Provenance is not the licensing check.** §6 requires a licensing check; "AI-generated via Codex" records origin only. Record the applicable usage right / service terms reference and the generation date alongside it, so the check is auditable later. This does not reopen the approved AI-asset decision.
 
-- [ ] **Step 4: Tick `G4` in the spec** — the owner supplied and approved the set. Gate state lives in the spec's checkboxes, never in prose.
+- [x] **Step 4: Tick `G4` in the spec** — the owner supplied and approved the set. Gate state lives in the spec's checkboxes, never in prose.
 
-- [ ] **Step 5: Gate** — build clean; assert every variant the manifest references exists with the declared dimensions.
+- [x] **Step 5: Gate** — build clean; assert every variant the manifest references exists with the declared dimensions.
 
 ---
 
@@ -106,15 +106,15 @@ Per image: id, variants with real dimensions, the **named** metrics (WCAG relati
 
 **Files:** modify `app/globals.css`, `components/magicui/dock.tsx`
 
-- [ ] **Step 1: Five tokens per theme** — `--glass-solid`, `--glass-translucent`, `--glass-rim`, `--glass-shadow`, `--scrim`. Separate light and dark values; §6: *"a white-based fill washes out on dark."* Derive from the Phase 2 ramp and **measure**, never compute.
+- [x] **Step 1: Five tokens per theme** — `--glass-solid`, `--glass-translucent`, `--glass-rim`, `--glass-shadow`, `--scrim`. Separate light and dark values; §6: *"a white-based fill washes out on dark."* Derive from the Phase 2 ramp and **measure**, never compute.
 
-- [ ] **Step 2: Invert `.glass`** — near-opaque base (92–96%); the translucent gradient and **both** `-webkit-backdrop-filter` and `backdrop-filter` inside `@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))`.
+- [x] **Step 2: Invert `.glass`** — near-opaque base (92–96%); the translucent gradient and **both** `-webkit-backdrop-filter` and `backdrop-filter` inside `@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))`.
 
-- [ ] **Step 3: Remove Dock's duplicate blur.** Delete `backdrop-blur-md` and the `supports-backdrop-blur:*` utilities from `dock.tsx:27` so `.glass` is the single authoritative declaration for that surface.
+- [x] **Step 3: Remove Dock's duplicate blur.** Delete `backdrop-blur-md` and the `supports-backdrop-blur:*` utilities from `dock.tsx:27` so `.glass` is the single authoritative declaration for that surface.
 
-- [ ] **Step 4: Add bounded `.scrim`** — covers the photo region only, never a whole section.
+- [x] **Step 4: Add bounded `.scrim`** — covers the photo region only, never a whole section.
 
-- [ ] **Step 5: Prove the polarity by parsing the CSS, not by faking support**
+- [x] **Step 5: Prove the polarity by parsing the CSS, not by faking support**
 
 Chromium **cannot** be made to treat a supported property as unsupported: setting `backdrop-filter: none` still leaves `@supports` matching, so the translucent enhancement stays active. An emulation-based test would silently prove nothing.
 
@@ -126,15 +126,15 @@ Instead, assert structurally via CSSOM: a base `.glass` rule **outside** any `CS
 
 **Files:** modify `components/sections/hero.tsx`, `tests/visual/ia-order.spec.ts`
 
-- [ ] **Step 1: Remove the two decorative blur blobs.** Verified safe: no contrast assertion depends on them and overflow stays 0 — the zero-overflow *assertion* is the invariant, not that particular container. The full-section container can go with them.
+- [x] **Step 1: Remove the two decorative blur blobs.** Verified safe: no contrast assertion depends on them and overflow stays 0 — the zero-overflow *assertion* is the invariant, not that particular container. The full-section container can go with them.
 
-- [ ] **Step 2: Insert the photo inside the right grid cell** (`hero.tsx:158`). Make that cell `relative isolate`; put the picture in an absolutely-positioned, **independently clipped** wrapper behind the `BlurFade` portrait stack. Do **not** clip the cell itself, and do not clip the rings or the "Open to work" badge at `hero.tsx:161–187` — they intentionally overflow the portrait.
+- [x] **Step 2: Insert the photo inside the right grid cell** (`hero.tsx:158`). Make that cell `relative isolate`; put the picture in an absolutely-positioned, **independently clipped** wrapper behind the `BlurFade` portrait stack. Do **not** clip the cell itself, and do not clip the rings or the "Open to work" badge at `hero.tsx:161–187` — they intentionally overflow the portrait.
 
-- [ ] **Step 3: Crop from the spatial statistics.** The plume is in thirds 2–3, so favour those in the cell crop; that is what makes the photo read as texture rather than as an empty dark rectangle.
+- [x] **Step 3: Crop from the spatial statistics.** The plume is in thirds 2–3, so favour those in the cell crop; that is what makes the photo read as texture rather than as an empty dark rectangle.
 
-- [ ] **Step 4: `<img>` with explicit `width`/`height`, hand-written `srcSet`/`sizes`, `loading="eager"`, `fetchPriority="high"`, `decoding="async"`.** It is the LCP element. `images.unoptimized: true` means Next contributes nothing — a missed `srcSet` silently ships the full-size file.
+- [x] **Step 4: `<img>` with explicit `width`/`height`, hand-written `srcSet`/`sizes`, `loading="eager"`, `fetchPriority="high"`, `decoding="async"`.** It is the LCP element. `images.unoptimized: true` means Next contributes nothing — a missed `srcSet` silently ships the full-size file.
 
-- [ ] **Step 5: Update `ia-order.spec.ts:51`.** It asserts `main img` count is exactly **1** — written in Phase 1a to prove the About photo was deleted, and it will fail the moment a hero photo exists. Replace the count with **semantic** assertions: exactly one portrait in the hero, and exactly one `[data-photo]` image in the hero cell. Do not simply bump the number; that would discard the original guarantee.
+- [x] **Step 5: Update `ia-order.spec.ts:51`.** It asserts `main img` count is exactly **1** — written in Phase 1a to prove the About photo was deleted, and it will fail the moment a hero photo exists. Replace the count with **semantic** assertions: exactly one portrait in the hero, and exactly one `[data-photo]` image in the hero cell. Do not simply bump the number; that would discard the original guarantee.
 
 ---
 
@@ -142,9 +142,9 @@ Instead, assert structurally via CSSOM: a base `.glass` rule **outside** any `CS
 
 **Files:** modify `components/sections/contact.tsx`
 
-- [ ] **Step 1: Bounded band** behind the contact block. `07-glass-alt` has WCAG luminance 0.410 — light — so the existing dark ink text needs only a light scrim.
-- [ ] **Step 2: `loading="lazy"`** — far below the fold, the opposite of the hero.
-- [ ] **Step 3: Glass on the CTA cluster only if it actually overlaps the photo**, per §6: *"Glass cards appear only where they overlap a photography band."* If it does not overlap, do not add glass.
+- [x] **Step 1: Bounded band** behind the contact block. `07-glass-alt` has WCAG luminance 0.410 — light — so the existing dark ink text needs only a light scrim.
+- [x] **Step 2: `loading="lazy"`** — far below the fold, the opposite of the hero.
+- [x] **Step 3: Glass on the CTA cluster only if it actually overlaps the photo**, per §6: *"Glass cards appear only where they overlap a photography band."* If it does not overlap, do not add glass.
 
 ---
 
@@ -152,7 +152,7 @@ Instead, assert structurally via CSSOM: a base `.glass` rule **outside** any `CS
 
 **Files:** create `tests/visual/photo-contract.spec.ts`; modify `tests/visual/source-contract.spec.ts`
 
-- [ ] **Step 1: Measure contrast on the real composite — correctly**
+- [x] **Step 1: Measure contrast on the real composite — correctly**
 
 §6: contrast measured per image **on the final composite, after `saturate()`**.
 
@@ -163,14 +163,14 @@ Four traps to avoid, each of which would let illegible text pass:
 - Capture with CSS-pixel scaling and decode in-browser via `createImageBitmap` + canvas.
 - Check the **worst** sampled pixel against the used text colour, not the mean. A mean passes while a headline crosses the plume.
 
-- [ ] **Step 2: Assert the five outcome rules, without the vacuous paths**
+- [x] **Step 2: Assert the five outcome rules, without the vacuous paths**
 
 - **at most two photo regions** — and require every photo source to come through the manifest and carry `data-photo`, so an unmarked CSS `background-image` or bare `<img>` cannot escape the count.
 - **nothing behind the metric row / Skills / Publications / Education + Awards** — compare **rendered rectangles** for overlap. DOM ancestry does not prove a *sibling* photo isn't geometrically behind the metric row.
 - **one photo region visible at a time** — prove it by computing each region's scroll-visibility **interval** and asserting the intervals are disjoint. Sampling a few scroll positions cannot prove "at any scroll position".
 - **first viewport legible with blur disabled** — via the forced-base-rule path from Task 2 Step 5.
 
-- [ ] **Step 3: Assert the six hard rules, without the vacuous paths**
+- [x] **Step 3: Assert the six hard rules, without the vacuous paths**
 
 - **one `backdrop-filter` per stack, never nested** — walk ancestor chains using **computed styles**, not source text.
 - **no blur on a scrolling container** — the blurred element may compute `static` while a `fixed` ancestor is the real chrome, so accept "contained by a fixed/sticky ancestor" and assert the mobile dock is that documented exception.
@@ -178,21 +178,21 @@ Four traps to avoid, each of which would let illegible text pass:
 - **both `-webkit-` and standard present** — assert they are in the **same** rule, since a source-presence check finds them in unrelated rules.
 - **`@supports` fallback near-opaque** — token correctness is not enough; a Tailwind utility or cascade order can override the rendered surface, so assert the **rendered** result too.
 
-- [ ] **Step 4: Performance** — total bytes of the hero-critical variants under a stated budget; no variant exceeds its declared intrinsic size.
+- [x] **Step 4: Performance** — total bytes of the hero-critical variants under a stated budget; no variant exceeds its declared intrinsic size.
 
-- [ ] **Step 5: Update `source-contract.spec.ts`.** New glass gradients and `color-mix` sites will invalidate its exact pinned counts (`:40–83`). Update around **named invariants** rather than just raising totals — a raised total is not a contract.
+- [x] **Step 5: Update `source-contract.spec.ts`.** New glass gradients and `color-mix` sites will invalidate its exact pinned counts (`:40–83`). Update around **named invariants** rather than just raising totals — a raised total is not a contract.
 
-- [ ] **Step 6: Mutation-test every category.** Remove the scrim; make the base glass translucent; nest a second `backdrop-filter`; put a photo behind the metric row; delete the `@supports` block; leave only `-webkit-`; add an unmarked `<img>`; upscale a variant. Confirm the matching assertion fails for each. **Six phases running, the decisive defect has been a gate that proved nothing** — a category without a mutation test is not trusted.
+- [x] **Step 6: Mutation-test every category.** Remove the scrim; make the base glass translucent; nest a second `backdrop-filter`; put a photo behind the metric row; delete the `@supports` block; leave only `-webkit-`; add an unmarked `<img>`; upscale a variant. Confirm the matching assertion fails for each. **Six phases running, the decisive defect has been a gate that proved nothing** — a category without a mutation test is not trusted.
 
 ---
 
 ### Task 6: Verify, present, THEN ship
 
-- [ ] **Step 1:** Gate every contract, inspect all six diffs, regenerate the baseline, `verify.sh` exits 0.
-- [ ] **Step 2: Look at it in a real browser** — both themes, 375 and 1280, and with the base glass forced. Confirm the hero reads as intentional and the metric row is unambiguously on canvas at **both** breakpoints, given the mobile reordering.
-- [ ] **Step 3: PRESENT THE PROTOTYPE AND STOP.** Produce the two artefacts §2 demands — the first viewport with the real image, and one representative content section — and hand them to the owner. **Do not commit, push or deploy yet.**
-- [ ] **Step 4: On approval, tick `G2` in the spec.** Then commit, push, confirm the deploy, and verify the variants are served with correct content types.
-- [ ] **Step 5:** `git status --porcelain` clean.
+- [x] **Step 1:** Gate every contract, inspect all six diffs, regenerate the baseline, `verify.sh` exits 0.
+- [x] **Step 2: Look at it in a real browser** — both themes, 375 and 1280, and with the base glass forced. Confirm the hero reads as intentional and the metric row is unambiguously on canvas at **both** breakpoints, given the mobile reordering.
+- [x] **Step 3: PRESENT THE PROTOTYPE AND STOP.** Produce the two artefacts §2 demands — the first viewport with the real image, and one representative content section — and hand them to the owner. **Do not commit, push or deploy yet.**
+- [x] **Step 4: On approval, tick `G2` in the spec.** Then commit, push, confirm the deploy, and verify the variants are served with correct content types.
+- [x] **Step 5:** `git status --porcelain` clean.
 
 ---
 
