@@ -1,4 +1,4 @@
-# CV Sync Agent Instructions
+# Portfolio Site — Agent Instructions (and its CV contract)
 
 > ## The redesign is COMPLETE — nothing is in flight
 >
@@ -29,264 +29,104 @@
 > compacted without warning, so anything keyed to "session end" silently never happens.
 >
 > Full environment notes and traps: `../AGENTS.md` in the workspace root.
->
-> **Note:** the "LaTeX is the source of truth" workflow below is UNVERIFIABLE here — no
-> LaTeX toolchain is installed, so the PDF cannot be rebuilt in this environment. See the
-> spec's "Out of scope" section.
 
-## Overview
+## The CV relationship — read this before editing `data/resume.tsx`
 
-This workspace contains two repositories that must be kept in sync:
+The sibling repo `../jk-cv` builds the CV. **It is no longer a LaTeX repo, and neither
+side is "the source of truth" for the other.** An earlier version of this file said
+"LaTeX → Portfolio, LaTeX is the source of truth" and then admitted the workflow was
+unverifiable because no TeX toolchain exists here. Both halves of that are now obsolete:
 
-1. **LaTeX CV (Source of Truth):** `jk-cv/`
-2. **Portfolio Website:** `jerilkuriakose.github.io/`
-
-**Sync Direction:** LaTeX → Portfolio (LaTeX is the source of truth)
-
----
-
-## Repository Locations
-
-```
-cvs/                                # Parent folder (can be any name)
-├── jk-cv/                          # LaTeX CV (SOURCE)
-│   ├── cv.tex                      # Main CV file
-│   ├── cv/
-│   │   ├── experience.tex          # Work experience
-│   │   ├── skills.tex              # Technical skills
-│   │   ├── education.tex           # Education history
-│   │   ├── publications.tex        # Publications
-│   │   ├── awards.tex              # Awards
-│   │   └── summary.tex             # Professional summary
-│   ├── CV-Jeril Kuriakose.pdf      # Generated PDF
-│   └── image.jpg                   # Profile photo
-│
-└── jerilkuriakose.github.io/       # Portfolio Website (TARGET)
-    ├── data/resume.tsx             # Content data file (UPDATE THIS)
-    ├── public/
-    │   ├── Jeril_Kuriakose_CV.pdf  # Copy PDF here
-    │   └── profile.jpg             # Profile photo
-    └── ...
-```
-
----
-
-## Workflow: When User Asks to Update CV
-
-### Step 1: Make Changes in LaTeX
-
-Edit the appropriate `.tex` file in `jk-cv/cv/`:
-
-| Content Type | LaTeX File |
-|--------------|------------|
-| Work experience | `cv/experience.tex` |
-| Skills | `cv/skills.tex` |
-| Education | `cv/education.tex` |
-| Publications | `cv/publications.tex` |
-| Awards | `cv/awards.tex` |
-| Summary/Bio | `cv/summary.tex` |
-| Personal info | `cv.tex` (header section) |
-
-### Step 2: Sync to Portfolio
-
-After LaTeX changes, update `jerilkuriakose.github.io/data/resume.tsx`:
-
-**Mapping LaTeX → Portfolio:**
-
-| LaTeX | Portfolio (resume.tsx) |
-|-------|------------------------|
-| `\cventry{title}{company}{location}{dates}{description}` | `work: [{ title, company, location, start, end, description, highlights }]` |
-| `\cvskill{category}{skills}` | `skills: [...]` |
-| `\cveducation{degree}{school}{location}{dates}` | `education: [{ degree, school, location, start, end }]` |
-| `\cvpublication{title}{authors}{journal}{year}` | `publications: [{ title, authors, journal, year }]` |
-| `\cvaward{title}{org}{date}` | `awards: [{ title, organization, date }]` |
-
-### Step 3: Rebuild PDF
+- CV content is authored in **`../jk-cv/data/cv.json`**, rendered to HTML by
+  `src/template.js`, and printed to PDF by **headless Chromium** (`playwright-core`). It
+  builds here, in one command, and is verified by 17 poppler-based gates.
+- Site content is authored in **`data/resume.tsx`** (one exported `DATA` object).
+- The two documents **share some facts and deliberately diverge on others.** The overlap
+  is a machine-checked contract, not a prose instruction.
 
 ```bash
-cd jk-cv
-pdflatex cv.tex
-# Or use the Makefile:
-make
+cd ../jk-cv && make check-sync    # every shared CV value must be present in resume.tsx
 ```
 
-Output: `CV-Jeril Kuriakose.pdf`
+It exits non-zero and **names the diverging fields**. Run it after any edit to a shared
+fact on either side. It also fails when this repo is absent (`--allow-missing-site` is the
+explicit escape hatch), because a check that silently passes having verified nothing is
+worse than no check.
 
-### Step 4: Copy PDF to Portfolio
+### What the contract compares
+
+Keyed by a stable `id` per record, defined in `../jk-cv/src/shared-fields.mjs`:
+
+| `cv.json` | `data/resume.tsx` (`DATA`) | Compared |
+|---|---|---|
+| `basics.email`, `basics.tel` | `contact.email`, `contact.tel` | yes — phone by digits, so the site's unspaced `wa.me` form is not drift |
+| `publications[].title`, `.year` | `publications[]` | yes |
+| `education[].school`, `.degree` | `education[]` | yes |
+| `awards[].title`, `.organization` | `awards[]` | yes |
+| `work[].company`, `.title` — only roles the CV still lists in full | `work[]` | yes |
+
+Comparison collapses whitespace, folds dashes (an en dash in the CV matches an ASCII
+hyphen here), and tolerates values this file wraps across lines. **Array lengths are never
+compared** — counting would pass while every value diverged, and it would false-fail on the
+collapsed roles below.
+
+### What deliberately diverges — do NOT "fix" these
+
+| Divergence | Why |
+|---|---|
+| `projects` (7 here, none in the CV) | site-only by design |
+| `skills` flat here, 4 groups in the CV | presentational choice on both sides |
+| Role bullets: the CV compresses, the site does not | CV has a page budget; the site does not |
+| The CV collapses pre-2017 roles into one "Earlier Experience" line; the site lists all 8 | O4 compression. Collapsed roles drop out of the contract |
+| `man-hours` here (8 occurrences) vs `person-hours` in the CV | **decision O2, not yet owner-approved for the site.** The CV's schema bans `man-hours`; the site keeps it until the owner says otherwise. Metric labels are not in the contract, so `check-sync` passes |
+| Stack Overflow link here, absent from the CV | a reputation profile, not a credential; the CV's contact line is capped at four links |
+| `jerilkuriakose.github.io` appears in the CV's links but in no URL here | expected — the host is explicitly exempt from the link check |
+| `extraInfo: "Saudi Arabia Premium Resident"` here | the CV puts residency in its **gulf** variant only, and gate G-p asserts the international PDF never carries it |
+
+### The PDF
 
 ```bash
-cp "jk-cv/CV-Jeril Kuriakose.pdf" "jerilkuriakose.github.io/public/Jeril_Kuriakose_CV.pdf"
+cd ../jk-cv && make                                     # builds both variants
+cp "../jk-cv/CV-Jeril Kuriakose.pdf" public/Jeril_Kuriakose_CV.pdf
+bash scripts/verify.sh
 ```
 
-### Step 5: Build Portfolio (Verify)
+- `DATA.resumeUrl` is already `/Jeril_Kuriakose_CV.pdf`, so refreshing the CV needs **no
+  code change here** — replace the binary and commit it.
+- Publish the **`international`** variant only. `CV-Jeril Kuriakose-Gulf.pdf` carries a
+  photo, nationality and residency detail and is for direct applications, never the web.
+- `output: 'export'` means the PDF is served as a plain static file from `public/`; there
+  is no route handler or redirect involved.
+
+### Workflow for a content change
+
+1. Edit `../jk-cv/data/cv.json` (CV) and/or `data/resume.tsx` (site).
+2. `cd ../jk-cv && make verify` — expect exactly one failure,
+   `G-h [international] 3 pages > 2`, which is sanctioned and owner-approved. Anything else
+   red is a real defect.
+3. `make check-sync` — green, or it names what diverged. Fix the divergence unless it is on
+   the accepted list above.
+4. Copy the international PDF to `public/` if it changed.
+5. `bash scripts/verify.sh` here — must exit 0.
+6. **Commit each repo separately.** They are independent git repos. Never assume one
+   command touches both, and never commit unless asked.
+
+## Where site content lives
+
+`data/resume.tsx` exports one `DATA` object: `name`, `initials`, `title`, `location`,
+`locationLink`, `description`, `summary`, `avatarUrl`, `resumeUrl`, `extraInfo`,
+`yearsOfExperience`, `contact`, `skills`, `work`, `education`, `projects`,
+`publications`, `awards`, `languages`, `featuredMetricIds`. Single route, static export,
+GitHub Pages. Stack, deploy details and the Tailwind 4 traps are in `../AGENTS.md` §3–§6
+and `docs/tailwind4-notes.md`.
+
+## Definition of done
 
 ```bash
-cd jerilkuriakose.github.io
-npm run build
+bash scripts/verify.sh            # build + tsc + lint + visual harness
+bash scripts/verify.sh --fast     # skip the browser harness
 ```
 
----
-
-## Workflow: When User Says "Commit" or "Push"
-
-Always commit and push BOTH repositories:
-
-### Commit Both Repos
-
-```bash
-# Commit LaTeX CV
-cd jk-cv
-git add -A
-git commit -m "Update CV: <description of changes>"
-
-# Commit Portfolio
-cd jerilkuriakose.github.io
-git add -A
-git commit -m "Sync from LaTeX: <description of changes>"
-```
-
-### Push Both Repos
-
-```bash
-# Push LaTeX CV
-cd jk-cv
-git push origin main
-
-# Push Portfolio
-cd jerilkuriakose.github.io
-git push origin main
-```
-
----
-
-## Content Transformation Examples
-
-### Experience Entry
-
-**LaTeX (`cv/experience.tex`):**
-```latex
-\cventry
-  {Principal Data Scientist (Gen AI)}
-  {Saudi Data \& AI Authority (SDAIA)}
-  {Riyadh, Saudi Arabia}
-  {Jan 2024 - Present}
-  {
-    \begin{cvitems}
-      \item Leading ALLaM development
-      \item Processed 50TB data
-    \end{cvitems}
-  }
-```
-
-**Portfolio (`data/resume.tsx`):**
-```tsx
-{
-  company: "Saudi Data & AI Authority (SDAIA)",
-  title: "Principal Data Scientist (Gen AI)",
-  location: "Riyadh, Saudi Arabia",
-  start: "Jan 2024",
-  end: "Present",
-  description: "Leading ALLaM (Arabic Large Language Model) development...",
-  highlights: [
-    "Leading ALLaM development",
-    "Processed 50TB data",
-  ],
-}
-```
-
-### Skills
-
-**LaTeX (`cv/skills.tex`):**
-```latex
-\cvskill{ML/AI}{PyTorch, Transformers, LangChain, vLLM}
-\cvskill{Infrastructure}{Kubernetes, Docker, Azure}
-```
-
-**Portfolio (`data/resume.tsx`):**
-```tsx
-skills: [
-  "PyTorch",
-  "Transformers", 
-  "LangChain",
-  "vLLM",
-  "Kubernetes",
-  "Docker",
-  "Azure",
-]
-```
-
-### Education
-
-**LaTeX (`cv/education.tex`):**
-```latex
-\cveducation
-  {Ph.D. in Computer Engineering}
-  {Manipal University Jaipur}
-  {Jaipur, India}
-  {Jul 2013 - Dec 2019}
-```
-
-**Portfolio (`data/resume.tsx`):**
-```tsx
-{
-  school: "Manipal University Jaipur, School of Computing and IT",
-  degree: "Ph.D. in Computer Engineering",
-  location: "Jaipur, India",
-  start: "Jul 2013",
-  end: "Dec 2019",
-  gpa: "9.62",
-  description: "Research focus: Secure localization...",
-}
-```
-
----
-
-## Quick Reference Commands
-
-```bash
-# Check status of both repos
-cd jk-cv && git status
-cd jerilkuriakose.github.io && git status
-
-# Sync PDF after LaTeX rebuild
-cp "jk-cv/CV-Jeril Kuriakose.pdf" "jerilkuriakose.github.io/public/Jeril_Kuriakose_CV.pdf"
-
-# Build and verify portfolio
-cd jerilkuriakose.github.io && npm run build
-
-# Commit both (run separately)
-cd jk-cv && git add -A && git commit -m "MSG"
-cd jerilkuriakose.github.io && git add -A && git commit -m "MSG"
-
-# Push both (run separately)
-cd jk-cv && git push origin main
-cd jerilkuriakose.github.io && git push origin main
-```
-
----
-
-## Important Notes
-
-1. **LaTeX is the source of truth** - Always make content changes in LaTeX first
-2. **Sync after every LaTeX change** - Update portfolio's `data/resume.tsx`
-3. **Copy PDF after rebuilding** - Keep the downloadable CV up to date
-4. **Commit both repos together** - Use similar commit messages for traceability
-5. **Portfolio has extra fields** - Some fields (like `highlights` array) may have more detail in portfolio than LaTeX
-
----
-
-## Files to Watch
-
-When these LaTeX files change, sync to portfolio:
-
-| LaTeX File Changed | Update in Portfolio |
-|--------------------|---------------------|
-| `cv/experience.tex` | `work` array in `data/resume.tsx` |
-| `cv/skills.tex` | `skills` array in `data/resume.tsx` |
-| `cv/education.tex` | `education` array in `data/resume.tsx` |
-| `cv/publications.tex` | `publications` array in `data/resume.tsx` |
-| `cv/awards.tex` | `awards` array in `data/resume.tsx` |
-| `cv/summary.tex` | `summary` field in `data/resume.tsx` |
-| `cv.tex` (header) | `name`, `title`, `location`, `contact` in `data/resume.tsx` |
-| `image.jpg` | Copy to `public/profile.jpg` |
-| `CV-Jeril Kuriakose.pdf` | Copy to `public/Jeril_Kuriakose_CV.pdf` |
+Exits 0 only if every gate passes. CI uses `npm ci`, so verify that path before claiming a
+change is deployable. For visual work, pixel-diff against the committed baseline
+(`npm run test:visual`, literal zero tolerance) rather than eyeballing.
