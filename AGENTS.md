@@ -1,26 +1,38 @@
 # CV Sync Agent Instructions
 
-> ## ⚠️ A phased redesign of this site is in flight — read this first
+> ## The redesign is COMPLETE — nothing is in flight
 >
-> **Before any work here:**
+> All seven phases shipped and all four owner gates (G1–G4) closed on 2026-09-01.
+> `verify.sh` green at 99 tests. Both repos clean and pushed. **There is no queued work
+> and no uncommitted work to protect** — an earlier version of this banner warned about an
+> uncommitted Next 16 upgrade; that shipped in `576c5c3` and the warning is retired.
+>
+> **Before changing anything here:**
 > ```bash
-> bash scripts/redesign-status.sh     # derives phases, plans, progress, gates, reviews, build/tsc/lint
-> cat docs/superpowers/TRACKER.md     # one sentence of non-derivable state + the write-through rule
+> bash scripts/verify.sh              # build + tsc + lint + 99-test visual harness
+> bash scripts/redesign-status.sh     # derives phases, gates, reviews, live build state
 > ```
-> **Record state WRITE-THROUGH — in the same turn a fact changes, not at "session end"**
-> (sessions get compacted without warning). A review verdict → a file in
-> `docs/superpowers/reviews/`. A human gate answered → tick its `G1..G4` checkbox in the
-> spec. Phase progress → tick checkboxes in `docs/superpowers/plans/*.md`. Only a change of
-> *next action* touches `TRACKER.md`. Writing the artifact **is** the update.
 >
-> **This repo has uncommitted work** (Next 16 / React 19 / Tailwind 4 upgrade). Run
-> `git status` and ask before any `checkout` / `clean` / `stash`. That is gate **G1**.
+> **Read these before touching CSS, colour, type, motion or photography** — they record
+> defects that cost real debugging and that no amount of code reading reveals:
+> - `docs/superpowers/TRACKER.md` §"Rules this project paid for" — 11 traps, incl. Tailwind 4
+>   stripping `@layer components`, `var()` substituting where DECLARED, and gates that
+>   sample animation frame 0
+> - `docs/superpowers/specs/2026-08-31-portfolio-redesign-design.md` §11b — the light-theme
+>   photo prominence is **accepted, not a bug**, with both disproven fixes and their numbers
+> - §11b "Known harness gap" — nothing asserts the photographs are *visible*, so 99 green
+>   tests would not catch a photo veiled out of existence
+>
+> **If you start a new multi-session project here**, restore the write-through discipline:
+> record each fact in its artifact in the same turn it changes (reviews → `reviews/`, gates →
+> spec checkboxes, progress → plan checkboxes, next action → `TRACKER.md`). Sessions get
+> compacted without warning, so anything keyed to "session end" silently never happens.
 >
 > Full environment notes and traps: `../AGENTS.md` in the workspace root.
 >
-> **Note:** the "LaTeX is the source of truth" workflow below is being reconsidered —
-> there is no LaTeX toolchain installed in this environment, so the PDF cannot be
-> rebuilt here. See the spec's "Out of scope" section.
+> **Note:** the "LaTeX is the source of truth" workflow below is UNVERIFIABLE here — no
+> LaTeX toolchain is installed, so the PDF cannot be rebuilt in this environment. See the
+> spec's "Out of scope" section.
 
 ## Overview
 
