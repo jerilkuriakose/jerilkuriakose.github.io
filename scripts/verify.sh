@@ -38,6 +38,16 @@ step "build"        npm run build
 step "tsc --noEmit" npx tsc --noEmit
 step "lint"         npm run lint
 
+# The published CV must be the current international build from ../jk-cv, or the
+# site serves a stale PDF with nothing complaining. A hash compare, so it runs
+# in every mode. Skipped when jk-cv is absent (e.g. CI), like check-sync's
+# --allow-missing-site escape hatch.
+if [ -d ../jk-cv ]; then
+  step "cv is current" node ../jk-cv/scripts/check-deploy.mjs
+else
+  echo "  cv is current              SKIPPED (../jk-cv absent)"
+fi
+
 if [ "$FAST" -eq 1 ]; then
   echo "  visual harness             SKIPPED (--fast)"
 else
