@@ -121,13 +121,34 @@ export const DATA = {
 
   work: [
     {
+      id: "humain",
+      company: "HUMAIN",
+      url: "https://www.humain.ai/",
+      title: "Senior Principal Engineer, AI Research",
+      location: "Riyadh, Saudi Arabia",
+      start: "Apr 2025",
+      end: "Present",
+      description:
+        "Owns technical strategy and hands-on delivery for HUMAIN's LLM inference and Arabic voice platforms: distributed serving, model-lifecycle automation, evaluation, production readiness, and latency and cost optimisation.",
+      highlights: [
+        "Architected and operate HUMAIN's GitOps-managed **multi-model inference platform** on Kubernetes (H100), with standardised deployment recipes and a secured API gateway (JWT/ACL), plus a self-hosted **ALLaM** playground on OpenWebUI, serving ALLaM and open-weight models to internal and external consumers.",
+        "Established **multi-node inference** for MoE models up to 744B parameters, using vLLM/Ray and SGLang/NCCL execution patterns with tensor and pipeline parallelism across multi-node H100 clusters.",
+        "Built an experiment-driven **serving-optimisation** practice: a serving-config change improved TTS time-to-first-audio 6.5x and throughput 38%, speculative decoding delivered up to 3.1x throughput at low concurrency, and designed autoscaling and workload tiering to reduce idle GPU capacity.",
+        "Built the **deployment and validation tooling** behind the platform: a benchmarking harness (TTFT and concurrency sweeps, GPU sizing), a validated per-model recipe library, event-driven model onboarding, and automated rollout with post-deploy health gates.",
+        "Led production engineering for HUMAIN's **Arabic voice** services on Triton: 8kHz telephony ASR (wav2vec2; WER, CER, real-time factor; diarisation and VAD) and Arabic TTS (diacritisation, voice controls, output guardrails).",
+        "Established the **voice evaluation and release discipline**: an internal voice-evaluation portal with rating and comparison workflows, TTS regression testing, and versioned ASR model, alias, and language-model mapping.",
+        "Drove production rollout of the voice platform: API gateway with TLS, Keycloak IAM, Kafka eventing, metering and usage analytics, observability, ISO/GRC control alignment, and a cross-cloud migration.",
+        "Produced executive product analytics: **Metabase** dashboards and a prompt-label study over 10M+ messages, covering MAU/DAU, retention cohorts, engagement and loyalty segments, work-versus-leisure use, intent, and 24 capability categories.",
+      ],
+    },
+    {
       id: "sdaia",
       company: "Saudi Data & AI Authority (SDAIA)",
       url: "https://sdaia.gov.sa/en/default.aspx",
       title: "Principal Data Scientist (Gen AI)",
       location: "Riyadh, Saudi Arabia",
       start: "Jan 2024",
-      end: "Present",
+      end: "Apr 2025",
       description:
         "Leading ALLaM (Arabic Large Language Model) development - data processing, training pipelines, and inference optimization at scale.",
       metrics: [
