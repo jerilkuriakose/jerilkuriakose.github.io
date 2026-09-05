@@ -98,7 +98,15 @@ export function ExperienceCard({
                     key={j}
                     className="text-sm text-muted-foreground pl-4 relative before:content-['▹'] before:absolute before:left-0 before:text-brand-vivid"
                   >
-                    {highlight}
+                    {highlight.split("**").map((part, k) =>
+                      k % 2 === 1 ? (
+                        <span key={k} className="text-interactive font-medium">
+                          {part}
+                        </span>
+                      ) : (
+                        part
+                      )
+                    )}
                   </li>
                 ))}
               </ul>
