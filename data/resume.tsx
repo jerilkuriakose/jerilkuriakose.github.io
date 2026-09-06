@@ -300,6 +300,26 @@ export const DATA = {
     },
   ] as readonly WorkEntry[],
 
+  /**
+   * "How I build with AI agents" - the site voice of the CV's
+   * "AI-Augmented Engineering" section (jk-cv/data/cv.json). Deliberately
+   * generic: no employer, product, model, host or ticket identifiers. The
+   * bullet lead-ins use the ** convention parsed everywhere else in the site
+   * (see experience.tsx / experience-card.tsx) so they render as accent spans.
+   */
+  aiAgents: {
+    intro:
+      "I run my own engineering as a managed multi-agent system. I set the guardrails. Agents do the work. I review and approve.",
+    bullets: [
+      "**Multi-runtime, multi-model.** I work across Claude Code, Codex, Gemini, and OpenCode, and route each task to the model that suits it. I keep my own reusable kit of agent skills, project blueprints, and a step where one agent reviews another's work.",
+      "**Autonomous ticket execution.** I built a system that takes a work ticket and runs an agent through triage, evidence-based planning, implementation on an isolated branch, tests, an adversarial code review, and a security review. It then opens a merge request for me to approve. It never merges on its own.",
+      "**Machine-checked readiness.** No agent starts until a ticket passes a code-aware check. The check pins the plan to the current code and a policy register, and binds them with a hash. Change the ticket or the code and the approval is void.",
+      "**I run it from my phone.** I start and monitor these agent runs over a Telegram bridge. Sensitive actions still wait for my approval.",
+      "**Unattended daily automation.** I run scheduled pipelines that refresh data and models each day. They validate, checkpoint, retry safely, and scale GPUs up and down on a schedule.",
+      "**Auditable by design.** Every run keeps durable state, an evidence trail, cost and token accounting, and redacted notifications.",
+    ],
+  },
+
   education: [
     {
       school: "Manipal University Jaipur, School of Computing and IT",

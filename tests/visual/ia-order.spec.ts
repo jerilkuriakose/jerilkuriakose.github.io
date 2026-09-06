@@ -4,6 +4,7 @@ import { DATA } from "../../data/resume";
 const EXPECTED = [
   "hero",
   "experience",
+  "ai-agents",
   "selected-work",
   "skills",
   "publications",

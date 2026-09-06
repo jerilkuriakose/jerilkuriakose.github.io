@@ -1,5 +1,6 @@
 import { Hero } from "@/components/sections/hero";
 import { Experience } from "@/components/sections/experience";
+import { AiAgents } from "@/components/sections/ai-agents";
 import { SelectedWork } from "@/components/sections/selected-work";
 import { Skills } from "@/components/sections/skills";
 import { Publications } from "@/components/sections/publications";
@@ -18,6 +19,10 @@ import { SocialRail } from "@/components/chrome/social-rail";
  * before Skills, so a recruiter meets evidence of impact before a list of
  * technologies. There is no "About" section: the positioning summary opens
  * Experience, and the hero keeps the short positioning copy.
+ *
+ * "How I build with AI agents" follows Experience, mirroring the CV's section
+ * order (Experience -> AI-Augmented Engineering) - the working practice reads
+ * right after the roles that demonstrate it, and before the project inventory.
  */
 export default function Home() {
   return (
@@ -36,6 +41,8 @@ export default function Home() {
       {/* Main Content */}
       <div className="relative z-10 px-6 md:px-12 lg:px-20 xl:px-24 max-w-6xl mx-auto pb-24">
         <Experience />
+
+        <AiAgents />
 
         <SelectedWork />
 
