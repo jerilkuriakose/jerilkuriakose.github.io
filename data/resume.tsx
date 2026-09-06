@@ -37,13 +37,13 @@ export type ProjectEntry = {
 export const DATA = {
   name: "Jeril Kuriakose",
   initials: "JK",
-  title: "Principal Data Scientist (Gen AI)",
+  title: "Senior Principal Engineer (Gen AI)",
   location: "Riyadh, Saudi Arabia",
   locationLink: "https://maps.google.com/?q=Riyadh,Saudi+Arabia",
   description:
-    "Principal Data Scientist with deep expertise in LLMs, NLP, and agentic AI systems. Leading end-to-end development of high-impact AI platforms.",
+    "Senior Principal Engineer with deep expertise in LLMs, NLP, and agentic AI systems. Leading end-to-end development of high-impact AI platforms.",
   summary:
-    "Principal Data Scientist with deep expertise in **LLMs**, NLP, and **agentic AI systems**. Leads end-to-end development of high-impact platforms from data engineering and training to **MLOps**, **inference optimization**, and **secure deployment at scale**. Proven record of measurable business outcomes (productivity savings, accuracy gains, and risk reduction) and hands-on leadership of cross-functional data teams.\n\nRecent focus: **Arabic LLMs (ALLaM)**, **agent orchestration**, curriculum **SFT**, **DPO**, **RL–SFT** hybrid training, and large-scale inference on **Kubernetes** with **vLLM/TGI/Triton**, Ray, and Azure.",
+    "Senior Principal Engineer with deep expertise in **LLMs**, NLP, and **agentic AI systems**. Leads end-to-end development of high-impact platforms from data engineering and training to **MLOps**, **inference optimization**, and **secure deployment at scale**. Proven record of measurable business outcomes (productivity savings, accuracy gains, and risk reduction) and hands-on leadership of cross-functional data teams.\n\nRecent focus: **Arabic LLMs (ALLaM)**, **agent orchestration**, curriculum **SFT**, **DPO**, **RL–SFT** hybrid training, and large-scale inference on **Kubernetes** with **vLLM/TGI/Triton**, Ray, and Azure.",
   avatarUrl: "/profile.jpg",
   resumeUrl: "/Jeril_Kuriakose_CV.pdf",
   extraInfo: "Saudi Arabia Premium Resident",

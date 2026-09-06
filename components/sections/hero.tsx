@@ -73,7 +73,7 @@ export function Hero() {
               <div className="max-w-2xl text-base md:text-lg leading-relaxed text-muted-foreground space-y-4">
                 <p>
                   I&apos;m a <span className="text-interactive font-medium">{DATA.title}</span> at{" "}
-                  <span className="text-foreground font-semibold">SDAIA</span>, specializing in
+                  <span className="text-foreground font-semibold">HUMAIN</span>, specializing in
                   large language models, agentic AI systems, and production-scale ML deployment.
                 </p>
                 <p>

@@ -52,11 +52,11 @@ export const viewport: Viewport = {
  * agrees everywhere" untestable.
  */
 const DESCRIPTION =
-  "Principal Data Scientist with deep expertise in LLMs, NLP, and agentic AI systems. Leading end-to-end development of high-impact AI platforms including Arabic LLMs (ALLaM).";
+  "Senior Principal Engineer with deep expertise in LLMs, NLP, and agentic AI systems. Leading end-to-end development of high-impact AI platforms including Arabic LLMs (ALLaM).";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://jerilkuriakose.github.io"),
-  title: "Jeril Kuriakose | Principal Data Scientist",
+  title: "Jeril Kuriakose | Senior Principal Engineer",
   description: DESCRIPTION,
   // Must equal metadataBase and og:url. The live site normalises og:url with a
   // trailing slash, so any test comparing them has to normalise first.
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://jerilkuriakose.github.io",
     siteName: "Jeril Kuriakose Portfolio",
-    title: "Jeril Kuriakose | Principal Data Scientist",
+    title: "Jeril Kuriakose | Senior Principal Engineer",
     description: DESCRIPTION,
     // 1200x630, branded, carrying the two approved impact claims. Replaces
     // /profile.jpg, which was declared 800x800 while actually being 996x1325 -
@@ -91,13 +91,13 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Jeril Kuriakose — Principal Data Scientist (Gen AI)",
+        alt: "Jeril Kuriakose — Senior Principal Engineer (Gen AI)",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jeril Kuriakose | Principal Data Scientist",
+    title: "Jeril Kuriakose | Senior Principal Engineer",
     description: DESCRIPTION,
     images: ["/og.png"],
   },

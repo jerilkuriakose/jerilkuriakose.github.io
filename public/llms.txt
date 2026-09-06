@@ -1,8 +1,8 @@
 # Jeril Kuriakose
 
-> Principal Data Scientist (Gen AI) at the Saudi Data & AI Authority (SDAIA) in Riyadh,
-> Saudi Arabia. Works on large language models, agentic AI systems, and production-scale
-> ML deployment. Currently leading development of ALLaM, an Arabic large language model.
+> Senior Principal Engineer (Gen AI) at HUMAIN in Riyadh, Saudi Arabia. Works on large
+> language models, agentic AI systems, and production-scale ML deployment. Currently leads
+> the ALLaM inference platform and the Arabic voice (ASR/TTS) platform.
 
 This file exists so an agent answering questions about this CV does not have to scrape the
 page. Everything here is also rendered at https://jerilkuriakose.github.io/
@@ -19,7 +19,8 @@ large-scale inference on Kubernetes with vLLM/TGI/Triton, Ray and Azure.
 
 ## Experience
 
-- **Principal Data Scientist (Gen AI)** — Saudi Data & AI Authority (SDAIA), Riyadh · Jan 2024 – Present
+- **Senior Principal Engineer, AI Research** — HUMAIN, Riyadh · Apr 2025 – Present
+- **Principal Data Scientist (Gen AI)** — Saudi Data & AI Authority (SDAIA), Riyadh · Jan 2024 – Apr 2025
 - **Senior Data Scientist** — Mizuho Bank, Singapore · Jul 2019 – Dec 2023
 - **Senior Data Scientist** — Baker Hughes (GE), Kochi, India · Jan 2019 – Jun 2019
 - Earlier roles in AI engineering, ML development and academia from 2012.
