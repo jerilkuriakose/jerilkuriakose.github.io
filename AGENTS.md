@@ -143,9 +143,15 @@ checked the dimensions. It is now **generated from `DATA`** and **gated**:
   looks right. Commit it with the `DATA` change that caused it.
 - **Not generated — update by hand on a role change:** the bold title and grey description
   under the image are `metadata.title` and `DESCRIPTION` in `app/layout.tsx`.
-- **Cache-busting is automatic.** `og:image` is `/og.png?v=<sha256 prefix>`, computed at
-  build time, so a new card gets a new URL. Messages already sent on WhatsApp keep the
-  preview they were sent with.
+- **WhatsApp caches the preview per exact page URL**, for days to weeks, with no purge
+  tool. Sharing an already-shared URL can show the old card after the new one is live:
+  on 2026-10-11 the plain URL still showed "SDAIA" 30+ minutes after deploy while every
+  URL variant served the new tags. Rule out the site first with
+  `curl -sA 'WhatsApp/2' https://jerilkuriakose.github.io/ | grep -o 'og:image" content="[^"]*'`;
+  if that shows the current `?v=` hash, the stale card is WhatsApp's cache. Workaround: share
+  a URL it has not seen, e.g. `https://jerilkuriakose.github.io/?v=2`. The versioned
+  `og:image` (`/og.png?v=<sha256 prefix>`, computed at build time) helps scrapers that cache
+  the image by URL, but cannot refresh a page WhatsApp has already cached.
 
 ## Where site content lives
 
