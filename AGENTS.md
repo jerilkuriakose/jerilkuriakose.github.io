@@ -3,13 +3,13 @@
 > ## The redesign is COMPLETE — nothing is in flight
 >
 > All seven phases shipped and all four owner gates (G1–G4) closed on 2026-09-01.
-> `verify.sh` green at 99 tests. Both repos clean and pushed. **There is no queued work
+> `verify.sh` green at 99 tests (100 since the 2026-10-11 social-card gate). Both repos clean and pushed. **There is no queued work
 > and no uncommitted work to protect** — an earlier version of this banner warned about an
 > uncommitted Next 16 upgrade; that shipped in `576c5c3` and the warning is retired.
 >
 > **Before changing anything here:**
 > ```bash
-> bash scripts/verify.sh              # build + tsc + lint + 99-test visual harness
+> bash scripts/verify.sh              # build + tsc + lint + 100-test visual harness
 > bash scripts/redesign-status.sh     # derives phases, gates, reviews, live build state
 > ```
 >
@@ -20,7 +20,7 @@
 >   sample animation frame 0
 > - `docs/superpowers/specs/2026-08-31-portfolio-redesign-design.md` §11b — the light-theme
 >   photo prominence is **accepted, not a bug**, with both disproven fixes and their numbers
-> - §11b "Known harness gap" — nothing asserts the photographs are *visible*, so 99 green
+> - §11b "Known harness gap" — nothing asserts the photographs are *visible*, so 100 green
 >   tests would not catch a photo veiled out of existence
 >
 > **If you start a new multi-session project here**, restore the write-through discipline:
@@ -120,9 +120,36 @@ make check-deploy                # (still in ../jk-cv) fails if this repo's PDF 
 6. **Commit each repo separately.** They are independent git repos. Never assume one
    command touches both, and never commit unless asked.
 
+## The social card (`public/og.png`) — generated, never hand-made
+
+`og.png` is the image WhatsApp, LinkedIn and X show when the site URL is shared. The
+2026-09-01 card was rendered once by hand and kept saying "Principal Data Scientist" and
+"SDAIA" for a month after the rebrand, because nothing tied it to `DATA` and its only test
+checked the dimensions. It is now **generated from `DATA`** and **gated**:
+
+- **Source:** `tests/visual/og-card.spec.ts` renders the card with the built site's CSS,
+  tokens and fonts, and fails unless `public/og.png` is pixel-identical to that render. Do
+  not edit, replace or re-export `og.png` by hand; change the template in that spec.
+- **Card fields:** `DATA.title` (eyebrow), `DATA.name`, `DATA.tagline`, the metrics named
+  by `DATA.featuredMetricIds`, and the current role `DATA.work[0]` (`company` + the city of
+  `location`). The hero reads `DATA.tagline` and `DATA.work[0].company` too, so the current
+  role must stay **first** in `work` with `end: "Present"`; the spec asserts that.
+- **When any card field changes** (new job, new title, new featured metric):
+  ```bash
+  npm run og:update          # next build, then rewrites public/og.png from DATA
+  bash scripts/verify.sh     # fails "public/og.png is stale" if you skipped the line above
+  ```
+  Look at the new `og.png` before committing it; the gate proves it is current, not that it
+  looks right. Commit it with the `DATA` change that caused it.
+- **Not generated — update by hand on a role change:** the bold title and grey description
+  under the image are `metadata.title` and `DESCRIPTION` in `app/layout.tsx`.
+- **Cache-busting is automatic.** `og:image` is `/og.png?v=<sha256 prefix>`, computed at
+  build time, so a new card gets a new URL. Messages already sent on WhatsApp keep the
+  preview they were sent with.
+
 ## Where site content lives
 
-`data/resume.tsx` exports one `DATA` object: `name`, `initials`, `title`, `location`,
+`data/resume.tsx` exports one `DATA` object: `name`, `initials`, `title`, `tagline`, `location`,
 `locationLink`, `description`, `summary`, `avatarUrl`, `resumeUrl`, `extraInfo`,
 `yearsOfExperience`, `contact`, `skills`, `work`, `education`, `projects`,
 `publications`, `awards`, `languages`, `featuredMetricIds`. Single route, static export,

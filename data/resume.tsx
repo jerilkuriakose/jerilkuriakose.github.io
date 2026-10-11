@@ -38,6 +38,8 @@ export const DATA = {
   name: "Jeril Kuriakose",
   initials: "JK",
   title: "Senior Principal Engineer (Gen AI)",
+  // Hero headline and the social card (public/og.png, tests/visual/og-card.spec.ts).
+  tagline: "I build intelligent AI systems.",
   location: "Riyadh, Saudi Arabia",
   locationLink: "https://maps.google.com/?q=Riyadh,Saudi+Arabia",
   description:

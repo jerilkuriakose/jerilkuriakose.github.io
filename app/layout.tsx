@@ -1,4 +1,7 @@
 import type { Metadata, Viewport } from "next";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -54,6 +57,17 @@ export const viewport: Viewport = {
 const DESCRIPTION =
   "Senior Principal Engineer with deep expertise in LLMs, NLP, and agentic AI systems. Leading end-to-end development of high-impact AI platforms including Arabic LLMs (ALLaM).";
 
+/**
+ * The social card URL, versioned by the PNG's content hash. Link-preview
+ * scrapers can cache og:image by URL, so a regenerated card served at an
+ * unchanged URL may keep showing the old one. The hash changes exactly when the
+ * card does. The card itself is generated: tests/visual/og-card.spec.ts.
+ */
+const OG_IMAGE = `/og.png?v=${createHash("sha256")
+  .update(readFileSync(join(process.cwd(), "public/og.png")))
+  .digest("hex")
+  .slice(0, 8)}`;
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://jerilkuriakose.github.io"),
   title: "Jeril Kuriakose | Senior Principal Engineer",
@@ -88,7 +102,7 @@ export const metadata: Metadata = {
     // slice. Dimensions here are asserted against the real PNG header.
     images: [
       {
-        url: "/og.png",
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Jeril Kuriakose — Senior Principal Engineer (Gen AI)",
@@ -99,7 +113,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Jeril Kuriakose | Senior Principal Engineer",
     description: DESCRIPTION,
-    images: ["/og.png"],
+    images: [OG_IMAGE],
   },
   robots: {
     index: true,

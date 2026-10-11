@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "test:visual": "playwright test",
-    "test:visual:update": "playwright test --update-snapshots"
+    "test:visual:update": "playwright test --update-snapshots",
+    "og:update": "next build && OG_UPDATE=1 playwright test tests/visual/og-card.spec.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.2.6",
